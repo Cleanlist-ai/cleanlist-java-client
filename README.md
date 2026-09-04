@@ -71,7 +71,7 @@ Requires Java 8+.
 
 Every request is authenticated with a **Cleanlist API key**, sent as an
 `Authorization: Bearer <key>` header. Create one in the portal under
-**[Settings → API Keys](https://app.cleanlist.ai/settings/api-keys)** (keys start with
+**[Settings → API Keys](https://app.cleanlist.ai/api-keys)** (keys start with
 `clapi_`).
 
 ```java
