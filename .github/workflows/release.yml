@@ -1,0 +1,39 @@
+name: Release to Maven Central
+
+# Publishes a signed artifact to the Sonatype Central Portal on a v* tag.
+# Required repo secrets:
+#   CENTRAL_TOKEN_USERNAME, CENTRAL_TOKEN_PASSWORD  (Portal → Account → user token)
+#   GPG_PRIVATE_KEY   (armored private key: gpg --armor --export-secret-keys <KEYID>)
+#   GPG_PASSPHRASE    (empty string if the key has no passphrase)
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17 + Maven settings
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
+          # Writes ~/.m2/settings.xml with a <server id="central"> using these env vars:
+          server-id: central
+          server-username: CENTRAL_TOKEN_USERNAME
+          server-password: CENTRAL_TOKEN_PASSWORD
+
+      - name: Publish to Maven Central
+        env:
+          CENTRAL_TOKEN_USERNAME: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
+          CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: >
+          mvn -B -Psign-artifacts -DskipTests -Dmaven.javadoc.failOnError=false
+          clean deploy
