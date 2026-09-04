@@ -1,0 +1,3546 @@
+openapi: 3.1.0
+info:
+  description: "Versioned public API surface (v2) for the Cleanlist MCP and direct\
+    \ API consumers: workspace, lead lists, enrichment, smart agents, sync, and export."
+  title: Cleanlist API (v2)
+  version: 2.0.0
+servers:
+- description: Production
+  url: https://api.cleanlist.ai
+- description: Local development
+  url: http://localhost:8000
+tags:
+- description: "Workspace, credits, usage"
+  name: Public Workspace
+- description: Lead list management
+  name: Public Lead Lists
+- description: Enrichment operations
+  name: Public Enrichment
+- description: Smart agent runs
+  name: Public Smart Agents
+- description: Data export
+  name: Public Export
+paths:
+  /api/v2/whoami:
+    get:
+      description: |-
+        Introspect the authenticated principal and its effective entitlements.
+        Returns the caller's identity (user, org, auth type, scopes) plus the
+        resolved plan `tier`, any `appsumo_tier`, and the merged `features` list
+        the server-side gates actually enforce — letting clients (and the MCP)
+        tier-filter their advertised tools before hitting a gated route. This
+        endpoint is free and deducts no credits; for API-key auth the returned
+        `user_email` is masked so a leaked key can't reveal the creator's address,
+        and display-name lookups are best-effort (null on a transient miss).
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/authentication
+      operationId: whoami
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WhoamiResponse"
+          description: Successful Response
+      security:
+      - HTTPBearer: []
+      summary: Get current identity & entitlements
+      tags:
+      - Public Workspace
+      x-accepts:
+      - application/json
+  /api/v2/credits/balance:
+    get:
+      description: |-
+        Return the current spendable credit balance for the caller's organization.
+        Reads the authoritative `organizations.credits_count` and returns it with a
+        short `agent_instructions` nudge summarizing remaining credits. Requires the
+        `credits:read` scope and deducts no credits itself. Use this before large
+        operations, and pair it with `POST /credits/estimate` to confirm a specific
+        action is affordable before spending.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/credits
+      operationId: credits_balance
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreditsBalanceResponse"
+          description: Successful Response
+      security:
+      - HTTPBearer: []
+      summary: Get credit balance
+      tags:
+      - Public Workspace
+      x-accepts:
+      - application/json
+  /api/v2/credits/estimate:
+    post:
+      description: |-
+        Pre-flight a paid operation and mint a signed, single-use `quote_id`.
+        The quote binds the canonical request (tool, list_id|filters|cohort, scope,
+        row_count, org) via HMAC and must be presented at execution time by every
+        paid bulk tool (`enrich_list`, `run_smart_agent`, `sync_to_crm`,
+        `sync_to_sequencer`, cohort enrichments). Row count is derived
+        authoritatively from the list or cohort — never trusted from the caller —
+        so a small quote can't be replayed against a large job. Requires the
+        `credits:read` scope; estimating itself is free, and the response reports
+        whether the org has `sufficient` credits to proceed.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/credits
+      operationId: credits_estimate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EstimateCostRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EstimateCostResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Estimate cost & get a signed quote
+      tags:
+      - Public Workspace
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/api-keys:
+    get:
+      description: |-
+        List the caller's API keys, showing only the prefix and last 4 characters
+        — full secret values are never returned. Results are user-scoped and further
+        filtered to the calling token's organization (defense in depth), so a Clerk
+        user in multiple orgs only sees keys belonging to the active org. Requires
+        the `admin:api_keys` scope and deducts no credits. Scopes are granted
+        per-user today, so each key reports the caller's own scopes.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/authentication
+      operationId: list_api_keys
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiKeysResponse"
+          description: Successful Response
+      security:
+      - HTTPBearer: []
+      summary: List API keys
+      tags:
+      - Public Workspace
+      x-accepts:
+      - application/json
+  /api/v2/usage:
+    get:
+      description: |-
+        Aggregate this organization's public-API request log over the last `days`
+        (1-365, default 7), grouped by `tool`, `key`, `day`, or `error`. Returns
+        per-bucket call counts and error counts plus window totals, so admins can
+        audit traffic and spot failing integrations. Requires the `admin:api_keys`
+        scope and deducts no credits. Note: until the request log gains cost/
+        tool-name columns, `group_by="tool"` buckets by request path and
+        `credits_spent` is always 0.0.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/credits
+      operationId: usage_report
+      parameters:
+      - explode: true
+        in: query
+        name: days
+        required: false
+        schema:
+          default: 7
+          maximum: 365
+          minimum: 1
+          title: Days
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: group_by
+        required: false
+        schema:
+          default: tool
+          enum:
+          - tool
+          - key
+          - day
+          - error
+          title: Group By
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsageReportResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Get usage report
+      tags:
+      - Public Workspace
+      x-accepts:
+      - application/json
+  /api/v2/lead-lists:
+    get:
+      description: |-
+        Paginate the lead lists the caller can access (owned, org-wide, shared).
+
+        Returns a page of `ListSummary` rows with live lead counts and owner
+        names. Page forward with `limit` (1–100, default 50) and the opaque
+        `cursor` from the previous response; omit `cursor` to start at the top.
+        Pass `folder_id` to scope the page to one folder. Requires the
+        `lists:read` scope.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/lead-lists · https://docs.cleanlist.ai/guides/managing-lists
+      operationId: list_lists
+      parameters:
+      - explode: true
+        in: query
+        name: folder_id
+        required: false
+        schema:
+          nullable: true
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          maximum: 100
+          minimum: 1
+          title: Limit
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: cursor
+        required: false
+        schema:
+          nullable: true
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListsPageResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: List lead lists
+      tags:
+      - Public Lead Lists
+      x-accepts:
+      - application/json
+    post:
+      description: |-
+        Create a private LeadList in the caller's workspace.
+
+        Idempotent on name: MCP agents sometimes fire create_list twice for one
+        "make a list" request (seconds apart), leaving an orphan empty list. If
+        the caller already OWNS an exact same-name list (case-insensitive),
+        reuse it instead of inserting a duplicate — returns 200 + `reused: true`.
+        Strictly caller-scoped: a user never reuses a teammate's org-visible
+        list, and match is exact name only, so "Q3 Leads" never reuses
+        "Q3 Leads List".
+
+        Requires the `lists:write` scope. Public-tier keys carry no contact-list
+        cap, but the cap is still enforced defensively (403 `list_cap_reached`).
+        Pass an optional `folder_id` you own to file the new list on creation.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/lead-lists · https://docs.cleanlist.ai/guides/managing-lists
+      operationId: create_list
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateListRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListDetailResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Create a lead list
+      tags:
+      - Public Lead Lists
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/lead-lists/{list_id}:
+    delete:
+      description: |-
+        Delete a list and its lead memberships. Leads survive.
+
+        Hard delete via `delete_with_dependencies` (mirrors the portal):
+        smart/action columns, CRM-contact links, per-user state, shares,
+        raw-person stubs, and junction rows are removed; the Lead rows
+        themselves are global entities and are NOT deleted — they stay
+        findable via search_people and in any other list they belong to.
+
+        Owner-only + is_protected guards mirror the portal. There is no
+        in-flight-workflow guard (the portal has none either; the MCP
+        confirm-gate already prevents accidental deletes off a fuzzy name
+        match). Re-deleting an unknown/already-deleted list returns 404.
+
+        Owner-only: a non-owner gets 404 (indistinguishable from missing) and a
+        protected list gets 403 `list_protected`. Requires the `lists:write`
+        scope.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/lead-lists · https://docs.cleanlist.ai/guides/managing-lists
+      operationId: delete_list
+      parameters:
+      - explode: false
+        in: path
+        name: list_id
+        required: true
+        schema:
+          title: List Id
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteListResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Delete a lead list
+      tags:
+      - Public Lead Lists
+      x-accepts:
+      - application/json
+    get:
+      description: |-
+        Return one LeadList accessible to the caller.
+
+        `lead_count` is derived from a live membership COUNT rather than the
+        denormalized `prospect_count` column, so a just-completed add/remove is
+        reflected immediately and any historical counter drift can't surface a
+        wrong number here.
+
+        Resolves any list you can access — owned, org-visible, or shared with
+        you — and 404s otherwise so private lists never leak. Requires the
+        `lists:read` scope.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/lead-lists · https://docs.cleanlist.ai/guides/managing-lists
+      operationId: get_list
+      parameters:
+      - explode: false
+        in: path
+        name: list_id
+        required: true
+        schema:
+          title: List Id
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListDetailResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Get a lead list
+      tags:
+      - Public Lead Lists
+      x-accepts:
+      - application/json
+    patch:
+      description: |-
+        Rename a list (and optionally re-describe it / move it between folders).
+
+        PATCH semantics: only the fields present in the body change. A `null`
+        `description` clears it; a `null` `folder_id` unfiles the list; an
+        omitted field is left untouched. Renaming to the current name is an
+        idempotent 200 no-op. Owner-only + is_protected guards mirror the
+        portal's edit path.
+
+        At least one of `name`, `description`, or `folder_id` must be present;
+        an empty body is a 422. Requires the `lists:write` scope.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/lead-lists · https://docs.cleanlist.ai/guides/managing-lists
+      operationId: update_list
+      parameters:
+      - explode: false
+        in: path
+        name: list_id
+        required: true
+        schema:
+          title: List Id
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublicLeadListUpdate"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListDetailResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Update a lead list
+      tags:
+      - Public Lead Lists
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/lead-lists/{list_id}/leads:
+    delete:
+      description: |-
+        Remove leads from a list (max 100 per call).
+
+        Removes the membership row only — the Lead itself stays in the
+        workspace (still findable via `search_people`, still in other lists
+        it belonged to). Non-existent lead_ids are silently no-op so the
+        caller can dedupe loosely without 404s.
+
+        Removing leads is free — no credits are refunded or charged. Requires the
+        `lists:write` scope.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/lead-lists · https://docs.cleanlist.ai/guides/managing-lists
+      operationId: remove_leads_from_list
+      parameters:
+      - explode: false
+        in: path
+        name: list_id
+        required: true
+        schema:
+          title: List Id
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RemoveLeadsRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RemoveLeadsResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Remove leads from a list
+      tags:
+      - Public Lead Lists
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+    get:
+      description: |-
+        Paginate leads in a list.
+
+        Fields like `first_name`, `last_name`, `title`, `company` come from
+        the joined Prospect + Company relations — the Lead row itself only
+        carries enrichment results (email, phone, linkedin URL).
+
+        Page forward with `limit` (1–500, default 100) and the opaque `cursor`.
+        The response also carries a `task_id` cohort handle for the page so a
+        follow-up `add_person_enrichments` can operate on these leads without
+        re-passing lead_ids. Requires the `lists:read` scope.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/lead-lists · https://docs.cleanlist.ai/guides/managing-lists
+      operationId: list_leads_in_list
+      parameters:
+      - explode: false
+        in: path
+        name: list_id
+        required: true
+        schema:
+          title: List Id
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 100
+          maximum: 500
+          minimum: 1
+          title: Limit
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: cursor
+        required: false
+        schema:
+          nullable: true
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadsPageResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: List leads in a list
+      tags:
+      - Public Lead Lists
+      x-accepts:
+      - application/json
+    post:
+      description: |-
+        Add leads to a list in one of two mutually-exclusive modes.
+
+        Mode A (`lead_ids`): add already-materialized leads by UUID.
+        Mode B (`task_id` [+ `entity_ids`]): materialize a prior search
+        cohort into the list (search rows carry integer search-DB ids, not
+        lead UUIDs, so they can't go through Mode A).
+
+        The body is an exclusive `oneOf` union (`AddByLeadIds | AddByCohort`):
+        both-set or neither-set bodies are rejected at the schema layer (422),
+        so this handler only sees a well-formed single mode. Filter-based add
+        is rejected — the MCP description tells the agent to translate filters
+        into a cohort task_id (or lead_ids) first.
+
+        Import / "Add to list" is FREE — materializing leads costs no credits;
+        only enrichment is billed separately. Pass an optional `idempotency_key`
+        so a retried add inserts exactly once. Requires the `lists:write` scope.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/lead-lists · https://docs.cleanlist.ai/guides/managing-lists
+      operationId: add_leads_to_list
+      parameters:
+      - explode: false
+        in: path
+        name: list_id
+        required: true
+        schema:
+          title: List Id
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Body"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddLeadsResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Add leads to a list
+      tags:
+      - Public Lead Lists
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/lead-lists/{list_id}/csv-import:
+    post:
+      description: |-
+        Import a CSV into a lead list and optionally dispatch bulk enrichment.
+
+        Pipeline:
+            1. Authz: `lists:write` always; `enrich:write` additionally when
+               `dispatch_enrichment=True` (the workflow spends credits).
+            2. Feature flag gate — disabled-by-default kill switch returns 503.
+            3. Idempotency cache lookup (org-wide, 24h TTL).
+            4. Base64 decode + parse via `parse_csv_to_rawpeople`.
+            5. If dispatching: verify quote (if provided), open reservation,
+               redeem quote.
+            6. Bulk-insert RawPeople into the list. UUIDs are stamped
+               Python-side so we can hand them to the workflow.
+            7. If dispatching: kick off `start_bulk_enrichment` with the
+               parsed prospects + raw_person_ids. The workflow's per-Lead
+               `insert_lead_to_list` activity handles prospect_count
+               updates per the existing pattern; import-only path bumps
+               prospect_count here directly.
+            8. Cache the response under `idempotency_key` (if provided).
+
+        Cross-list dedup: this endpoint dedupes ONLY within the upload. A
+        row whose identity already exists as a Lead elsewhere in the
+        workspace still imports as a RawPerson here; the workflow's
+        `persist_enrichment_result` then deduplicates against existing
+        Leads by public_identifier / prospect_id (existing behavior).
+        Net effect: no duplicate Lead, but the RawPerson stub persists
+        until the workflow processes it.
+
+        Send the file as base64 in `csv_content_base64` (≤150 KB / ~600 rows)
+        with a `column_mapping` from canonical field to CSV header. Requires the
+        `lists:write` scope, plus `enrich:write` when `dispatch_enrichment=true`
+        (the enrichment spend). Importing rows is free; when dispatching,
+        enrichment is billed on top (partial 1cr, phone_only 10cr, full 11cr per
+        lead). Pass an `idempotency_key` to make retries safe.
+
+        **📖 Docs:** https://docs.cleanlist.ai/guides/bulk-enrichment
+      operationId: csv_import
+      parameters:
+      - explode: false
+        in: path
+        name: list_id
+        required: true
+        schema:
+          title: List Id
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CsvImportRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsvImportResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Import leads from CSV
+      tags:
+      - Public Lead Lists
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/enrichment/person:
+    post:
+      description: |-
+        Resolve email and/or phone for one contact through the provider
+        waterfall and write the result to a lead list.
+
+        This is an asynchronous workflow: it reserves credits up front, returns
+        a `workflow_id` immediately, then runs the provider cascade in the
+        background — poll `poll_url` (GET /enrichment/status/{workflow_id}) until
+        `status` is terminal. Cost is set by `enrichment_type`: 1 credit for
+        `partial` (email only), 10 for `phone_only`, or 11 for `full` (email +
+        phone); the legacy `include_phone` boolean is used when the field is
+        unset. Pay-for-results means the final debit may be lower than
+        `credits_reserved`. `quote_id` is optional here — single-call scale
+        doesn't require it, but a supplied quote is verified and redeemed so the
+        caller can pre-commit spend.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment-types
+        **📖 Docs:** https://docs.cleanlist.ai/guides/bulk-enrichment
+      operationId: enrich_person
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnrichPersonRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnrichPersonResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Enrich a single person
+      tags:
+      - Public Enrichment
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/enrichment/company:
+    post:
+      description: |-
+        Look up firmographics for a single company and return the full record
+        synchronously.
+
+        Unlike person enrichment, this path is synchronous — it performs a
+        CompanyDB single-record lookup inline (no Temporal workflow, no
+        `workflow_id`) and returns the enriched `CompanyRecord` in the response,
+        billing a flat 1 credit that settles before the response returns. Pass
+        any of `domain` (most reliable), `company_id`, `company_name`, or
+        `company_ticker`; a ticker is resolved to a domain via Finnhub (24h Redis
+        cache) and falls back to a `company_name` fuzzy match when the symbol is
+        unknown. `quote_id` is optional and, when present, verified and redeemed.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment-types
+        **📖 Docs:** https://docs.cleanlist.ai/guides/bulk-enrichment
+      operationId: enrich_company
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnrichCompanyRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnrichCompanyResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Enrich a company
+      tags:
+      - Public Enrichment
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/enrichment/by-task:
+    post:
+      description: |-
+        Enrich a cohort of entities referenced by a `task_id` returned from a
+        prior search, without re-listing every identifier.
+
+        The task's entity type decides the flow. Person (or lead) tasks dispatch
+        an asynchronous workflow — the response carries a `workflow_id` with every
+        entity `queued`, and results land in `lead_list_id` (a hidden per-user
+        scratch list is auto-created when none is given); poll status for
+        progress. Company tasks run synchronously — each entity returns an
+        inline `enriched`/`skipped`/`failed` result with no workflow. Both paths
+        are billed per entity and REQUIRE a `quote_id` from POST /credits/estimate
+        (person cohort cost follows the requested data points; company cohort is
+        ~1 credit per 10 companies), settling with pay-for-results semantics.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment-types
+        **📖 Docs:** https://docs.cleanlist.ai/guides/bulk-enrichment
+      operationId: enrich_by_task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnrichByTaskRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnrichByTaskResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Enrich entities from a prior task
+      tags:
+      - Public Enrichment
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/enrichment/bulk:
+    post:
+      description: |-
+        Run the provider waterfall over every lead in an existing list in one
+        call.
+
+        This is an asynchronous, fan-out workflow: it reserves the estimated cost,
+        returns a `workflow_id` immediately, then enriches all leads in parallel
+        background child workflows — poll `poll_url` for aggregate progress and
+        the settled billing. `scope` sets the per-lead enrichment type
+        (`partial` = 1 credit, `phone-only` = 10, `full` = 11). A `quote_id` from
+        POST /credits/estimate is REQUIRED and bound to this list + scope + lead
+        count; the actual charge is the recomputed cost capped at the quote's
+        `max_credits`, and pay-for-results refunds the unused reservation for
+        leads where nothing was found.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment-types
+        **📖 Docs:** https://docs.cleanlist.ai/guides/bulk-enrichment
+      operationId: enrich_list
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnrichListRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnrichListResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Enrich a whole lead list
+      tags:
+      - Public Enrichment
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/enrichment/status/{workflow_id}:
+    get:
+      description: |-
+        Poll the status, progress, and settled billing of an enrichment
+        workflow started by `enrich_person`, `enrich_list`, or `enrich_by_task`.
+
+        This read is free and idempotent — call it repeatedly until `status`
+        reaches a terminal state (`completed` / `failed` / `cancelled`). It
+        accepts EITHER a `workflow_id` (e.g. `enrich-...` / `bulk-enrich-...`) OR
+        an MCPTask cohort `task_id` (`cl-task_...`), resolving the latter to the
+        workflow bound at dispatch so the agent can keep using the one handle it
+        already has. Terminal single-lead runs include the inline enriched `result`;
+        bulk runs report aggregate counters instead. When a prepaid-via-MCP run
+        ends in failure, `refund_status` surfaces `pending_review` (credits are
+        not auto-refunded).
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
+      operationId: enrichment_status
+      parameters:
+      - explode: false
+        in: path
+        name: workflow_id
+        required: true
+        schema:
+          title: Workflow Id
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkflowStatusResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Poll an enrichment workflow
+      tags:
+      - Public Enrichment
+      x-accepts:
+      - application/json
+  /api/v2/smart-agents/run:
+    post:
+      description: |-
+        Launch an AI smart agent over the leads in a list and return a run id.
+
+        Pick an `agent_type` — `custom_ai` (your own `prompt`), `cold_intro_email`
+        (personalized opener), or a preset research agent — and the run executes
+        asynchronously as a smart column, one AI call per lead. Runs are metered
+        per lead by agent type (e.g. `custom_ai` ≈ 1 credit/lead,
+        `cold_intro_email` ≈ 3 credits/lead) and require a single-use `quote_id`
+        from POST /credits/estimate; credits are debited as rows complete. Scope
+        with `lead_scope="subset"` + `max_rows` for speed and cost control — a
+        `lead_scope="all"` run above the approval threshold (default 500 leads)
+        is blocked with a 400 `approval_required` until you narrow it or route a
+        human approval. The response returns immediately with `status="pending"`;
+        poll GET /smart-agents/{smart_agent_task_id} for progress and per-lead
+        results.
+
+        **📖 Docs:** https://docs.cleanlist.ai/guides/using-ai-agents
+      operationId: run_smart_agent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RunSmartAgentRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RunSmartAgentResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Run a smart agent
+      tags:
+      - Public Smart Agents
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/smart-agents:
+    get:
+      description: |-
+        List recent smart-agent runs with live progress counters.
+
+        Returns each run's id, target list, agent type, status, and processed /
+        failed / total counts so you can track in-flight and completed runs. Pass
+        `list_id` to scope to a single list (access-checked so a known id can't
+        enumerate another workspace's history); omit it for a caller-scoped rollup
+        across every list you can see. This endpoint is free and does not consume
+        credits. To read the per-lead output of any run, call
+        GET /smart-agents/{smart_agent_task_id}.
+
+        **📖 Docs:** https://docs.cleanlist.ai/guides/using-ai-agents
+      operationId: list_smart_agents
+      parameters:
+      - description: "Optional lead-list UUID. When set, returns only runs for that\
+          \ list (access-checked). When omitted, returns a rollup of recent runs across\
+          \ every list the caller can see."
+        explode: true
+        in: query
+        name: list_id
+        required: false
+        schema:
+          nullable: true
+          type: string
+        style: form
+      - description: "Maximum number of runs to return, most recent first."
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          description: "Maximum number of runs to return, most recent first."
+          maximum: 100
+          minimum: 1
+          title: Limit
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListSmartAgentsResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: List smart agent runs
+      tags:
+      - Public Smart Agents
+      x-accepts:
+      - application/json
+  /api/v2/smart-agents/{smart_agent_task_id}:
+    get:
+      description: |-
+        Poll a smart-agent run for status, progress, and per-lead output.
+
+        Returns the run's lifecycle `status`, a `progress` percentage, and
+        succeeded / failed / total counters, along with a `results` array holding
+        each lead's agent output (or its error). Poll this after
+        POST /smart-agents/run until `status` is `completed` (or `failed`) — the
+        `results` array grows as leads finish, so a still-running run returns a
+        partial set. Access is checked via the run's list, and unknown or
+        inaccessible run ids return 404. This endpoint is free and does not
+        consume credits.
+
+        **📖 Docs:** https://docs.cleanlist.ai/guides/using-ai-agents
+      operationId: get_smart_agent_results
+      parameters:
+      - description: Canonical id from /smart-agents/run's `smart_agent_task_id` field
+        explode: false
+        in: path
+        name: smart_agent_task_id
+        required: true
+        schema:
+          description: Canonical id from /smart-agents/run's `smart_agent_task_id`
+            field
+          title: Smart Agent Task Id
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SmartAgentResultsResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Get smart agent results
+      tags:
+      - Public Smart Agents
+      x-accepts:
+      - application/json
+  /api/v2/export/csv/signed-url:
+    post:
+      description: |-
+        Export a Lead List to CSV and return a time-limited signed download URL.
+
+        Streams the list's leads through a temporary spooled file, uploads the
+        result to blob storage, and responds with a SAS-signed `download_url`
+        that expires 24 hours after generation (see `expires_at`). Pass `columns`
+        to control which fields — and their order — are written, or omit it to use
+        the default column set; set `include_smart_agents=false` to skip any
+        configured smart-agent result columns. This export is free and does not
+        consume credits.
+
+        **📖 Docs:** https://docs.cleanlist.ai/guides/exporting-data
+      operationId: export_csv
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExportCsvRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportCsvResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Export a list to CSV (signed URL)
+      tags:
+      - Public Export
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/export/json:
+    get:
+      description: |-
+        Export a Lead List as JSON rows returned inline in the response.
+
+        Returns a page of leads (default 100, max 500 per call) projected to the
+        same columns as the CSV export and wrapped in the standard response
+        envelope. Use the opaque `cursor` from each response to fetch the next
+        page; a malformed cursor returns 400 rather than silently rewinding to
+        page 0. This export is free and does not consume credits.
+
+        **📖 Docs:** https://docs.cleanlist.ai/guides/exporting-data
+      operationId: export_json
+      parameters:
+      - explode: true
+        in: query
+        name: list_id
+        required: true
+        schema:
+          title: List Id
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 100
+          maximum: 500
+          minimum: 1
+          title: Limit
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: cursor
+        required: false
+        schema:
+          nullable: true
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: columns
+        required: false
+        schema:
+          items:
+            type: string
+          nullable: true
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportJsonResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+      security:
+      - HTTPBearer: []
+      summary: Export a list as JSON
+      tags:
+      - Public Export
+      x-accepts:
+      - application/json
+components:
+  schemas:
+    AddByCohort:
+      additionalProperties: false
+      description: |-
+        Mode B: materialize a prior search cohort into the list.
+
+        `search_*` rows carry integer search-DB ids (not lead UUIDs), so
+        Mode A's `UUID(lead_id)` rejects them — Mode B resolves the cohort by
+        `task_id` and creates the lead rows from the task's cached
+        `entity_details`.
+      example:
+        entity_ids:
+        - "4482910"
+        - "4482911"
+        idempotency_key: save-2026-06-28-d4e5f6
+        task_id: task_9f2c1a
+      properties:
+        task_id:
+          description: A cohort handle from a prior search_people / list_leads_in_list
+            response. Materializes that cohort's entities into this list.
+          title: Task Id
+          type: string
+        entity_ids:
+          items:
+            type: string
+          maxItems: 2000
+          nullable: true
+          type: array
+        idempotency_key:
+          maxLength: 128
+          nullable: true
+          type: string
+      required:
+      - task_id
+      title: AddByCohort
+    AddByLeadIds:
+      additionalProperties: false
+      description: |-
+        Mode A: add already-materialized leads by UUID.
+
+        These come from `list_leads_in_list` (real lead UUIDs) or a list
+        already owned by the workspace.
+      example:
+        idempotency_key: add-2026-06-28-a1b2c3
+        lead_ids:
+        - lead_5f3b8c
+        - lead_9d2e71
+      properties:
+        lead_ids:
+          description: Lead UUIDs to add (from list_leads_in_list / an owned list).
+          items:
+            type: string
+          maxItems: 1000
+          minItems: 1
+          type: array
+        idempotency_key:
+          maxLength: 128
+          nullable: true
+          type: string
+      required:
+      - lead_ids
+      title: AddByLeadIds
+    AddLeadsResponse:
+      additionalProperties: false
+      example:
+        added: 25
+        created: 20
+        credits_charged: 12.5
+        list_id: list_7c2a91
+        skipped_duplicates: 3
+      properties:
+        list_id:
+          description: Identifier of the list leads were added to.
+          title: List Id
+          type: string
+        added:
+          description: Number of leads newly inserted into the list (billed rows).
+          title: Added
+          type: integer
+        skipped_duplicates:
+          description: Leads already in the list that were skipped (not re-billed).
+          title: Skipped Duplicates
+          type: integer
+        created:
+          nullable: true
+          type: integer
+        credits_charged:
+          default: 0
+          description: "Import credits charged. Import is free, so this is 0; only\
+            \ enrichment is billed (separately)."
+          title: Credits Charged
+          type: number
+      required:
+      - added
+      - list_id
+      - skipped_duplicates
+      title: AddLeadsResponse
+    ApiKeyInfo:
+      additionalProperties: {}
+      example:
+        created_at: 2026-05-12 09:31:44
+        is_active: true
+        key_id: ak_5f8c2b91
+        key_last4: a4f9
+        key_prefix: clapi_
+        last_used_at: 2026-06-30 18:02:10
+        name: Production server key
+        scopes:
+        - credits:read
+        - search:read
+        - enrichment:write
+        - admin:api_keys
+      properties:
+        key_id:
+          description: Opaque id of the API key row (safe to display and reference).
+          title: Key Id
+          type: string
+        key_prefix:
+          description: "Non-secret leading segment of the key, used for at-a-glance\
+            \ identification. Cleanlist keys are `clapi_`."
+          title: Key Prefix
+          type: string
+        key_last4:
+          description: Last 4 characters of the key for disambiguation. The full secret
+            is never returned by this endpoint.
+          title: Key Last4
+          type: string
+        name:
+          nullable: true
+          type: string
+        scopes:
+          description: "Permission scopes carried by this key. Scopes are granted\
+            \ per-USER today, so every key the caller owns shares the caller's scopes."
+          items:
+            nullable: true
+            type: string
+          type: array
+        created_at:
+          nullable: true
+          type: string
+        last_used_at:
+          nullable: true
+          type: string
+        is_active:
+          description: Whether the key is currently active. Revoked keys report false.
+          title: Is Active
+          type: boolean
+      required:
+      - is_active
+      - key_id
+      - key_last4
+      - key_prefix
+      - scopes
+      title: ApiKeyInfo
+    ApiKeysResponse:
+      additionalProperties: false
+      example:
+        keys:
+        - created_at: 2026-05-12 09:31:44
+          is_active: true
+          key_id: ak_5f8c2b91
+          key_last4: a4f9
+          key_prefix: clapi_
+          last_used_at: 2026-06-30 18:02:10
+          name: Production server key
+          scopes:
+          - credits:read
+          - search:read
+          - enrichment:write
+          - admin:api_keys
+      properties:
+        keys:
+          description: API keys owned by the caller and scoped to the calling token's
+            org (prefix + last 4 only — never full secrets). Empty when none exist.
+          items:
+            $ref: "#/components/schemas/ApiKeyInfo"
+          type: array
+      required:
+      - keys
+      title: ApiKeysResponse
+    CompanyRecord:
+      additionalProperties: false
+      description: |-
+        Synchronous company enrichment result. Shape follows what
+        CompanyDB returns, but with stable field names independent of
+        Crustdata's response shape drift.
+      example:
+        company_id: company_3f9a
+        domain: acme.io
+        employee_count: 240
+        employee_count_range: 201-500
+        funding_stage: Series B
+        hq_location: "San Francisco, CA, US"
+        industries:
+        - Computer Software
+        - SaaS
+        industry: Computer Software
+        linkedin_url: https://www.linkedin.com/company/acme
+        name: Acme
+        revenue_range: $25M-$50M
+        tech_stack:
+        - React
+        - Python
+        - AWS
+        total_funding_usd: 48000000
+      properties:
+        company_id:
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+        domain:
+          nullable: true
+          type: string
+        industry:
+          nullable: true
+          type: string
+        industries:
+          items:
+            type: string
+          nullable: true
+          type: array
+        employee_count:
+          nullable: true
+          type: integer
+        employee_count_range:
+          nullable: true
+          type: string
+        revenue_range:
+          nullable: true
+          type: string
+        hq_location:
+          nullable: true
+          type: string
+        funding_stage:
+          nullable: true
+          type: string
+        total_funding_usd:
+          nullable: true
+          type: integer
+        tech_stack:
+          items:
+            type: string
+          nullable: true
+          type: array
+        linkedin_url:
+          nullable: true
+          type: string
+      title: CompanyRecord
+    CreateListRequest:
+      additionalProperties: false
+      example:
+        description: "VPs of Sales at Series B+ SaaS companies, North America."
+        folder_id: folder_3d9b12
+        name: Q3 Enterprise SaaS Leads
+      properties:
+        name:
+          description: "Display name for the list (1–200 chars). Create is idempotent\
+            \ on this name — if you already own an exact same-name list (case-insensitive)\
+            \ it is reused and returned with `reused: true` instead of a duplicate\
+            \ being inserted."
+          maxLength: 200
+          minLength: 1
+          title: Name
+          type: string
+        description:
+          nullable: true
+          type: string
+        folder_id:
+          nullable: true
+          type: string
+      required:
+      - name
+      title: CreateListRequest
+    CreditsBalanceResponse:
+      additionalProperties: false
+      description: |-
+        Minimal balance shape. The MCP `check_credits` description tells
+        the agent to direct the user to billing for plan/renewal info, so
+        we deliberately don't ship plan_slug / renew_at here even though
+        callers might want them — keep the contract tight.
+      example:
+        agent_instructions: "You have 4,820 credits remaining. Enrichment costs 1-11\
+          \ credits per lead depending on scope."
+        credits: 4820
+        organization_id: org_2abcRevenueLabs
+        task_id: task_9f2c1a
+        timestamp_ms: 1751404800000
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        organization_id:
+          description: Organization whose credit wallet this balance belongs to.
+          title: Organization Id
+          type: string
+        credits:
+          description: Current spendable credit balance for the organization (`organizations.credits_count`).
+            Whole credits; never negative.
+          title: Credits
+          type: integer
+      required:
+      - credits
+      - organization_id
+      title: CreditsBalanceResponse
+    CsvImportRequest:
+      additionalProperties: {}
+      example:
+        column_mapping:
+          company_name: Company
+          email: Email
+          first_name: First Name
+          last_name: Last Name
+        csv_content_base64: Zmlyc3RfbmFtZSxsYXN0X25hbWUsZW1haWwsY29tcGFueQpKYW5lLERvZSxqYW5lLmRvZUBhY21lLmlvLEFjbWUK
+        dispatch_enrichment: true
+        enrichment_type: full
+        idempotency_key: csv-import-2026-06-28-7a3c
+        quote_id: quote_2f8b10
+      properties:
+        csv_content_base64:
+          description: "Full CSV file body, base64-encoded. UTF-8 (with or without\
+            \ BOM). v1 hard-caps the raw body at 150 KB / ~600 rows — past that the\
+            \ base64 payload starts hitting tool-call output limits in the agent before\
+            \ any server cap fires. Above the cap the endpoint returns 413; chunk\
+            \ the file upstream."
+          title: Csv Content Base64
+          type: string
+        column_mapping:
+          additionalProperties:
+            nullable: true
+            type: string
+          description: "{ canonical_field: csv_header_name }. The MCP agent reads\
+            \ the CSV header line and supplies the mapping; the server never guesses.\
+            \ CSV columns not mapped are dropped. Mapping a field that isn't in the\
+            \ CSV header returns 400 missing_column with the bad header name in `details`."
+          minProperties: 1
+          title: Column Mapping
+        dispatch_enrichment:
+          default: true
+          description: "When True (default), the import dispatches a BulkEnrichmentWorkflow\
+            \ immediately after the RawPeople rows land. When False, rows land as\
+            \ RawPerson(status=pending) and the caller dispatches enrichment separately\
+            \ via enrich_list."
+          title: Dispatch Enrichment
+          type: boolean
+        enrichment_type:
+          enum:
+          - partial
+          - phone_only
+          - full
+          nullable: true
+          type: string
+        quote_id:
+          nullable: true
+          type: string
+        idempotency_key:
+          nullable: true
+          type: string
+      required:
+      - column_mapping
+      - csv_content_base64
+      title: CsvImportRequest
+    CsvImportResponse:
+      additionalProperties: {}
+      example:
+        enrichment_status_url: /api/v2/enrichment/status/bulk-enrich-a1b2c3d4
+        idempotency_replayed: false
+        list_id: list_7c2a91
+        rows_imported: 188
+        rows_parsed: 200
+        rows_skipped: 12
+        sample_skip_rows:
+        - 14
+        - 27
+        - 33
+        - 58
+        - 61
+        skip_reasons:
+          duplicate_email: 9
+          missing_required: 3
+        task_id: task_9f2c1a
+        timestamp_ms: 1751404800000
+        workflow_id: bulk-enrich-a1b2c3d4
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        list_id:
+          description: Identifier of the list the CSV was imported into.
+          title: List Id
+          type: string
+        rows_parsed:
+          description: Total data rows read from the CSV (excludes the header).
+          title: Rows Parsed
+          type: integer
+        rows_imported:
+          description: Rows that landed as importable contacts.
+          title: Rows Imported
+          type: integer
+        rows_skipped:
+          description: Rows dropped during parsing (see skip_reasons).
+          title: Rows Skipped
+          type: integer
+        skip_reasons:
+          additionalProperties:
+            nullable: true
+            type: integer
+          description: "Skip counts by stable reason key (missing_required, duplicate_email,\
+            \ duplicate_linkedin, row_cap_exceeded)."
+          title: Skip Reasons
+        sample_skip_rows:
+          description: "Up to 10 1-indexed row numbers (header is row 1) that were\
+            \ skipped, for spot-checking the file."
+          items:
+            nullable: true
+            type: integer
+          type: array
+        workflow_id:
+          nullable: true
+          type: string
+        enrichment_status_url:
+          nullable: true
+          type: string
+        idempotency_replayed:
+          default: false
+          description: True when served from the idempotency cache — the CSV was NOT
+            re-imported and NO credits were re-charged.
+          title: Idempotency Replayed
+          type: boolean
+      required:
+      - list_id
+      - rows_imported
+      - rows_parsed
+      - rows_skipped
+      title: CsvImportResponse
+    DeleteListResponse:
+      additionalProperties: {}
+      example:
+        deleted: true
+        list_id: list_7c2a91
+        message: List deleted.
+        task_id: task_9f2c1a
+        timestamp_ms: 1751404800000
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        list_id:
+          description: Identifier of the deleted list.
+          title: List Id
+          type: string
+        deleted:
+          description: Always true on a successful delete.
+          title: Deleted
+          type: boolean
+      required:
+      - deleted
+      - list_id
+      title: DeleteListResponse
+    EnrichByTaskEntityResult:
+      additionalProperties: {}
+      example:
+        company:
+          company_id: company_3f9a
+          domain: acme.io
+          employee_count: 240
+          funding_stage: Series B
+          industry: Computer Software
+          linkedin_url: https://www.linkedin.com/company/acme
+          name: Acme
+        entity_id: company_3f9a
+        status: enriched
+      properties:
+        entity_id:
+          description: The cohort entity id this result belongs to.
+          title: Entity Id
+          type: string
+        status:
+          description: "Per-entity outcome. Person tasks return 'queued' (results\
+            \ land asynchronously). Company tasks return 'enriched' (record attached),\
+            \ 'skipped' (no cached identifier), or 'failed' (lookup error / not found)."
+          enum:
+          - queued
+          - enriched
+          - skipped
+          - failed
+          title: Status
+          type: string
+        error:
+          nullable: true
+          type: string
+        company:
+          $ref: "#/components/schemas/CompanyRecord"
+      required:
+      - entity_id
+      - status
+      title: EnrichByTaskEntityResult
+    EnrichByTaskRequest:
+      additionalProperties: false
+      example:
+        data_points:
+        - Email
+        - Phone
+        entity_ids:
+        - prospect_5c8e
+        - prospect_9d21
+        lead_list_id: ll_7f3a2b9c
+        quote_id: quote_c0h0rt
+        task_id: cl-task_8b21f4
+      properties:
+        task_id:
+          description: Task handle from a prior search_people / search_companies /
+            list_leads_in_list call. Org-scoped and time-limited; re-run the search
+            to refresh an expired handle.
+          title: Task Id
+          type: string
+        data_points:
+          description: "Fields to enrich. Person tasks accept Email, Phone, LinkedIn;\
+            \ company tasks accept Industry, Employees, Revenue, Funding, TechStack,\
+            \ Domain. Must match the task's entity type. For person cohorts, Email+Phone\
+            \ → 'full', Phone → 'phone_only', else 'partial'."
+          items:
+            type: string
+          minItems: 1
+          type: array
+        entity_ids:
+          items:
+            type: string
+          nullable: true
+          type: array
+        lead_list_id:
+          nullable: true
+          type: string
+        quote_id:
+          nullable: true
+          type: string
+      required:
+      - data_points
+      - task_id
+      title: EnrichByTaskRequest
+    EnrichByTaskResponse:
+      additionalProperties: false
+      example:
+        agent_instructions: Person cohort queued. Poll status with the workflow_id
+          (or the task_id) until completed; results land in the destination list.
+        credits_reserved: 22
+        entity_kind: person
+        results:
+        - entity_id: prospect_5c8e
+          status: queued
+        - entity_id: prospect_9d21
+          status: queued
+        status: pending
+        task_id: cl-task_8b21f4
+        timestamp_ms: 1751404800000
+        total_entities: 2
+        workflow_id: wf_enrich_7c2a
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        entity_kind:
+          description: Resolved entity type of the task. 'person' → async workflow;
+            'company' → synchronous inline results.
+          enum:
+          - person
+          - company
+          title: Entity Kind
+          type: string
+        workflow_id:
+          nullable: true
+          type: string
+        status:
+          description: '''pending'' for person tasks (workflow running); ''completed''
+            for company tasks (results already attached).'
+          enum:
+          - pending
+          - completed
+          title: Status
+          type: string
+        total_entities:
+          description: Number of cohort entities dispatched for enrichment.
+          title: Total Entities
+          type: integer
+        credits_reserved:
+          description: "Person tasks: upfront reservation cap; the workflow settles\
+            \ with actual usage and refunds the delta. Company tasks: the final billed\
+            \ amount (settled inline)."
+          title: Credits Reserved
+          type: integer
+        results:
+          description: "Per-entity outcomes. Person tasks: all 'queued'. Company tasks:\
+            \ 'enriched'/'skipped'/'failed' with records attached."
+          items:
+            $ref: "#/components/schemas/EnrichByTaskEntityResult"
+          type: array
+      required:
+      - credits_reserved
+      - entity_kind
+      - results
+      - status
+      - total_entities
+      title: EnrichByTaskResponse
+    EnrichCompanyRequest:
+      additionalProperties: false
+      example:
+        company_name: Acme
+        domain: acme.io
+        quote_id: quote_c0mp4ny
+      properties:
+        domain:
+          nullable: true
+          type: string
+        company_name:
+          nullable: true
+          type: string
+        company_ticker:
+          nullable: true
+          type: string
+        company_id:
+          nullable: true
+          type: string
+        quote_id:
+          nullable: true
+          type: string
+      title: EnrichCompanyRequest
+    EnrichCompanyResponse:
+      additionalProperties: false
+      example:
+        company:
+          company_id: company_3f9a
+          domain: acme.io
+          employee_count: 240
+          employee_count_range: 201-500
+          funding_stage: Series B
+          hq_location: "San Francisco, CA, US"
+          industries:
+          - Computer Software
+          - SaaS
+          industry: Computer Software
+          linkedin_url: https://www.linkedin.com/company/acme
+          name: Acme
+          revenue_range: $25M-$50M
+          tech_stack:
+          - React
+          - Python
+          - AWS
+          total_funding_usd: 48000000
+        credits_charged: 1
+        task_id: task_9f2c1a
+        timestamp_ms: 1751404800000
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        company:
+          $ref: "#/components/schemas/CompanyRecord"
+        credits_charged:
+          description: Final credits billed for this lookup (1). Settled inline before
+            the response returns — no reserved-vs-charged ambiguity.
+          title: Credits Charged
+          type: integer
+      required:
+      - company
+      - credits_charged
+      title: EnrichCompanyResponse
+    EnrichListRequest:
+      additionalProperties: false
+      example:
+        list_id: ll_7f3a2b9c
+        quote_id: quote_bulk99
+        scope: full
+      properties:
+        list_id:
+          description: The lead list to enrich in bulk. Every lead in the list runs
+            through the provider waterfall. Must be non-empty and accessible to your
+            API key.
+          title: List Id
+          type: string
+        scope:
+          default: partial
+          description: Enrichment scope per lead. 'partial' = email + LinkedIn + title
+            + company (1 credit); 'phone-only' = phone only (10 credits); 'full' =
+            email AND phone (11 credits).
+          enum:
+          - partial
+          - full
+          - phone-only
+          title: Scope
+          type: string
+        quote_id:
+          description: Required. Obtain via POST /credits/estimate first (bound to
+            this list_id + scope + lead count). Bulk spend must be pre-approved; cost
+            is capped at the quote's max_credits.
+          title: Quote Id
+          type: string
+      required:
+      - list_id
+      - quote_id
+      title: EnrichListRequest
+    EnrichListResponse:
+      additionalProperties: false
+      example:
+        agent_instructions: Bulk enrichment started for 120 leads. Poll poll_url until
+          status is 'completed'; final charge may be lower than credits_reserved (pay-for-results).
+        credits_reserved: 1320
+        estimated_cost: 1320
+        poll_url: https://api.cleanlist.ai/api/v1/public/enrichment/status/wf_enrich_7c2a
+        status: pending
+        task_id: task_9f2c1a
+        timestamp_ms: 1751404800000
+        total_leads: 120
+        workflow_id: wf_enrich_7c2a
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        workflow_id:
+          description: Handle for the bulk enrichment workflow. Poll it via poll_url.
+          title: Workflow Id
+          type: string
+        status:
+          description: Always 'pending' on dispatch — the bulk workflow runs async.
+          enum:
+          - pending
+          title: Status
+          type: string
+        total_leads:
+          description: Number of leads in the list submitted for enrichment.
+          title: Total Leads
+          type: integer
+        estimated_cost:
+          description: "Recomputed cost for the run, capped at the quote's max_credits."
+          title: Estimated Cost
+          type: integer
+        credits_reserved:
+          description: "Upfront reservation cap. Pay-for-results: leads with no email/phone\
+            \ found aren't charged, so settle refunds the unused portion. Poll status\
+            \ for the final debit."
+          title: Credits Reserved
+          type: integer
+        poll_url:
+          description: Fully-qualified URL to poll for aggregate progress and billing.
+          title: Poll Url
+          type: string
+      required:
+      - credits_reserved
+      - estimated_cost
+      - poll_url
+      - status
+      - total_leads
+      - workflow_id
+      title: EnrichListResponse
+    EnrichPersonRequest:
+      additionalProperties: {}
+      example:
+        company_name: Acme
+        domain: acme.io
+        email: jane@acme.io
+        enrichment_type: full
+        first_name: Jane
+        include_phone: true
+        last_name: Doe
+        lead_list_id: ll_7f3a2b9c
+        linkedin_url: https://www.linkedin.com/in/jane-doe-9a1b
+        quote_id: quote_a1b2c3
+      properties:
+        lead_list_id:
+          description: ID of the lead list the enriched contact is written to when
+            the workflow completes. Must be a list your API key can access.
+          title: Lead List Id
+          type: string
+        email:
+          nullable: true
+          type: string
+        linkedin_url:
+          nullable: true
+          type: string
+        phone:
+          nullable: true
+          type: string
+        first_name:
+          nullable: true
+          type: string
+        last_name:
+          nullable: true
+          type: string
+        company_name:
+          nullable: true
+          type: string
+        domain:
+          nullable: true
+          type: string
+        person_id:
+          nullable: true
+          type: string
+        enrichment_type:
+          enum:
+          - partial
+          - phone_only
+          - full
+          nullable: true
+          type: string
+        include_phone:
+          default: false
+          description: "Legacy scope toggle, kept for back-compat. false → 'partial',\
+            \ true → 'phone_only'. Ignored when enrichment_type is set."
+          title: Include Phone
+          type: boolean
+        quote_id:
+          nullable: true
+          type: string
+      required:
+      - lead_list_id
+      title: EnrichPersonRequest
+    EnrichPersonResponse:
+      additionalProperties: false
+      example:
+        agent_instructions: Enrichment started. Poll poll_url until status is 'completed';
+          the enriched contact lands in lead_list_id.
+        credits_reserved: 11
+        lead_list_id: ll_7f3a2b9c
+        poll_url: https://api.cleanlist.ai/api/v1/public/enrichment/status/wf_enrich_7c2a
+        status: pending
+        task_id: task_9f2c1a
+        timestamp_ms: 1751404800000
+        workflow_id: wf_enrich_7c2a
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        workflow_id:
+          description: Handle for the async enrichment workflow. Poll it via poll_url.
+          title: Workflow Id
+          type: string
+        status:
+          description: Always 'pending' on dispatch — the workflow runs asynchronously.
+          enum:
+          - pending
+          title: Status
+          type: string
+        credits_reserved:
+          description: "Upfront credit reservation cap (1/10/11 for partial/phone_only/full).\
+            \ Pay-for-results: the workflow refunds the unused portion at settle,\
+            \ so the final debit may be lower. Poll status for the actual charge."
+          title: Credits Reserved
+          type: integer
+        lead_list_id:
+          description: List the enriched contact will be written to on completion.
+          title: Lead List Id
+          type: string
+        poll_url:
+          description: Fully-qualified URL to poll for workflow status and results.
+          title: Poll Url
+          type: string
+      required:
+      - credits_reserved
+      - lead_list_id
+      - poll_url
+      - status
+      - workflow_id
+      title: EnrichPersonResponse
+    EstimateCostRequest:
+      additionalProperties: {}
+      example:
+        include_phone: true
+        list_id: list_7a1b2c3d
+        scope: full
+        tool: enrich_list
+      properties:
+        tool:
+          description: "Tool to price. Must be a key in the server's cost table (e.g.\
+            \ `enrich_list`, `enrich_person`, `run_smart_agent`, `sync_to_crm`, `add_person_enrichments`).\
+            \ Unknown tools return a 400."
+          title: Tool
+          type: string
+        list_id:
+          nullable: true
+          type: string
+        filters:
+          additionalProperties: false
+          nullable: true
+          type: object
+        row_count:
+          nullable: true
+          type: integer
+        scope:
+          nullable: true
+          type: string
+        agent_type:
+          nullable: true
+          type: string
+        include_phone:
+          default: false
+          description: Legacy boolean that requests phone enrichment when `enrichment_type`/`scope`
+            are not set. Kept for back-compat; prefer `scope`/`enrichment_type`.
+          title: Include Phone
+          type: boolean
+        provider:
+          nullable: true
+          type: string
+        sub_action:
+          nullable: true
+          type: string
+        enrichment_type:
+          nullable: true
+          type: string
+        task_id:
+          nullable: true
+          type: string
+        data_points:
+          items:
+            type: string
+          nullable: true
+          type: array
+        entity_ids:
+          items:
+            type: string
+          nullable: true
+          type: array
+        extra:
+          additionalProperties: false
+          nullable: true
+          type: object
+      required:
+      - tool
+      title: EstimateCostRequest
+    EstimateCostResponse:
+      additionalProperties: {}
+      example:
+        available_credits: 4820
+        estimated_cost: 275
+        expires_at: 1751405100
+        filter_hash: 3f8a1c9d2e4b6a70
+        quote_id: qte_v1_1751404800_9a3f2c1b8e7d6a5f4c3b2a1908f7e6d5c4b3a2910f8e7d6c5b4a3928170
+        row_count: 25
+        sufficient: true
+        tool: enrich_list
+      properties:
+        quote_id:
+          description: "HMAC-signed quote handle (`qte_<kid>_<issued_at>_<sig>`) that\
+            \ the paired paid tool must present at execution time. Single-use and\
+            \ bound to the canonical request (tool, list/filters, scope, row_count,\
+            \ org)."
+          title: Quote Id
+          type: string
+        expires_at:
+          description: "Unix epoch SECONDS at which the quote expires (issue time\
+            \ + `CLEANLIST_QUOTE_TTL_SECONDS`, 5 min default). Re-estimate after this\
+            \ to obtain a fresh quote."
+          title: Expires At
+          type: integer
+        estimated_cost:
+          description: Credits this operation will cost — the authoritative signed
+            spend cap. Execution rejects (`spend_cap_exceeded`) if the recomputed
+            cost would exceed it.
+          title: Estimated Cost
+          type: integer
+        tool:
+          description: Echo of the priced tool.
+          title: Tool
+          type: string
+        row_count:
+          description: "Number of rows/entities the estimate priced — derived from\
+            \ the list or cohort when applicable, not the caller's raw input."
+          title: Row Count
+          type: integer
+        filter_hash:
+          description: Stable digest of the canonical filter/list/cohort shape bound
+            into the quote signature; `none` when there is no filter object.
+          title: Filter Hash
+          type: string
+        available_credits:
+          description: The organization's current credit balance at estimate time.
+          title: Available Credits
+          type: integer
+        sufficient:
+          description: True when `available_credits >= estimated_cost`. False signals
+            the org must top up at billing before the operation can run.
+          title: Sufficient
+          type: boolean
+      required:
+      - available_credits
+      - estimated_cost
+      - expires_at
+      - filter_hash
+      - quote_id
+      - row_count
+      - sufficient
+      - tool
+      title: EstimateCostResponse
+    ExportCsvRequest:
+      additionalProperties: {}
+      example:
+        columns:
+        - first_name
+        - last_name
+        - email
+        - company_domain
+        include_smart_agents: true
+        list_id: list_7c2a91
+      properties:
+        list_id:
+          description: ID of the Lead List to export. Must be a list your API key
+            is authorized to read.
+          title: List Id
+          type: string
+        columns:
+          items:
+            type: string
+          nullable: true
+          type: array
+        include_smart_agents:
+          default: true
+          description: Append the list's configured smart-agent result columns after
+            the selected columns. Set false to export only the base columns.
+          title: Include Smart Agents
+          type: boolean
+      required:
+      - list_id
+      title: ExportCsvRequest
+    ExportCsvResponse:
+      additionalProperties: false
+      example:
+        download_url: https://api.cleanlist.ai/exports/list_7c2a91.csv?sig=Rk9PQkFSc2lnbmF0dXJlLWV4YW1wbGU&exp=1751404800
+        expires_at: 2025-07-01T21:20:00+00:00
+        file_size_bytes: 402118
+        list_id: list_7c2a91
+        row_count: 1284
+      properties:
+        list_id:
+          description: ID of the Lead List that was exported.
+          title: List Id
+          type: string
+        download_url:
+          description: "Time-limited, SAS-signed URL to download the generated CSV\
+            \ file. The signature (`sig`) and expiry (`exp`) query params gate access;\
+            \ the link stops working after `expires_at`."
+          title: Download Url
+          type: string
+        expires_at:
+          description: ISO-8601 UTC timestamp at which `download_url` expires. Generated
+            URLs are valid for 24 hours.
+          title: Expires At
+          type: string
+        row_count:
+          description: Number of data rows written to the CSV (excludes the header
+            row).
+          title: Row Count
+          type: integer
+        file_size_bytes:
+          description: Size of the generated CSV file in bytes.
+          title: File Size Bytes
+          type: integer
+      required:
+      - download_url
+      - expires_at
+      - file_size_bytes
+      - list_id
+      - row_count
+      title: ExportCsvResponse
+    ExportJsonResponse:
+      additionalProperties: {}
+      example:
+        cursor: "100"
+        leads:
+        - company_domain: analytical.io
+          email: ada@analytical.io
+          first_name: Ada
+          last_name: Lovelace
+          lead_id: lead_5f9d2b
+        - company_domain: bletchley.co
+          email: alan@bletchley.co
+          first_name: Alan
+          last_name: Turing
+          lead_id: lead_6a1e4c
+        list_id: list_7c2a91
+        task_id: task_9f2c1a
+        timestamp_ms: 1751404800000
+        total: 1284
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        list_id:
+          description: ID of the Lead List whose leads were returned.
+          title: List Id
+          type: string
+        leads:
+          description: "Page of lead rows returned inline, each projected to the selected\
+            \ (or default) columns. At most `limit` rows are returned per call."
+          items:
+            additionalProperties: false
+            nullable: true
+            type: object
+          type: array
+        total:
+          description: Total number of leads in the list (across all pages).
+          title: Total
+          type: integer
+        cursor:
+          nullable: true
+          type: string
+      required:
+      - leads
+      - list_id
+      - total
+      title: ExportJsonResponse
+    HTTPValidationError:
+      example:
+        detail:
+        - msg: msg
+          loc:
+          - ValidationError_loc_inner
+          - ValidationError_loc_inner
+          type: type
+        - msg: msg
+          loc:
+          - ValidationError_loc_inner
+          - ValidationError_loc_inner
+          type: type
+      properties:
+        detail:
+          items:
+            $ref: "#/components/schemas/ValidationError"
+          type: array
+      title: HTTPValidationError
+    LeadRow:
+      additionalProperties: false
+      example:
+        company: Acme
+        email: jane.doe@acme.io
+        first_name: Jane
+        full_name: Jane Doe
+        last_name: Doe
+        lead_id: lead_5f3b8c
+        location: "San Francisco, California, United States"
+        phone: "+14155550142"
+        title: VP of Sales
+      properties:
+        lead_id:
+          description: Stable lead identifier. Reusable as an add/remove lead_id.
+          title: Lead Id
+          type: string
+        first_name:
+          nullable: true
+          type: string
+        last_name:
+          nullable: true
+          type: string
+        full_name:
+          nullable: true
+          type: string
+        email:
+          nullable: true
+          type: string
+        phone:
+          nullable: true
+          type: string
+        title:
+          nullable: true
+          type: string
+        company:
+          nullable: true
+          type: string
+        location:
+          nullable: true
+          type: string
+        linkedin_url:
+          nullable: true
+          type: string
+        provider:
+          nullable: true
+          type: string
+      required:
+      - lead_id
+      title: LeadRow
+    LeadsPageResponse:
+      additionalProperties: false
+      example:
+        cursor: "100"
+        leads:
+        - company: Acme
+          email: jane.doe@acme.io
+          first_name: Jane
+          full_name: Jane Doe
+          last_name: Doe
+          lead_id: lead_5f3b8c
+          location: "San Francisco, California, United States"
+          phone: "+14155550142"
+          title: VP of Sales
+        list_id: list_7c2a91
+        task_id: task_9f2c1a
+        timestamp_ms: 1751404800000
+        total: 128
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        list_id:
+          description: Identifier of the list these leads belong to.
+          title: List Id
+          type: string
+        leads:
+          description: The page of leads in the list.
+          items:
+            $ref: "#/components/schemas/LeadRow"
+          type: array
+        total:
+          description: Total number of leads in the list across all pages.
+          title: Total
+          type: integer
+        cursor:
+          nullable: true
+          type: string
+      required:
+      - leads
+      - list_id
+      - total
+      title: LeadsPageResponse
+    ListDetailResponse:
+      additionalProperties: {}
+      example:
+        created_at: 2026-06-28T14:32:00Z
+        description: "VPs of Sales at Series B+ SaaS companies, North America."
+        enriched_count: 96
+        folder_id: folder_3d9b12
+        lead_count: 128
+        list_id: list_7c2a91
+        name: Q3 Enterprise SaaS Leads
+        reused: false
+        task_id: task_9f2c1a
+        timestamp_ms: 1751404800000
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        list_id:
+          description: Stable identifier of the list.
+          title: List Id
+          type: string
+        name:
+          description: Display name of the list.
+          title: Name
+          type: string
+        description:
+          nullable: true
+          type: string
+        lead_count:
+          description: Live count of leads in the list (derived from a fresh COUNT).
+          title: Lead Count
+          type: integer
+        enriched_count:
+          description: How many of the leads have been enriched (email/phone found).
+          title: Enriched Count
+          type: integer
+        folder_id:
+          nullable: true
+          type: string
+        created_at:
+          nullable: true
+          type: string
+        reused:
+          default: false
+          description: True only when POST /lead-lists returned a pre-existing same-name
+            list (idempotent reuse). Always false on reads and genuine creates.
+          title: Reused
+          type: boolean
+      required:
+      - enriched_count
+      - lead_count
+      - list_id
+      - name
+      title: ListDetailResponse
+    ListSmartAgentsResponse:
+      additionalProperties: false
+      example:
+        runs:
+        - agent_type: custom_ai
+          column_name: Fit Research
+          created_at: 2026-07-01T20:40:00Z
+          failed: 2
+          list_id: 9c1f7e2a-4b6d-4f21-9a3e-2b7c8d1e5f04
+          processed: 100
+          status: completed
+          task_id: run_7c2a91
+          total: 100
+        - agent_type: cold_intro_email
+          column_name: Cold Intro
+          created_at: 2026-07-01T21:05:00Z
+          failed: 0
+          list_id: 9c1f7e2a-4b6d-4f21-9a3e-2b7c8d1e5f04
+          processed: 18
+          status: processing
+          task_id: run_4b1e77
+          total: 50
+        task_id: task_9f2c1a
+        timestamp_ms: 1751404800000
+        total: 2
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        runs:
+          description: "Smart-agent runs, most recent first, scoped to what the caller\
+            \ can see (a single list when `list_id` is passed, else a rollup across\
+            \ accessible lists)."
+          items:
+            $ref: "#/components/schemas/SmartAgentRun"
+          type: array
+        total:
+          description: Number of runs returned in `runs` (bounded by `limit`).
+          title: Total
+          type: integer
+      required:
+      - runs
+      - total
+      title: ListSmartAgentsResponse
+    ListSummary:
+      additionalProperties: false
+      example:
+        created_at: 2026-06-28T14:32:00Z
+        folder_id: folder_3d9b12
+        lead_count: 128
+        list_id: list_7c2a91
+        name: Q3 Enterprise SaaS Leads
+        owner_name: Jane Doe
+        visibility: organization
+      properties:
+        list_id:
+          description: Stable identifier of the list.
+          title: List Id
+          type: string
+        name:
+          description: Display name of the list.
+          title: Name
+          type: string
+        lead_count:
+          description: Live count of leads currently in the list.
+          title: Lead Count
+          type: integer
+        folder_id:
+          nullable: true
+          type: string
+        created_at:
+          nullable: true
+          type: string
+        owner_name:
+          nullable: true
+          type: string
+        visibility:
+          nullable: true
+          type: string
+      required:
+      - lead_count
+      - list_id
+      - name
+      title: ListSummary
+    ListsPageResponse:
+      additionalProperties: false
+      example:
+        lists:
+        - created_at: 2026-06-28T14:32:00Z
+          folder_id: folder_3d9b12
+          lead_count: 128
+          list_id: list_7c2a91
+          name: Q3 Enterprise SaaS Leads
+          owner_name: Jane Doe
+          visibility: organization
+        - created_at: 2026-06-12T09:05:00Z
+          lead_count: 41
+          list_id: list_4b8e02
+          name: Inbound Trials — June
+          owner_name: Jane Doe
+          visibility: private
+        task_id: task_9f2c1a
+        timestamp_ms: 1751404800000
+        total: 2
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        lists:
+          description: The page of lists accessible to the caller.
+          items:
+            $ref: "#/components/schemas/ListSummary"
+          type: array
+        total:
+          description: Total number of accessible lists across all pages.
+          title: Total
+          type: integer
+        cursor:
+          nullable: true
+          type: string
+      required:
+      - lists
+      - total
+      title: ListsPageResponse
+    PublicLeadListUpdate:
+      additionalProperties: false
+      description: |-
+        PATCH body for renaming / re-describing / re-filing a list.
+
+        All fields optional but at least one must be supplied. PATCH
+        semantics: only the fields PRESENT in the request change. A field
+        set to ``null`` clears it (``description``) or unfiles the list
+        (``folder_id``); a field omitted entirely is left untouched. The
+        omitted-vs-explicit-null distinction is read from
+        ``model_fields_set`` in the handler — which is exactly why
+        ``extra="forbid"`` matters here: an unknown key would otherwise land
+        in that set and be mistaken for a real field change.
+      example:
+        description: Refocused on Series B+ SaaS in EMEA.
+        folder_id: folder_3d9b12
+        name: Q3 Enterprise SaaS Leads (EMEA)
+      properties:
+        name:
+          maxLength: 200
+          minLength: 1
+          nullable: true
+          type: string
+        description:
+          nullable: true
+          type: string
+        folder_id:
+          nullable: true
+          type: string
+      title: PublicLeadListUpdate
+    RemoveLeadsRequest:
+      additionalProperties: false
+      example:
+        lead_ids:
+        - lead_5f3b8c
+        - lead_9d2e71
+      properties:
+        lead_ids:
+          description: Lead UUIDs to remove from the list (max 100 per call). Unknown
+            ids are silently no-op — no 404.
+          items:
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+      required:
+      - lead_ids
+      title: RemoveLeadsRequest
+    RemoveLeadsResponse:
+      additionalProperties: false
+      example:
+        list_id: list_7c2a91
+        removed: 2
+      properties:
+        list_id:
+          description: Identifier of the list leads were removed from.
+          title: List Id
+          type: string
+        removed:
+          description: Number of membership rows actually removed.
+          title: Removed
+          type: integer
+      required:
+      - list_id
+      - removed
+      title: RemoveLeadsResponse
+    RunSmartAgentRequest:
+      additionalProperties: {}
+      example:
+        agent_type: custom_ai
+        column_name: Fit Research
+        lead_scope: subset
+        list_id: 9c1f7e2a-4b6d-4f21-9a3e-2b7c8d1e5f04
+        max_rows: 100
+        overwrite: false
+        prompt: "For each lead, research their company's recent funding rounds and\
+          \ product launches, then write a 2-sentence summary of why they are a strong\
+          \ fit for our sales-automation platform. Only cite facts supported by the\
+          \ available lead and company fields."
+        quote_id: qte_v1_1751404800_a3f9c8e2b7d14f6a9c0e1b2d3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a
+      properties:
+        list_id:
+          description: "UUID of the lead list the agent runs against. Must be a list\
+            \ this API key can access (owned, org-visible, or shared) — a known id\
+            \ for a private list in the same org is rejected with 404."
+          title: List Id
+          type: string
+        agent_type:
+          default: custom_ai
+          description: "Which agent to run. `custom_ai` runs your own `prompt`; `cold_intro_email`\
+            \ drafts a personalized opener from an email template. The preset research\
+            \ agents (`title_normalizer`, `company_intel`, `pain_point_hypothesis`)\
+            \ run a baked-in instruction and ignore `prompt`. All types execute asynchronously\
+            \ as an AI smart column."
+          enum:
+          - custom_ai
+          - cold_intro_email
+          - title_normalizer
+          - company_intel
+          - pain_point_hypothesis
+          title: Agent Type
+          type: string
+        prompt:
+          nullable: true
+          type: string
+        column_name:
+          description: Display name for the new column that stores each lead's agent
+            output. Re-using an existing column name appends to it unless `overwrite=true`
+            is set.
+          maxLength: 100
+          minLength: 1
+          title: Column Name
+          type: string
+        lead_scope:
+          default: subset
+          description: "`subset` runs on up to `max_rows` leads (the fast, cheap path).\
+            \ `all` runs on the entire list, but any `all` run above the configured\
+            \ threshold (default 500 leads) is blocked with a 400 `approval_required`\
+            \ until you narrow scope or route a human approval."
+          enum:
+          - subset
+          - all
+          title: Lead Scope
+          type: string
+        max_rows:
+          default: 100
+          description: Upper bound on how many leads to process when `lead_scope='subset'`.
+            Clamped to the list size. Ignored when `lead_scope='all'`.
+          maximum: 10000.0
+          minimum: 1.0
+          title: Max Rows
+          type: integer
+        quote_id:
+          description: "Single-use spend quote from POST /credits/estimate, signed\
+            \ for this exact request shape (list_id + agent_type + column_name + row\
+            \ count). It is verified and atomically redeemed before the run starts;\
+            \ a stale, mismatched, or already-used quote returns a 400 or 409. Re-quote\
+            \ if you change any field."
+          title: Quote Id
+          type: string
+        overwrite:
+          default: false
+          description: "When true, existing values in a column of the same name are\
+            \ overwritten instead of preserved. Passed through to the workflow via\
+            \ column metadata."
+          title: Overwrite
+          type: boolean
+      required:
+      - column_name
+      - list_id
+      - quote_id
+      title: RunSmartAgentRequest
+    RunSmartAgentResponse:
+      additionalProperties: false
+      description: |-
+        Three identifiers can live on this response (T1-6 ID-space rename):
+
+        - `smart_agent_task_id` — canonical id for polling
+          `get_smart_agent_results`.
+        - `smart_agent_task_ids` — dict keyed by column type when
+          `process_smart_columns` returns multiple underlying task ids.
+        - `task_id` (from EnvelopeFields) — kept populated for back-compat
+          with v1.0 callers that read it from the envelope.
+
+        The three are distinct identifiers. A smart-column run's id is NOT
+        an MCP cohort handle, but the envelope still carries `task_id` for
+        transitional compat. New callers should read `smart_agent_task_id`.
+      example:
+        agent_instructions: Run started over 100 leads. Poll GET /smart-agents/run_7c2a91
+          every few seconds until status is 'completed'. ~100 credits are deducted
+          as rows complete.
+        column_name: Fit Research
+        estimated_cost: 100
+        list_id: 9c1f7e2a-4b6d-4f21-9a3e-2b7c8d1e5f04
+        smart_agent_task_id: run_7c2a91
+        smart_agent_task_ids:
+          custom_ai: run_7c2a91
+        status: pending
+        task_id: task_9f2c1a
+        timestamp_ms: 1751404800000
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        smart_agent_task_id:
+          description: "Canonical run id. Pass this to GET /smart-agents/{id} to poll\
+            \ progress and per-lead results."
+          title: Smart Agent Task Id
+          type: string
+        smart_agent_task_ids:
+          additionalProperties:
+            type: string
+          description: Underlying task ids keyed by column type. Usually a single
+            entry; populated when the run fans out to more than one smart-column task.
+          title: Smart Agent Task Ids
+        status:
+          description: Initial run status; always 'pending' at launch.
+          title: Status
+          type: string
+        list_id:
+          description: UUID of the lead list the run was launched against.
+          title: List Id
+          type: string
+        column_name:
+          description: Name of the column that will hold each lead's output.
+          title: Column Name
+          type: string
+        estimated_cost:
+          description: Credits expected for this run (per-lead rate × row count).
+            Actual debit happens as rows complete and may be lower if leads fail.
+          title: Estimated Cost
+          type: integer
+      required:
+      - column_name
+      - estimated_cost
+      - list_id
+      - smart_agent_task_id
+      - status
+      title: RunSmartAgentResponse
+    SingleEnrichmentResultRead:
+      additionalProperties: false
+      description: |-
+        Inline enriched-lead payload for single-workflow polls.
+
+        Populated by `enrich_status` only when the workflow is a single-
+        lead `enrich_person` run AND has reached a terminal state. Read
+        from the workflow's returned `EnrichmentResult` via Temporal's
+        history — no extra DB round-trip, no race with backend visibility.
+        Bulk-list runs leave `result=None` on the parent response (the
+        aggregate counters carry the cohort's progress instead).
+
+        `status` here is the EnrichmentResult-level outcome
+        ("completed" / "failed"), NOT the outer workflow status. Use it
+        to distinguish a real enrichment (Lead persisted, lead_id set)
+        from a workflow that returned cleanly with no usable Lead (e.g.
+        provider cascade exhausted — `lead_id` will be empty).
+      example:
+        company: Acme
+        email: jane@acme.io
+        email_status: valid
+        enrichment_type: full
+        first_name: Jane
+        full_name: Jane Doe
+        last_name: Doe
+        lead_id: lead_4a7c
+        linkedin_url: https://www.linkedin.com/in/jane-doe-9a1b
+        phone: "+14155550142"
+        provider: wiza
+        status: completed
+        title: VP of Sales
+      properties:
+        lead_id:
+          description: ID of the persisted Lead. Empty when the provider cascade was
+            exhausted with no usable result.
+          title: Lead Id
+          type: string
+        status:
+          description: "EnrichmentResult-level outcome: 'completed' (lead persisted)\
+            \ or 'failed'. Distinct from the outer workflow status."
+          title: Status
+          type: string
+        full_name:
+          nullable: true
+          type: string
+        first_name:
+          nullable: true
+          type: string
+        last_name:
+          nullable: true
+          type: string
+        email:
+          nullable: true
+          type: string
+        email_status:
+          nullable: true
+          type: string
+        phone:
+          nullable: true
+          type: string
+        linkedin_url:
+          nullable: true
+          type: string
+        title:
+          nullable: true
+          type: string
+        company:
+          nullable: true
+          type: string
+        enrichment_type:
+          nullable: true
+          type: string
+        provider:
+          nullable: true
+          type: string
+      required:
+      - lead_id
+      - status
+      title: SingleEnrichmentResultRead
+    SmartAgentResultRow:
+      additionalProperties: {}
+      example:
+        lead_id: b2d4f6a8-1c3e-4d5f-8a9b-0c1d2e3f4a5b
+        value: Acme raised a $40M Series B in Mar 2026 and shipped an AI analytics
+          suite; the VP of Sales owns quota for a 60-rep team — a strong fit for outbound
+          automation.
+      properties:
+        lead_id:
+          description: UUID of the lead this result row belongs to.
+          title: Lead Id
+          type: string
+        value: {}
+        error:
+          nullable: true
+          type: string
+      required:
+      - lead_id
+      title: SmartAgentResultRow
+    SmartAgentResultsResponse:
+      additionalProperties: false
+      example:
+        failed: 2
+        progress: 100
+        results:
+        - lead_id: b2d4f6a8-1c3e-4d5f-8a9b-0c1d2e3f4a5b
+          value: Acme raised a $40M Series B in Mar 2026 and shipped an AI analytics
+            suite; the VP of Sales owns quota for a 60-rep team — a strong fit for
+            outbound automation.
+        - error: No company domain on lead; skipped research.
+          lead_id: d4f6a8b2-3e1c-4d5f-9a8b-1c2d3e4f5a6b
+        smart_agent_task_id: run_7c2a91
+        status: completed
+        succeeded: 98
+        task_id: task_9f2c1a
+        timestamp_ms: 1751404800000
+        total: 100
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        smart_agent_task_id:
+          description: The run id being polled (echoes the path parameter).
+          title: Smart Agent Task Id
+          type: string
+        status:
+          description: "Run lifecycle state: `pending`, `processing`, `completed`,\
+            \ or `failed`."
+          title: Status
+          type: string
+        progress:
+          description: "Percent complete (0–100), derived from processed / total."
+          title: Progress
+          type: integer
+        total:
+          description: Total leads scheduled for this run.
+          title: Total
+          type: integer
+        succeeded:
+          description: Leads that produced a value without error.
+          title: Succeeded
+          type: integer
+        failed:
+          description: Leads that errored during processing.
+          title: Failed
+          type: integer
+        results:
+          description: Per-lead output rows attributed to this run. May be empty while
+            the run is still starting up.
+          items:
+            $ref: "#/components/schemas/SmartAgentResultRow"
+          type: array
+      required:
+      - failed
+      - progress
+      - results
+      - smart_agent_task_id
+      - status
+      - succeeded
+      - total
+      title: SmartAgentResultsResponse
+    SmartAgentRun:
+      additionalProperties: false
+      example:
+        agent_type: custom_ai
+        column_name: Fit Research
+        created_at: 2026-07-01T20:40:00Z
+        failed: 2
+        list_id: 9c1f7e2a-4b6d-4f21-9a3e-2b7c8d1e5f04
+        processed: 100
+        status: completed
+        task_id: run_7c2a91
+        total: 100
+      properties:
+        task_id:
+          description: "Run id for this smart-agent run — poll it via GET /smart-agents/{id}."
+          title: Task Id
+          type: string
+        list_id:
+          description: UUID of the lead list this run targeted.
+          title: List Id
+          type: string
+        column_name:
+          description: Name of the column the run wrote its output to.
+          title: Column Name
+          type: string
+        agent_type:
+          description: "Agent / smart-column type the run executed as (e.g. `custom_ai`,\
+            \ `cold_intro_email`)."
+          title: Agent Type
+          type: string
+        status:
+          description: "Lifecycle state: `pending`, `processing`, `completed`, or\
+            \ `failed`."
+          title: Status
+          type: string
+        total:
+          default: 0
+          description: Total leads scheduled for this run.
+          title: Total
+          type: integer
+        processed:
+          default: 0
+          description: Leads processed so far (succeeded + failed).
+          title: Processed
+          type: integer
+        failed:
+          default: 0
+          description: Leads that errored during processing.
+          title: Failed
+          type: integer
+        created_at:
+          nullable: true
+          type: string
+      required:
+      - agent_type
+      - column_name
+      - list_id
+      - status
+      - task_id
+      title: SmartAgentRun
+    UsageGroupRow:
+      additionalProperties: false
+      example:
+        calls: 142
+        credits_spent: 0.0
+        errors: 3
+        group: /api/v1/public/enrichment/by-list
+      properties:
+        group:
+          description: "Bucket label for this row, per the requested `group_by`: the\
+            \ tool/path, key id, day, or error class."
+          title: Group
+          type: string
+        calls:
+          description: Number of API calls counted in this bucket over the window.
+          title: Calls
+          type: integer
+        credits_spent:
+          description: Credits spent in this bucket. Float because per-lead agents
+            can cost fractional credits (e.g. 0.5). Currently 0.0 until the request
+            log gains a per-row cost column.
+          title: Credits Spent
+          type: number
+        errors:
+          description: Number of error (non-2xx) responses counted in this bucket.
+          title: Errors
+          type: integer
+      required:
+      - calls
+      - credits_spent
+      - errors
+      - group
+      title: UsageGroupRow
+    UsageReportResponse:
+      additionalProperties: false
+      example:
+        days: 7
+        group_by: tool
+        rows:
+        - calls: 142
+          credits_spent: 0.0
+          errors: 3
+          group: /api/v1/public/enrichment/by-list
+        - calls: 176
+          credits_spent: 0.0
+          errors: 2
+          group: /api/v1/public/search/people
+        total_calls: 318
+        total_credits_spent: 0.0
+        total_errors: 5
+      properties:
+        days:
+          description: Length of the reporting window in days (as requested).
+          title: Days
+          type: integer
+        group_by:
+          description: "Dimension the rows are grouped by: `tool`, `key`, `day`, or\
+            \ `error`."
+          title: Group By
+          type: string
+        total_calls:
+          description: Total API calls across all buckets in the window.
+          title: Total Calls
+          type: integer
+        total_credits_spent:
+          description: Total credits spent across all buckets. Currently 0.0 until
+            the request log gains a per-row cost column.
+          title: Total Credits Spent
+          type: number
+        total_errors:
+          description: Total error (non-2xx) responses across all buckets.
+          title: Total Errors
+          type: integer
+        rows:
+          description: Per-bucket usage rows for the requested `group_by` dimension.
+          items:
+            $ref: "#/components/schemas/UsageGroupRow"
+          type: array
+      required:
+      - days
+      - group_by
+      - rows
+      - total_calls
+      - total_credits_spent
+      - total_errors
+      title: UsageReportResponse
+    ValidationError:
+      example:
+        msg: msg
+        loc:
+        - ValidationError_loc_inner
+        - ValidationError_loc_inner
+        type: type
+      properties:
+        loc:
+          items:
+            $ref: "#/components/schemas/ValidationError_loc_inner"
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    WhoamiResponse:
+      additionalProperties: {}
+      example:
+        agent_instructions: "You have 4,820 credits remaining."
+        auth_type: api_key
+        features:
+        - data_source_csv_upload
+        - enrich_email
+        - enrich_phone
+        - search_people
+        - sync_to_crm
+        organization_id: org_2abcRevenueLabs
+        organization_name: Acme Revenue Labs
+        scopes:
+        - credits:read
+        - search:read
+        - lists:write
+        - enrichment:write
+        task_id: task_9f2c1a
+        tier: pro
+        timestamp_ms: 1751404800000
+        user_email: jordan@acme.io
+        user_id: user_2abcJ0rdanRivera
+        user_name: Jordan Rivera
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        user_email:
+          nullable: true
+          type: string
+        user_id:
+          nullable: true
+          type: string
+        user_name:
+          nullable: true
+          type: string
+        organization_id:
+          description: Cleanlist organization id that owns this session's credits
+            and lists.
+          title: Organization Id
+          type: string
+        organization_name:
+          nullable: true
+          type: string
+        auth_type:
+          description: "How the caller authenticated: `clerk_jwt` (portal session\
+            \ token), `api_key` (a `clapi_` bearer key), or `oauth` (third-party grant)."
+          enum:
+          - clerk_jwt
+          - api_key
+          - oauth
+          title: Auth Type
+          type: string
+        scopes:
+          description: "Granted permission scopes for this credential (per-user Clerk\
+            \ `publicMetadata.cleanlist_scopes`). Endpoints gate on these — e.g. `credits:read`,\
+            \ `search:read`, `lists:write`, `enrichment:write`, `admin:api_keys`."
+          items:
+            nullable: true
+            type: string
+          type: array
+        tier:
+          description: Resolved plan tier from the org's Stripe `credits_product_id`
+            (V2 'Scale' buyers map to `enterprise`). The MCP reads this once per session
+            to tier-filter its advertised tool list. Unknown / unmapped products fall
+            through to `free` (the safe default).
+          enum:
+          - free
+          - starter
+          - pro
+          - enterprise
+          title: Tier
+          type: string
+        appsumo_tier:
+          nullable: true
+          type: integer
+        features:
+          description: "EFFECTIVE feature grants the gates actually enforce: base\
+            \ Stripe tier ∪ AppSumo carve-outs − AppSumo blocks (via `has_feature_effective`).\
+            \ Sourced from the same function the server-side gate uses so the advertised\
+            \ list and the gate can't drift. Sorted alphabetically for stable diffs."
+          items:
+            nullable: true
+            type: string
+          type: array
+      required:
+      - auth_type
+      - features
+      - organization_id
+      - scopes
+      - tier
+      - user_email
+      title: WhoamiResponse
+    WorkflowStatusResponse:
+      additionalProperties: {}
+      example:
+        completed: 1
+        credits_charged: 11
+        credits_refunded: 0
+        enrichment_type: full
+        failed: 0
+        lead_list_id: ll_7f3a2b9c
+        processed: 1
+        progress: 100
+        refund_status: not_applicable
+        result:
+          company: Acme
+          email: jane@acme.io
+          email_status: valid
+          enrichment_type: full
+          first_name: Jane
+          full_name: Jane Doe
+          last_name: Doe
+          lead_id: lead_4a7c
+          linkedin_url: https://www.linkedin.com/in/jane-doe-9a1b
+          phone: "+14155550142"
+          provider: wiza
+          status: completed
+          title: VP of Sales
+        status: completed
+        summary:
+          emails_found: 1
+          phones_found: 1
+        task_id: task_9f2c1a
+        timestamp_ms: 1751404800000
+        total: 1
+        workflow_id: wf_enrich_7c2a
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        workflow_id:
+          description: The workflow (or cohort task) handle being polled.
+          title: Workflow Id
+          type: string
+        status:
+          description: "Outer workflow status: e.g. 'pending', 'running', 'completed',\
+            \ 'failed', 'cancelled'."
+          title: Status
+          type: string
+        progress:
+          nullable: true
+          type: integer
+        total:
+          nullable: true
+          type: integer
+        processed:
+          nullable: true
+          type: integer
+        completed:
+          nullable: true
+          type: integer
+        failed:
+          nullable: true
+          type: integer
+        enrichment_type:
+          nullable: true
+          type: string
+        lead_list_id:
+          nullable: true
+          type: string
+        summary:
+          additionalProperties: false
+          nullable: true
+          type: object
+        refund_status:
+          enum:
+          - not_applicable
+          - pending_review
+          nullable: true
+          type: string
+        refund_message:
+          nullable: true
+          type: string
+        result:
+          $ref: "#/components/schemas/SingleEnrichmentResultRead"
+        credits_charged:
+          nullable: true
+          type: integer
+        credits_refunded:
+          nullable: true
+          type: integer
+      required:
+      - status
+      - workflow_id
+      title: WorkflowStatusResponse
+    Body:
+      oneOf:
+      - $ref: "#/components/schemas/AddByLeadIds"
+      - $ref: "#/components/schemas/AddByCohort"
+      title: Body
+    ValidationError_loc_inner:
+      anyOf:
+      - type: string
+      - type: integer
+  securitySchemes:
+    HTTPBearer:
+      scheme: bearer
+      type: http
+

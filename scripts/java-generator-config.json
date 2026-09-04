@@ -1,0 +1,23 @@
+{
+  "additionalProperties": {
+    "library": "okhttp-gson",
+    "groupId": "ai.cleanlist",
+    "artifactId": "cleanlist-java",
+    "artifactVersion": "2.0.0",
+    "invokerPackage": "ai.cleanlist.client",
+    "apiPackage": "ai.cleanlist.client.api",
+    "modelPackage": "ai.cleanlist.client.model",
+    "hideGenerationTimestamp": true,
+    "artifactDescription": "Official Java SDK for the Cleanlist API (v2) — B2B lead discovery, enrichment, lists, smart agents, and export.",
+    "artifactUrl": "https://github.com/Cleanlist-ai/cleanlist-java-client",
+    "licenseName": "MIT",
+    "licenseUrl": "https://opensource.org/licenses/MIT",
+    "scmConnection": "scm:git:git://github.com/Cleanlist-ai/cleanlist-java-client.git",
+    "scmDeveloperConnection": "scm:git:ssh://github.com:Cleanlist-ai/cleanlist-java-client.git",
+    "scmUrl": "https://github.com/Cleanlist-ai/cleanlist-java-client",
+    "developerName": "Cleanlist",
+    "developerEmail": "sal@cleanlist.ai",
+    "developerOrganization": "Cleanlist",
+    "developerOrganizationUrl": "https://cleanlist.ai"
+  }
+}
