@@ -29,9 +29,7 @@ import java.io.IOException;
 
 import ai.cleanlist.client.model.ApiKeysResponse;
 import ai.cleanlist.client.model.CreditsBalanceResponse;
-import ai.cleanlist.client.model.EstimateCostRequest;
-import ai.cleanlist.client.model.EstimateCostResponse;
-import ai.cleanlist.client.model.HTTPValidationError;
+import ai.cleanlist.client.model.PublicApiError;
 import ai.cleanlist.client.model.UsageReportResponse;
 import ai.cleanlist.client.model.WhoamiResponse;
 
@@ -88,6 +86,15 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call creditsBalanceCall(final ApiCallback _callback) throws ApiException {
@@ -150,6 +157,15 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
      </table>
      */
     public CreditsBalanceResponse creditsBalance() throws ApiException {
@@ -167,6 +183,15 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<CreditsBalanceResponse> creditsBalanceWithHttpInfo() throws ApiException {
@@ -186,143 +211,21 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call creditsBalanceAsync(final ApiCallback<CreditsBalanceResponse> _callback) throws ApiException {
 
         okhttp3.Call localVarCall = creditsBalanceValidateBeforeCall(_callback);
         Type localVarReturnType = new TypeToken<CreditsBalanceResponse>(){}.getType();
-        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
-        return localVarCall;
-    }
-    /**
-     * Build call for creditsEstimate
-     * @param estimateCostRequest  (required)
-     * @param _callback Callback for upload/download progress
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     * @http.response.details
-     <table border="1">
-       <caption>Response Details</caption>
-        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
-     </table>
-     */
-    public okhttp3.Call creditsEstimateCall(@javax.annotation.Nonnull EstimateCostRequest estimateCostRequest, final ApiCallback _callback) throws ApiException {
-        String basePath = null;
-        // Operation Servers
-        String[] localBasePaths = new String[] {  };
-
-        // Determine Base Path to Use
-        if (localCustomBaseUrl != null){
-            basePath = localCustomBaseUrl;
-        } else if ( localBasePaths.length > 0 ) {
-            basePath = localBasePaths[localHostIndex];
-        } else {
-            basePath = null;
-        }
-
-        Object localVarPostBody = estimateCostRequest;
-
-        // create path and map variables
-        String localVarPath = "/api/v2/credits/estimate";
-
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-        Map<String, String> localVarCookieParams = new HashMap<String, String>();
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-        final String[] localVarAccepts = {
-            "application/json"
-        };
-        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) {
-            localVarHeaderParams.put("Accept", localVarAccept);
-        }
-
-        final String[] localVarContentTypes = {
-            "application/json"
-        };
-        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
-        if (localVarContentType != null) {
-            localVarHeaderParams.put("Content-Type", localVarContentType);
-        }
-
-        String[] localVarAuthNames = new String[] { "HTTPBearer" };
-        return localVarApiClient.buildCall(basePath, localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private okhttp3.Call creditsEstimateValidateBeforeCall(@javax.annotation.Nonnull EstimateCostRequest estimateCostRequest, final ApiCallback _callback) throws ApiException {
-        // verify the required parameter 'estimateCostRequest' is set
-        if (estimateCostRequest == null) {
-            throw new ApiException("Missing the required parameter 'estimateCostRequest' when calling creditsEstimate(Async)");
-        }
-
-        return creditsEstimateCall(estimateCostRequest, _callback);
-
-    }
-
-    /**
-     * Estimate cost &amp; get a signed quote
-     * Pre-flight a paid operation and mint a signed, single-use &#x60;quote_id&#x60;. The quote binds the canonical request (tool, list_id|filters|cohort, scope, row_count, org) via HMAC and must be presented at execution time by every paid bulk tool (&#x60;enrich_list&#x60;, &#x60;run_smart_agent&#x60;, &#x60;sync_to_crm&#x60;, &#x60;sync_to_sequencer&#x60;, cohort enrichments). Row count is derived authoritatively from the list or cohort — never trusted from the caller — so a small quote can&#39;t be replayed against a large job. Requires the &#x60;credits:read&#x60; scope; estimating itself is free, and the response reports whether the org has &#x60;sufficient&#x60; credits to proceed.  **📖 Docs:** https://docs.cleanlist.ai/api-reference/credits
-     * @param estimateCostRequest  (required)
-     * @return EstimateCostResponse
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     * @http.response.details
-     <table border="1">
-       <caption>Response Details</caption>
-        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
-     </table>
-     */
-    public EstimateCostResponse creditsEstimate(@javax.annotation.Nonnull EstimateCostRequest estimateCostRequest) throws ApiException {
-        ApiResponse<EstimateCostResponse> localVarResp = creditsEstimateWithHttpInfo(estimateCostRequest);
-        return localVarResp.getData();
-    }
-
-    /**
-     * Estimate cost &amp; get a signed quote
-     * Pre-flight a paid operation and mint a signed, single-use &#x60;quote_id&#x60;. The quote binds the canonical request (tool, list_id|filters|cohort, scope, row_count, org) via HMAC and must be presented at execution time by every paid bulk tool (&#x60;enrich_list&#x60;, &#x60;run_smart_agent&#x60;, &#x60;sync_to_crm&#x60;, &#x60;sync_to_sequencer&#x60;, cohort enrichments). Row count is derived authoritatively from the list or cohort — never trusted from the caller — so a small quote can&#39;t be replayed against a large job. Requires the &#x60;credits:read&#x60; scope; estimating itself is free, and the response reports whether the org has &#x60;sufficient&#x60; credits to proceed.  **📖 Docs:** https://docs.cleanlist.ai/api-reference/credits
-     * @param estimateCostRequest  (required)
-     * @return ApiResponse&lt;EstimateCostResponse&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     * @http.response.details
-     <table border="1">
-       <caption>Response Details</caption>
-        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
-     </table>
-     */
-    public ApiResponse<EstimateCostResponse> creditsEstimateWithHttpInfo(@javax.annotation.Nonnull EstimateCostRequest estimateCostRequest) throws ApiException {
-        okhttp3.Call localVarCall = creditsEstimateValidateBeforeCall(estimateCostRequest, null);
-        Type localVarReturnType = new TypeToken<EstimateCostResponse>(){}.getType();
-        return localVarApiClient.execute(localVarCall, localVarReturnType);
-    }
-
-    /**
-     * Estimate cost &amp; get a signed quote (asynchronously)
-     * Pre-flight a paid operation and mint a signed, single-use &#x60;quote_id&#x60;. The quote binds the canonical request (tool, list_id|filters|cohort, scope, row_count, org) via HMAC and must be presented at execution time by every paid bulk tool (&#x60;enrich_list&#x60;, &#x60;run_smart_agent&#x60;, &#x60;sync_to_crm&#x60;, &#x60;sync_to_sequencer&#x60;, cohort enrichments). Row count is derived authoritatively from the list or cohort — never trusted from the caller — so a small quote can&#39;t be replayed against a large job. Requires the &#x60;credits:read&#x60; scope; estimating itself is free, and the response reports whether the org has &#x60;sufficient&#x60; credits to proceed.  **📖 Docs:** https://docs.cleanlist.ai/api-reference/credits
-     * @param estimateCostRequest  (required)
-     * @param _callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
-     * @http.response.details
-     <table border="1">
-       <caption>Response Details</caption>
-        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
-     </table>
-     */
-    public okhttp3.Call creditsEstimateAsync(@javax.annotation.Nonnull EstimateCostRequest estimateCostRequest, final ApiCallback<EstimateCostResponse> _callback) throws ApiException {
-
-        okhttp3.Call localVarCall = creditsEstimateValidateBeforeCall(estimateCostRequest, _callback);
-        Type localVarReturnType = new TypeToken<EstimateCostResponse>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
     }
@@ -336,6 +239,15 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call listApiKeysCall(final ApiCallback _callback) throws ApiException {
@@ -398,6 +310,15 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
      </table>
      */
     public ApiKeysResponse listApiKeys() throws ApiException {
@@ -415,6 +336,15 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<ApiKeysResponse> listApiKeysWithHttpInfo() throws ApiException {
@@ -434,6 +364,15 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call listApiKeysAsync(final ApiCallback<ApiKeysResponse> _callback) throws ApiException {
@@ -455,7 +394,15 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call usageReportCall(@javax.annotation.Nullable Integer days, @javax.annotation.Nullable String groupBy, final ApiCallback _callback) throws ApiException {
@@ -528,7 +475,15 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public UsageReportResponse usageReport(@javax.annotation.Nullable Integer days, @javax.annotation.Nullable String groupBy) throws ApiException {
@@ -548,7 +503,15 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<UsageReportResponse> usageReportWithHttpInfo(@javax.annotation.Nullable Integer days, @javax.annotation.Nullable String groupBy) throws ApiException {
@@ -570,7 +533,15 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call usageReportAsync(@javax.annotation.Nullable Integer days, @javax.annotation.Nullable String groupBy, final ApiCallback<UsageReportResponse> _callback) throws ApiException {
@@ -590,6 +561,15 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call whoamiCall(final ApiCallback _callback) throws ApiException {
@@ -652,6 +632,15 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
      </table>
      */
     public WhoamiResponse whoami() throws ApiException {
@@ -669,6 +658,15 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<WhoamiResponse> whoamiWithHttpInfo() throws ApiException {
@@ -688,6 +686,15 @@ public class PublicWorkspaceApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call whoamiAsync(final ApiCallback<WhoamiResponse> _callback) throws ApiException {

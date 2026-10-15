@@ -25,7 +25,7 @@
 |**refundStatus** | [**RefundStatusEnum**](#RefundStatusEnum) |  |  [optional] |
 |**refundMessage** | **String** |  |  [optional] |
 |**result** | [**SingleEnrichmentResultRead**](SingleEnrichmentResultRead.md) |  |  [optional] |
-|**creditsCharged** | **Integer** |  |  [optional] |
+|**creditsCharged** | **BigDecimal** |  |  [optional] |
 |**creditsRefunded** | **Integer** |  |  [optional] |
 
 

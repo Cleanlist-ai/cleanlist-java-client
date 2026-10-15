@@ -1,13 +1,14 @@
 /*
- * The estimate -> quote -> bulk-enrich credit flow.
+ * The quote -> bulk-enrich credit flow.
  *
- * Bulk ops must be pre-priced: creditsEstimate returns a signed, single-use quoteId
- * that enrichList redeems. The quote caps the spend.
+ * Bulk ops must be pre-priced: enrichList redeems a signed, single-use quoteId (bound to
+ * the list + scope + lead count). The quote caps the spend. The pricing endpoint
+ * (POST /api/v2/credits/estimate) is no longer part of the public API spec, so this
+ * SDK cannot request a quote — pass one you already have.
  *
- * ⚠️ Spends credits for every lead in the list. Stops before dispatch if the balance
- * is insufficient, and prints the cost first.
+ * ⚠️ Spends credits for every lead in the list.
  *
- *   mvn -q exec:java -Dexec.mainClass="examples.BulkEnrichWithQuote" -Dexec.args="<list_id>"
+ *   mvn -q exec:java -Dexec.mainClass="examples.BulkEnrichWithQuote" -Dexec.args="<list_id> <quote_id>"
  */
 package examples;
 
@@ -17,34 +18,26 @@ import ai.cleanlist.client.ApiException;
 import ai.cleanlist.client.Cleanlist;
 import ai.cleanlist.client.model.EnrichListRequest;
 import ai.cleanlist.client.model.EnrichListResponse;
-import ai.cleanlist.client.model.EstimateCostRequest;
-import ai.cleanlist.client.model.EstimateCostResponse;
 import ai.cleanlist.client.model.WorkflowStatusResponse;
 
 public class BulkEnrichWithQuote {
     private static final Set<String> TERMINAL = Set.of("completed", "failed", "cancelled");
 
     public static void main(String[] args) throws ApiException, InterruptedException {
-        if (args.length < 1) {
-            System.err.println("Usage: BulkEnrichWithQuote <list_id>");
+        if (args.length < 2) {
+            System.err.println("Usage: BulkEnrichWithQuote <list_id> <quote_id>");
             System.exit(1);
         }
         String listId = args[0];
+        String quoteId = args[1];
         Cleanlist cl = Cleanlist.fromEnv();
 
-        // 1. Price it.
-        EstimateCostResponse quote = cl.workspace.creditsEstimate(
-                new EstimateCostRequest().tool("enrich_list").listId(listId).scope("full"));
-        System.out.printf("Estimate: %d credits for %d leads (you have %d, sufficient=%b)%n",
-                quote.getEstimatedCost(), quote.getRowCount(), quote.getAvailableCredits(), quote.getSufficient());
-        if (!Boolean.TRUE.equals(quote.getSufficient())) {
-            System.err.println("Not enough credits — top up at app.cleanlist.ai/billing.");
-            System.exit(1);
-        }
+        // 1. Show the balance before spending.
+        System.out.println("Balance: " + cl.workspace.creditsBalance());
 
         // 2. Redeem the quote.
         EnrichListResponse run = cl.enrichment.enrichList(new EnrichListRequest()
-                .listId(listId).scope(EnrichListRequest.ScopeEnum.FULL).quoteId(quote.getQuoteId()));
+                .listId(listId).scope(EnrichListRequest.ScopeEnum.FULL).quoteId(quoteId));
         System.out.println("Bulk workflow dispatched: " + run.getWorkflowId());
 
         // 3. Poll.

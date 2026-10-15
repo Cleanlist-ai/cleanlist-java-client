@@ -77,7 +77,15 @@ public class Example {
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 
 <a id="enrichCompany"></a>
 # **enrichCompany**
@@ -145,7 +153,15 @@ public class Example {
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 
 <a id="enrichList"></a>
 # **enrichList**
@@ -213,7 +229,15 @@ public class Example {
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 
 <a id="enrichPerson"></a>
 # **enrichPerson**
@@ -281,7 +305,15 @@ public class Example {
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 
 <a id="enrichmentStatus"></a>
 # **enrichmentStatus**
@@ -349,5 +381,13 @@ public class Example {
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 

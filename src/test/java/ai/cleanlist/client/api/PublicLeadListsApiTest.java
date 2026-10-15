@@ -20,10 +20,13 @@ import ai.cleanlist.client.model.CreateListRequest;
 import ai.cleanlist.client.model.CsvImportRequest;
 import ai.cleanlist.client.model.CsvImportResponse;
 import ai.cleanlist.client.model.DeleteListResponse;
-import ai.cleanlist.client.model.HTTPValidationError;
+import ai.cleanlist.client.model.FindPeopleRequest;
+import ai.cleanlist.client.model.FindPeopleResponse;
+import ai.cleanlist.client.model.FindPeopleStatusResponse;
 import ai.cleanlist.client.model.LeadsPageResponse;
 import ai.cleanlist.client.model.ListDetailResponse;
 import ai.cleanlist.client.model.ListsPageResponse;
+import ai.cleanlist.client.model.PublicApiError;
 import ai.cleanlist.client.model.PublicLeadListUpdate;
 import ai.cleanlist.client.model.RemoveLeadsRequest;
 import ai.cleanlist.client.model.RemoveLeadsResponse;
@@ -98,6 +101,36 @@ public class PublicLeadListsApiTest {
     public void deleteListTest() throws ApiException {
         String listId = null;
         DeleteListResponse response = api.deleteList(listId);
+        // TODO: test validations
+    }
+
+    /**
+     * Find people at companies already in a list and import them (async)
+     *
+     * Start an async job that finds people at the given companies (which must already belong to &#x60;&#x60;list_id&#x60;&#x60;) and imports them into that list.  Returns a &#x60;&#x60;workflow_id&#x60;&#x60; immediately; poll &#x60;&#x60;poll_url&#x60;&#x60; (GET /lead-lists/{list_id}/find-people/status/{workflow_id}) until &#x60;&#x60;status&#x60;&#x60; is terminal. Discovery is free; imports bill the standard per-new-lead cost.
+     *
+     * @throws ApiException if the Api call fails
+     */
+    @Test
+    public void findPeopleTest() throws ApiException {
+        String listId = null;
+        FindPeopleRequest findPeopleRequest = null;
+        FindPeopleResponse response = api.findPeople(listId, findPeopleRequest);
+        // TODO: test validations
+    }
+
+    /**
+     * Poll a find-people job
+     *
+     * Poll a find-people job started by &#x60;&#x60;POST /lead-lists/{list_id}/find-people&#x60;&#x60;. Free and idempotent — call until &#x60;&#x60;status&#x60;&#x60; is terminal (&#x60;&#x60;completed&#x60;&#x60; / &#x60;&#x60;failed&#x60;&#x60; / &#x60;&#x60;cancelled&#x60;&#x60;). Cross-tenant workflow ids fail closed as 404. &#x60;&#x60;list_id&#x60;&#x60; is for path nesting; the lookup is by &#x60;&#x60;workflow_id&#x60;&#x60; + org.
+     *
+     * @throws ApiException if the Api call fails
+     */
+    @Test
+    public void findPeopleStatusTest() throws ApiException {
+        String listId = null;
+        String workflowId = null;
+        FindPeopleStatusResponse response = api.findPeopleStatus(listId, workflowId);
         // TODO: test validations
     }
 

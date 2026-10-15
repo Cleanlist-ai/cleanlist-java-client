@@ -17,7 +17,7 @@ import ai.cleanlist.client.ApiException;
 import ai.cleanlist.client.model.ExportCsvRequest;
 import ai.cleanlist.client.model.ExportCsvResponse;
 import ai.cleanlist.client.model.ExportJsonResponse;
-import ai.cleanlist.client.model.HTTPValidationError;
+import ai.cleanlist.client.model.PublicApiError;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

@@ -71,6 +71,14 @@ public class RunSmartAgentRequestTest {
     }
 
     /**
+     * Test the property 'templateId'
+     */
+    @Test
+    public void templateIdTest() {
+        // TODO: test templateId
+    }
+
+    /**
      * Test the property 'leadScope'
      */
     @Test

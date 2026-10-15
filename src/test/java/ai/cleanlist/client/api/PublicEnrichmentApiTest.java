@@ -22,7 +22,7 @@ import ai.cleanlist.client.model.EnrichListRequest;
 import ai.cleanlist.client.model.EnrichListResponse;
 import ai.cleanlist.client.model.EnrichPersonRequest;
 import ai.cleanlist.client.model.EnrichPersonResponse;
-import ai.cleanlist.client.model.HTTPValidationError;
+import ai.cleanlist.client.model.PublicApiError;
 import ai.cleanlist.client.model.WorkflowStatusResponse;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

@@ -16,9 +16,11 @@ tags:
   name: Public Lead Lists
 - description: Enrichment operations
   name: Public Enrichment
+- description: Find people by filters or find employees by company
+  name: Public People Finder
 - description: Smart agent runs
   name: Public Smart Agents
-- description: Data export
+- description: Export
   name: Public Export
 paths:
   /api/v2/whoami:
@@ -42,6 +44,60 @@ paths:
               schema:
                 $ref: "#/components/schemas/WhoamiResponse"
           description: Successful Response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
       security:
       - HTTPBearer: []
       summary: Get current identity & entitlements
@@ -68,53 +124,65 @@ paths:
               schema:
                 $ref: "#/components/schemas/CreditsBalanceResponse"
           description: Successful Response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
       security:
       - HTTPBearer: []
       summary: Get credit balance
       tags:
       - Public Workspace
-      x-accepts:
-      - application/json
-  /api/v2/credits/estimate:
-    post:
-      description: |-
-        Pre-flight a paid operation and mint a signed, single-use `quote_id`.
-        The quote binds the canonical request (tool, list_id|filters|cohort, scope,
-        row_count, org) via HMAC and must be presented at execution time by every
-        paid bulk tool (`enrich_list`, `run_smart_agent`, `sync_to_crm`,
-        `sync_to_sequencer`, cohort enrichments). Row count is derived
-        authoritatively from the list or cohort — never trusted from the caller —
-        so a small quote can't be replayed against a large job. Requires the
-        `credits:read` scope; estimating itself is free, and the response reports
-        whether the org has `sufficient` credits to proceed.
-
-        **📖 Docs:** https://docs.cleanlist.ai/api-reference/credits
-      operationId: credits_estimate
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/EstimateCostRequest"
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/EstimateCostResponse"
-          description: Successful Response
-        "422":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
-      security:
-      - HTTPBearer: []
-      summary: Estimate cost & get a signed quote
-      tags:
-      - Public Workspace
-      x-content-type: application/json
       x-accepts:
       - application/json
   /api/v2/api-keys:
@@ -136,6 +204,60 @@ paths:
               schema:
                 $ref: "#/components/schemas/ApiKeysResponse"
           description: Successful Response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
       security:
       - HTTPBearer: []
       summary: List API keys
@@ -193,8 +315,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Get usage report
@@ -254,8 +424,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: List lead lists
@@ -294,12 +512,66 @@ paths:
               schema:
                 $ref: "#/components/schemas/ListDetailResponse"
           description: Successful Response
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListDetailResponse"
+          description: Existing same-name list reused (idempotent); `reused` is true.
         "422":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Create a lead list
@@ -350,8 +622,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Delete a lead list
@@ -394,8 +714,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Get a lead list
@@ -444,8 +812,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Update a lead list
@@ -495,8 +911,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Remove leads from a list
@@ -559,8 +1023,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: List leads in a list
@@ -615,8 +1127,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Add leads to a list
@@ -690,14 +1250,700 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Import leads from CSV
       tags:
       - Public Lead Lists
       x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/people/find/filters:
+    get:
+      description: |-
+        Valid filter values for people search. ZERO CREDITS.
+
+        Fixed-enum fields (seniority, management_levels, departments,
+        job_functions, company_headcount) return a canned list — Crustdata
+        accepts these values verbatim, no autocomplete needed.
+
+        Autocompletable fields (titles, locations, company_industries)
+        delegate to Crustdata's autocomplete with the friendly field name
+        translated via `_PEOPLE_AUTOCOMPLETE_FIELD_MAP`.
+      operationId: search_filters_people
+      parameters:
+      - explode: true
+        in: query
+        name: field
+        required: true
+        schema:
+          enum:
+          - titles
+          - seniority
+          - departments
+          - job_functions
+          - management_levels
+          - locations
+          - company_headcount
+          - company_industries
+          title: Field
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: query
+        required: false
+        schema:
+          nullable: true
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PeopleFiltersResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
+      security:
+      - HTTPBearer: []
+      summary: Search Filters People
+      tags:
+      - Public People Finder
+      x-accepts:
+      - application/json
+  /api/v2/people/find:
+    post:
+      description: |-
+        Search people. FREE — credits are spent at enrichment / save time.
+
+        Delegates to the internal staging handler so the 5-step filter
+        pipeline (location component expansion → region contains expansion
+        → column mapping → enum alias expansion → Crustdata format
+        transform) runs unchanged. We pass the caller's actual tier so
+        FREE-tier callers get the 25-row preview cap.
+      operationId: search_people
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PeopleSearchRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PeopleSearchResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
+      security:
+      - HTTPBearer: []
+      summary: Search People
+      tags:
+      - Public People Finder
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/people/find/compile:
+    post:
+      description: |-
+        Show what a search would do, without doing it. FREE.
+
+        Returns the compiled query, the route the search would take, and the
+        exclusions that would apply. Use it to check an unfamiliar combination of
+        criteria before spending a search, and to explain to a user why a result
+        is bounded: a by-companies route resolves a limited company set first, and
+        incomplete CRM exclusions block compilation with an actionable error.
+      operationId: compile_search
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompileRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompileResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
+      security:
+      - HTTPBearer: []
+      summary: Compile criteria without running the search
+      tags:
+      - Public People Finder
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/people/find-at-companies:
+    post:
+      description: |-
+        Start an async "find people at these companies" search. FREE — credits are
+        spent at enrichment / save time.
+
+        Returns a ``task_id`` immediately; poll ``poll_url``
+        (GET /people/find-at-companies/status/{task_id}) until ``status`` is terminal.
+        One job returns one result block; page by re-calling with the returned
+        ``cursor``.
+      operationId: companies_find_start
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PeopleByCompaniesRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompaniesFindStartResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
+      security:
+      - HTTPBearer: []
+      summary: Find people at companies by filter (async discovery)
+      tags:
+      - Public People Finder
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/people/find-at-companies/status/{task_id}:
+    get:
+      description: |-
+        Poll a search started by ``POST /people/find-at-companies``. Free and
+        idempotent —
+        call until ``status`` is terminal (``completed`` / ``failed``). Cross-tenant
+        task ids fail closed as 404.
+      operationId: companies_find_status
+      parameters:
+      - explode: false
+        in: path
+        name: task_id
+        required: true
+        schema:
+          title: Task Id
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompaniesFindStatusResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
+      security:
+      - HTTPBearer: []
+      summary: Poll a find-people-at-companies search
+      tags:
+      - Public People Finder
+      x-accepts:
+      - application/json
+  /api/v2/lead-lists/{list_id}/find-people:
+    post:
+      description: |-
+        Start an async job that finds people at the given companies (which must
+        already belong to ``list_id``) and imports them into that list.
+
+        Returns a ``workflow_id`` immediately; poll ``poll_url``
+        (GET /lead-lists/{list_id}/find-people/status/{workflow_id}) until ``status``
+        is terminal. Discovery is free; imports bill the standard per-new-lead cost.
+      operationId: find_people
+      parameters:
+      - explode: false
+        in: path
+        name: list_id
+        required: true
+        schema:
+          title: List Id
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FindPeopleRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FindPeopleResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
+      security:
+      - HTTPBearer: []
+      summary: Find people at companies already in a list and import them (async)
+      tags:
+      - Public Lead Lists
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v2/lead-lists/{list_id}/find-people/status/{workflow_id}:
+    get:
+      description: |-
+        Poll a find-people job started by
+        ``POST /lead-lists/{list_id}/find-people``. Free and idempotent — call until
+        ``status`` is terminal (``completed`` / ``failed`` / ``cancelled``).
+        Cross-tenant workflow ids fail closed as 404. ``list_id`` is for path nesting;
+        the lookup is by ``workflow_id`` + org.
+      operationId: find_people_status
+      parameters:
+      - explode: false
+        in: path
+        name: list_id
+        required: true
+        schema:
+          title: List Id
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: workflow_id
+        required: true
+        schema:
+          title: Workflow Id
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FindPeopleStatusResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
+      security:
+      - HTTPBearer: []
+      summary: Poll a find-people job
+      tags:
+      - Public Lead Lists
       x-accepts:
       - application/json
   /api/v2/enrichment/person:
@@ -738,8 +1984,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Enrich a single person
@@ -784,8 +2078,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Enrich a company
@@ -831,8 +2173,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Enrich entities from a prior task
@@ -878,8 +2268,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Enrich a whole lead list
@@ -926,8 +2364,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Poll an enrichment workflow
@@ -943,13 +2429,15 @@ paths:
         Pick an `agent_type` — `custom_ai` (your own `prompt`), `cold_intro_email`
         (personalized opener), or a preset research agent — and the run executes
         asynchronously as a smart column, one AI call per lead. Runs are metered
-        per lead by agent type (e.g. `custom_ai` ≈ 1 credit/lead,
-        `cold_intro_email` ≈ 3 credits/lead) and require a single-use `quote_id`
-        from POST /credits/estimate; credits are debited as rows complete. Scope
-        with `lead_scope="subset"` + `max_rows` for speed and cost control — a
-        `lead_scope="all"` run above the approval threshold (default 500 leads)
-        is blocked with a 400 `approval_required` until you narrow it or route a
-        human approval. The response returns immediately with `status="pending"`;
+        per lead by agent type (`custom_ai` is priced from its `prompt`, so read
+        its price from the quote; `cold_intro_email` ≈ 3 credits/lead) and
+        require a single-use `quote_id` from POST /credits/estimate; credits are
+        debited before dispatch. Cold intro email requires enriched profiles and
+        an active organization email template. Scope with `lead_scope="subset"` +
+        `max_rows` for cost control.
+        Any selection above the approval threshold (default 500 leads) is blocked
+        with `approval_required`; this public route requires a smaller selection.
+        The response returns immediately with `status="pending"`;
         poll GET /smart-agents/{smart_agent_task_id} for progress and per-lead
         results.
 
@@ -972,8 +2460,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Run a smart agent
@@ -1033,8 +2569,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: List smart agent runs
@@ -1081,8 +2665,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Get smart agent results
@@ -1122,8 +2754,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Export a list to CSV (signed URL)
@@ -1194,8 +2874,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HTTPValidationError"
-          description: Validation Error
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
       security:
       - HTTPBearer: []
       summary: Export a list as JSON
@@ -1384,6 +3112,111 @@ components:
       required:
       - keys
       title: ApiKeysResponse
+    CompaniesFindStartResponse:
+      additionalProperties: false
+      example:
+        usage: usage
+        agent_instructions: agent_instructions
+        task_id: task_id
+        timestamp_ms: 0
+        message: message
+        poll_url: poll_url
+        status: status
+      properties:
+        task_id:
+          title: Task Id
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        status:
+          title: Status
+          type: string
+        poll_url:
+          title: Poll Url
+          type: string
+      required:
+      - poll_url
+      - status
+      - task_id
+      title: CompaniesFindStartResponse
+    CompaniesFindStatusResponse:
+      additionalProperties: false
+      example:
+        cursor: cursor
+        usage: usage
+        credits_charged: 1
+        agent_instructions: agent_instructions
+        task_id: task_id
+        timestamp_ms: 0
+        message: message
+        composite_warning: composite_warning
+        entity_kind: person
+        total: 6
+        resolved_company_count: 5
+        results:
+        - ""
+        - ""
+        status: status
+      properties:
+        task_id:
+          title: Task Id
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        entity_kind:
+          default: person
+          enum:
+          - person
+          title: Entity Kind
+          type: string
+        status:
+          title: Status
+          type: string
+        results:
+          items: {}
+          type: array
+        total:
+          default: 0
+          title: Total
+          type: integer
+        cursor:
+          nullable: true
+          type: string
+        credits_charged:
+          default: 0
+          title: Credits Charged
+          type: integer
+        resolved_company_count:
+          default: 0
+          title: Resolved Company Count
+          type: integer
+        composite_warning:
+          nullable: true
+          type: string
+      required:
+      - status
+      - task_id
+      title: CompaniesFindStatusResponse
     CompanyRecord:
       additionalProperties: false
       description: |-
@@ -1454,6 +3287,831 @@ components:
           nullable: true
           type: string
       title: CompanyRecord
+    CompanySearchCriteria:
+      additionalProperties: false
+      description: "The company-side filter blob, one field per ``CompanySearchFilters``\
+        \ key."
+      example:
+        headcountLatestMax: ""
+        revenueMax: ""
+        companyName: ""
+        yearFoundedMax: ""
+        fundingRoundTypes:
+        - fundingRoundTypes
+        - fundingRoundTypes
+        fundingRoundTypesExclude:
+        - fundingRoundTypesExclude
+        - fundingRoundTypesExclude
+        lastFundingRoundAmountMax: ""
+        crmFilterSections:
+          salesforce:
+          - condition: condition
+            id: id
+            polarity: exclude
+          - condition: condition
+            id: id
+            polarity: exclude
+          hubspot:
+          - condition: condition
+            id: id
+            polarity: exclude
+          - condition: condition
+            id: id
+            polarity: exclude
+        companyNamesList:
+        - companyNamesList
+        - companyNamesList
+        crunchbaseCategoriesExclude:
+        - crunchbaseCategoriesExclude
+        - crunchbaseCategoriesExclude
+        followersGrowth12mMin: ""
+        investorsExclude:
+        - investorsExclude
+        - investorsExclude
+        excludeInCleanlist: "off"
+        lastFundingDateAfter: ""
+        excludeCompanyDomains:
+        - excludeCompanyDomains
+        - excludeCompanyDomains
+        hqStates:
+        - hqStates
+        - hqStates
+        lastFundingRoundAmountMin: ""
+        yearFoundedMin: ""
+        headcountRanges:
+        - headcountRanges
+        - headcountRanges
+        growth3mMin: ""
+        growth1mMin: ""
+        companyNameMatchType: contains
+        headcountLatestMin: ""
+        followersMin: ""
+        ipoDateAfter: ""
+        twitterHandle: ""
+        domain: ""
+        hqCountriesIso3Exclude:
+        - hqCountriesIso3Exclude
+        - hqCountriesIso3Exclude
+        stockListings:
+        - stockListings
+        - stockListings
+        descriptionKeyword: ""
+        investorsInclude:
+        - investorsInclude
+        - investorsInclude
+        revenueMin: ""
+        updatedAfter: ""
+        growthMin: ""
+        stockSymbols:
+        - stockSymbols
+        - stockSymbols
+        valuationMax: ""
+        acquiredOnly: false
+        crunchbaseCategoriesInclude:
+        - crunchbaseCategoriesInclude
+        - crunchbaseCategoriesInclude
+        linkedinCategoriesInclude:
+        - linkedinCategoriesInclude
+        - linkedinCategoriesInclude
+        compositeMode: false
+        domainsList:
+        - domainsList
+        - domainsList
+        fundingAmountMin: ""
+        growth12mMin: ""
+        hqCitiesExclude:
+        - hqCitiesExclude
+        - hqCitiesExclude
+        growthMax: ""
+        largestHeadcountCountriesIso3:
+        - largestHeadcountCountriesIso3
+        - largestHeadcountCountriesIso3
+        hqCities:
+        - hqCities
+        - hqCities
+        industriesExclude:
+        - industriesExclude
+        - industriesExclude
+        companyType:
+        - companyType
+        - companyType
+        industriesInclude:
+        - industriesInclude
+        - industriesInclude
+        excludeInCleanlistListIds:
+        - excludeInCleanlistListIds
+        - excludeInCleanlistListIds
+        hqCountriesIso3:
+        - hqCountriesIso3
+        - hqCountriesIso3
+        workforceRules:
+        - op: '>='
+          role: role
+          metric: percent
+          threshold: 1.4658129805029452
+        - op: '>='
+          role: role
+          metric: percent
+          threshold: 1.4658129805029452
+        companyTypeExclude:
+        - companyTypeExclude
+        - companyTypeExclude
+        followersGrowth6mMin: ""
+        headcountRangesExclude:
+        - headcountRangesExclude
+        - headcountRangesExclude
+        valuationMin: ""
+        bootstrappedOnly: false
+        hqStatesExclude:
+        - hqStatesExclude
+        - hqStatesExclude
+      properties:
+        companyName:
+          default: ""
+          description: Company name match.
+          title: Companyname
+          type: string
+        companyNameMatchType:
+          default: contains
+          description: "How company_name matches: contains (substring), exact, or\
+            \ similar (word-order-free fuzzy)."
+          enum:
+          - contains
+          - exact
+          - similar
+          title: Companynamematchtype
+          type: string
+        domain:
+          default: ""
+          description: Company website domain; a pasted URL is reduced to its host.
+          title: Domain
+          type: string
+        industriesInclude:
+          description: LinkedIn industries or industry group names to include.
+          items:
+            type: string
+          type: array
+        headcountRanges:
+          description: "Headcount buckets to include (1-10 through 10001+), OR-ed."
+          items:
+            type: string
+          type: array
+        revenueMin:
+          default: ""
+          description: Minimum estimated annual revenue in USD.
+          title: Revenuemin
+          type: string
+        revenueMax:
+          default: ""
+          description: Maximum estimated annual revenue in USD.
+          title: Revenuemax
+          type: string
+        yearFoundedMin:
+          default: ""
+          description: "Earliest founding year, inclusive."
+          title: Yearfoundedmin
+          type: string
+        yearFoundedMax:
+          default: ""
+          description: "Latest founding year, inclusive."
+          title: Yearfoundedmax
+          type: string
+        companyType:
+          description: Canonical LinkedIn company types to include.
+          items:
+            type: string
+          type: array
+        fundingRoundTypes:
+          description: "Last funding round labels to include, such as 'Series B'."
+          items:
+            type: string
+          type: array
+        fundingAmountMin:
+          default: ""
+          description: Total disclosed investment must exceed this USD amount.
+          title: Fundingamountmin
+          type: string
+        growthMin:
+          default: ""
+          description: Six-month employee growth percent must exceed this value.
+          title: Growthmin
+          type: string
+        growthMax:
+          default: ""
+          description: Six-month employee growth percent must be below this value.
+          title: Growthmax
+          type: string
+        industriesExclude:
+          description: LinkedIn industries or industry group names to exclude.
+          items:
+            type: string
+          type: array
+        headcountRangesExclude:
+          description: Headcount buckets to exclude.
+          items:
+            type: string
+          type: array
+        companyTypeExclude:
+          description: Canonical LinkedIn company types to exclude.
+          items:
+            type: string
+          type: array
+        hqCountriesIso3:
+          description: "HQ countries as ISO-3 codes, country names or group names."
+          items:
+            type: string
+          type: array
+        hqCountriesIso3Exclude:
+          description: "HQ countries to exclude, same forms as hq_countries_iso3."
+          items:
+            type: string
+          type: array
+        largestHeadcountCountriesIso3:
+          description: "Countries holding most employees, same forms as hq_countries_iso3."
+          items:
+            type: string
+          type: array
+        hqStates:
+          description: "HQ state substrings such as 'Texas, United States', OR-ed."
+          items:
+            type: string
+          type: array
+        hqStatesExclude:
+          description: HQ state substrings to exclude.
+          items:
+            type: string
+          type: array
+        hqCities:
+          description: "HQ city substrings such as 'Austin, Texas, United States',\
+            \ OR-ed."
+          items:
+            type: string
+          type: array
+        hqCitiesExclude:
+          description: HQ city substrings to exclude.
+          items:
+            type: string
+          type: array
+        linkedinCategoriesInclude:
+          description: LinkedIn category tags to include.
+          items:
+            type: string
+          type: array
+        crunchbaseCategoriesInclude:
+          description: Crunchbase categories to include.
+          items:
+            type: string
+          type: array
+        crunchbaseCategoriesExclude:
+          description: Crunchbase categories to exclude.
+          items:
+            type: string
+          type: array
+        stockListings:
+          description: Stock exchange listings; PRIVATE selects unlisted companies.
+          items:
+            type: string
+          type: array
+        headcountLatestMin:
+          default: ""
+          description: Minimum tracked employee count; overrides headcount buckets.
+          title: Headcountlatestmin
+          type: string
+        headcountLatestMax:
+          default: ""
+          description: Maximum tracked employee count; overrides headcount buckets.
+          title: Headcountlatestmax
+          type: string
+        growth1mMin:
+          default: ""
+          description: Minimum one-month employee growth percent.
+          title: Growth1Mmin
+          type: string
+        growth3mMin:
+          default: ""
+          description: Minimum three-month employee growth percent.
+          title: Growth3Mmin
+          type: string
+        growth12mMin:
+          default: ""
+          description: Minimum twelve-month employee growth percent.
+          title: Growth12Mmin
+          type: string
+        followersMin:
+          default: ""
+          description: Minimum LinkedIn follower count.
+          title: Followersmin
+          type: string
+        followersGrowth6mMin:
+          default: ""
+          description: Minimum six-month follower growth percent.
+          title: Followersgrowth6Mmin
+          type: string
+        followersGrowth12mMin:
+          default: ""
+          description: Minimum twelve-month follower growth percent.
+          title: Followersgrowth12Mmin
+          type: string
+        lastFundingDateAfter:
+          default: ""
+          description: Last funding date floor as YYYY-MM-DD.
+          title: Lastfundingdateafter
+          type: string
+        ipoDateAfter:
+          default: ""
+          description: IPO date floor as YYYY-MM-DD.
+          title: Ipodateafter
+          type: string
+        lastFundingRoundAmountMin:
+          default: ""
+          description: Minimum size of the last funding round in USD.
+          title: Lastfundingroundamountmin
+          type: string
+        lastFundingRoundAmountMax:
+          default: ""
+          description: Maximum size of the last funding round in USD.
+          title: Lastfundingroundamountmax
+          type: string
+        valuationMin:
+          default: ""
+          description: Minimum Crunchbase valuation in USD.
+          title: Valuationmin
+          type: string
+        valuationMax:
+          default: ""
+          description: Maximum Crunchbase valuation in USD.
+          title: Valuationmax
+          type: string
+        bootstrappedOnly:
+          default: false
+          description: Only companies with no disclosed investment.
+          title: Bootstrappedonly
+          type: boolean
+        acquiredOnly:
+          default: false
+          description: Only acquired companies.
+          title: Acquiredonly
+          type: boolean
+        fundingRoundTypesExclude:
+          description: Last funding round labels to exclude.
+          items:
+            type: string
+          type: array
+        investorsInclude:
+          description: Crunchbase investors to include.
+          items:
+            type: string
+          type: array
+        investorsExclude:
+          description: Crunchbase investors to exclude.
+          items:
+            type: string
+          type: array
+        stockSymbols:
+          description: Stock ticker symbols to include.
+          items:
+            type: string
+          type: array
+        domainsList:
+          description: Exact company domains to match; URLs are reduced to hosts.
+          items:
+            type: string
+          type: array
+        companyNamesList:
+          description: "Exact, case-sensitive company names to match."
+          items:
+            type: string
+          type: array
+        twitterHandle:
+          default: ""
+          description: Exact Twitter handle; a leading @ is kept.
+          title: Twitterhandle
+          type: string
+        descriptionKeyword:
+          default: ""
+          description: Keyword matched against the LinkedIn company description.
+          title: Descriptionkeyword
+          type: string
+        updatedAfter:
+          default: ""
+          description: "Crustdata updated_at floor, sent verbatim."
+          title: Updatedafter
+          type: string
+        compositeMode:
+          default: false
+          description: UI-only flag from the composite section; never compiled.
+          title: Compositemode
+          type: boolean
+        workforceRules:
+          description: "AND-combined role rules: percent, growth_6m or growth_yoy,\
+            \ with >= or <= and a finite threshold. Growth thresholds may be negative."
+          items:
+            $ref: "#/components/schemas/WorkforceRule"
+          type: array
+        excludeCompanyDomains:
+          description: Company domains to exclude; resolved by the exclusions step.
+          items:
+            type: string
+          type: array
+        excludeInCleanlist:
+          default: "off"
+          description: "Skip companies already on the user's lists: off, any list\
+            \ they can open, or specific lists."
+          enum:
+          - "off"
+          - any
+          - list
+          title: Excludeincleanlist
+          type: string
+        excludeInCleanlistListIds:
+          description: Lead list ids the list scope resolves against.
+          items:
+            type: string
+          type: array
+        crmFilterSections:
+          $ref: "#/components/schemas/CrmFilterSections"
+      title: CompanySearchCriteria
+    CompileRequest:
+      additionalProperties: false
+      example:
+        criteria:
+          excludeCrmOwnedByOthers: false
+          neverWorkedAtCompanies:
+          - neverWorkedAtCompanies
+          - neverWorkedAtCompanies
+          jobTitlesExclude:
+          - jobTitlesExclude
+          - jobTitlesExclude
+          pastCompanies:
+          - pastCompanies
+          - pastCompanies
+          connectionsMax: ""
+          companyFilterCompositeMode: false
+          excludeCrmOwner: ""
+          skills:
+          - skills
+          - skills
+          keywordsBooleanQuery: ""
+          crmFilterSections:
+            salesforce:
+            - condition: condition
+              id: id
+              polarity: exclude
+            - condition: condition
+              id: id
+              polarity: exclude
+            hubspot:
+            - condition: condition
+              id: id
+              polarity: exclude
+            - condition: condition
+              id: id
+              polarity: exclude
+          companyCountriesExclude:
+          - companyCountriesExclude
+          - companyCountriesExclude
+          currentCompanyNames:
+          - currentCompanyNames
+          - currentCompanyNames
+          linkedinUrls:
+          - linkedinUrls
+          - linkedinUrls
+          pastTitles:
+          - pastTitles
+          - pastTitles
+          pastSeniority:
+          - pastSeniority
+          - pastSeniority
+          excludeCrmAccountStatus: ""
+          maxResults: 6
+          companySizes:
+          - companySizes
+          - companySizes
+          companyCitiesExclude:
+          - companyCitiesExclude
+          - companyCitiesExclude
+          excludeInCleanlist: "off"
+          companyCountries:
+          - companyCountries
+          - companyCountries
+          excludeCrmCustomers: false
+          schoolNames:
+          - schoolNames
+          - schoolNames
+          companyCities:
+          - companyCities
+          - companyCities
+          openToCards:
+          - openToCards
+          - openToCards
+          contactRegionsExclude:
+          - contactRegionsExclude
+          - contactRegionsExclude
+          excludeCompanyDomains:
+          - excludeCompanyDomains
+          - excludeCompanyDomains
+          contactCountries:
+          - contactCountries
+          - contactCountries
+          companyRegions:
+          - companyRegions
+          - companyRegions
+          degreeTypes:
+          - degreeTypes
+          - degreeTypes
+          companyNameFilter: ""
+          companyNameMatchType: contains
+          firstName: ""
+          functionCategoriesInclude:
+          - functionCategoriesInclude
+          - functionCategoriesInclude
+          followersMin: ""
+          fieldsOfStudy:
+          - fieldsOfStudy
+          - fieldsOfStudy
+          twitterHandle: ""
+          excludeProfileUrls:
+          - excludeProfileUrls
+          - excludeProfileUrls
+          jobTitlesInclude:
+          - jobTitlesInclude
+          - jobTitlesInclude
+          lastName: ""
+          pastFunctionCategoriesInclude:
+          - pastFunctionCategoriesInclude
+          - pastFunctionCategoriesInclude
+          currentCompanyDomains:
+          - currentCompanyDomains
+          - currentCompanyDomains
+          certificationKeywords:
+          - certificationKeywords
+          - certificationKeywords
+          followersMax: ""
+          joinedCurrentAfter: ""
+          pastCompanyLinkedInUrls:
+          - pastCompanyLinkedInUrls
+          - pastCompanyLinkedInUrls
+          recentlyChangedJobs: false
+          currentCompanyLinkedInUrls:
+          - currentCompanyLinkedInUrls
+          - currentCompanyLinkedInUrls
+          limitPerCompany: ""
+          jobTitleMatchType: contains
+          yearsOfExperience: ""
+          contactCitiesExclude:
+          - contactCitiesExclude
+          - contactCitiesExclude
+          neverHeldTitles:
+          - neverHeldTitles
+          - neverHeldTitles
+          profileUpdatedAfter: ""
+          industriesExclude:
+          - industriesExclude
+          - industriesExclude
+          excludeCrmActiveOpportunities: false
+          languages:
+          - languages
+          - languages
+          titleBooleanQuery: ""
+          geoRadius:
+            unit: km
+            center: ""
+            radius: 0.8008281904610115
+          yearsAtCompany: ""
+          pastCompaniesRequireAll: false
+          industriesInclude:
+          - industriesInclude
+          - industriesInclude
+          contactRegions:
+          - contactRegions
+          - contactRegions
+          companyRegionsExclude:
+          - companyRegionsExclude
+          - companyRegionsExclude
+          pastLeftCompanyAfter: ""
+          excludeCrmOwnedByMe: false
+          excludeInCleanlistListIds:
+          - excludeInCleanlistListIds
+          - excludeInCleanlistListIds
+          contactCities:
+          - contactCities
+          - contactCities
+          summaryContains: ""
+          headlineContains: ""
+          contactCountriesExclude:
+          - contactCountriesExclude
+          - contactCountriesExclude
+          seniority:
+          - seniority
+          - seniority
+          connectionsMin: ""
+        company_criteria:
+          headcountLatestMax: ""
+          revenueMax: ""
+          companyName: ""
+          yearFoundedMax: ""
+          fundingRoundTypes:
+          - fundingRoundTypes
+          - fundingRoundTypes
+          fundingRoundTypesExclude:
+          - fundingRoundTypesExclude
+          - fundingRoundTypesExclude
+          lastFundingRoundAmountMax: ""
+          crmFilterSections:
+            salesforce:
+            - condition: condition
+              id: id
+              polarity: exclude
+            - condition: condition
+              id: id
+              polarity: exclude
+            hubspot:
+            - condition: condition
+              id: id
+              polarity: exclude
+            - condition: condition
+              id: id
+              polarity: exclude
+          companyNamesList:
+          - companyNamesList
+          - companyNamesList
+          crunchbaseCategoriesExclude:
+          - crunchbaseCategoriesExclude
+          - crunchbaseCategoriesExclude
+          followersGrowth12mMin: ""
+          investorsExclude:
+          - investorsExclude
+          - investorsExclude
+          excludeInCleanlist: "off"
+          lastFundingDateAfter: ""
+          excludeCompanyDomains:
+          - excludeCompanyDomains
+          - excludeCompanyDomains
+          hqStates:
+          - hqStates
+          - hqStates
+          lastFundingRoundAmountMin: ""
+          yearFoundedMin: ""
+          headcountRanges:
+          - headcountRanges
+          - headcountRanges
+          growth3mMin: ""
+          growth1mMin: ""
+          companyNameMatchType: contains
+          headcountLatestMin: ""
+          followersMin: ""
+          ipoDateAfter: ""
+          twitterHandle: ""
+          domain: ""
+          hqCountriesIso3Exclude:
+          - hqCountriesIso3Exclude
+          - hqCountriesIso3Exclude
+          stockListings:
+          - stockListings
+          - stockListings
+          descriptionKeyword: ""
+          investorsInclude:
+          - investorsInclude
+          - investorsInclude
+          revenueMin: ""
+          updatedAfter: ""
+          growthMin: ""
+          stockSymbols:
+          - stockSymbols
+          - stockSymbols
+          valuationMax: ""
+          acquiredOnly: false
+          crunchbaseCategoriesInclude:
+          - crunchbaseCategoriesInclude
+          - crunchbaseCategoriesInclude
+          linkedinCategoriesInclude:
+          - linkedinCategoriesInclude
+          - linkedinCategoriesInclude
+          compositeMode: false
+          domainsList:
+          - domainsList
+          - domainsList
+          fundingAmountMin: ""
+          growth12mMin: ""
+          hqCitiesExclude:
+          - hqCitiesExclude
+          - hqCitiesExclude
+          growthMax: ""
+          largestHeadcountCountriesIso3:
+          - largestHeadcountCountriesIso3
+          - largestHeadcountCountriesIso3
+          hqCities:
+          - hqCities
+          - hqCities
+          industriesExclude:
+          - industriesExclude
+          - industriesExclude
+          companyType:
+          - companyType
+          - companyType
+          industriesInclude:
+          - industriesInclude
+          - industriesInclude
+          excludeInCleanlistListIds:
+          - excludeInCleanlistListIds
+          - excludeInCleanlistListIds
+          hqCountriesIso3:
+          - hqCountriesIso3
+          - hqCountriesIso3
+          workforceRules:
+          - op: '>='
+            role: role
+            metric: percent
+            threshold: 1.4658129805029452
+          - op: '>='
+            role: role
+            metric: percent
+            threshold: 1.4658129805029452
+          companyTypeExclude:
+          - companyTypeExclude
+          - companyTypeExclude
+          followersGrowth6mMin: ""
+          headcountRangesExclude:
+          - headcountRangesExclude
+          - headcountRangesExclude
+          valuationMin: ""
+          bootstrappedOnly: false
+          hqStatesExclude:
+          - hqStatesExclude
+          - hqStatesExclude
+        crm: crm
+      properties:
+        criteria:
+          $ref: "#/components/schemas/PeopleSearchCriteria"
+        company_criteria:
+          $ref: "#/components/schemas/CompanySearchCriteria"
+        crm:
+          nullable: true
+          type: string
+      required:
+      - criteria
+      title: CompileRequest
+    CompileResponse:
+      additionalProperties: {}
+      example:
+        company_filter: "{}"
+        route: "{}"
+        person_filter: "{}"
+        usage: usage
+        warnings:
+        - warnings
+        - warnings
+        exclusions_applied:
+          key: 6
+        agent_instructions: agent_instructions
+        task_id: task_id
+        timestamp_ms: 0
+        message: message
+        exclusions_complete: true
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        route:
+          additionalProperties: false
+          title: Route
+          type: object
+        person_filter:
+          additionalProperties: false
+          title: Person Filter
+          type: object
+        company_filter:
+          additionalProperties: false
+          nullable: true
+          type: object
+        warnings:
+          items:
+            type: string
+          type: array
+        exclusions_applied:
+          additionalProperties:
+            type: integer
+          nullable: true
+        exclusions_complete:
+          default: true
+          title: Exclusions Complete
+          type: boolean
+      required:
+      - person_filter
+      - route
+      title: CompileResponse
     CreateListRequest:
       additionalProperties: false
       example:
@@ -1522,6 +4180,67 @@ components:
       - credits
       - organization_id
       title: CreditsBalanceResponse
+    CrmFilterClause:
+      additionalProperties: false
+      description: "``CrmFilterClause``: one include/exclude condition against a CRM."
+      example:
+        condition: condition
+        id: id
+        polarity: exclude
+      properties:
+        id:
+          description: "Required, nonblank stable client id for the clause."
+          minLength: 1
+          title: Id
+          type: string
+        polarity:
+          default: exclude
+          description: Whether the clause narrows (exclude) or requires (include).
+          enum:
+          - include
+          - exclude
+          title: Polarity
+          type: string
+        condition:
+          description: "The /crm/exclusion-set token, e.g. current_customers, owner:<id>,\
+            \ account_status:<value>."
+          title: Condition
+          type: string
+      required:
+      - condition
+      - id
+      title: CrmFilterClause
+    CrmFilterSections:
+      additionalProperties: false
+      description: "``CrmFilterSections``: clauses grouped by the CRM they resolve\
+        \ against."
+      example:
+        salesforce:
+        - condition: condition
+          id: id
+          polarity: exclude
+        - condition: condition
+          id: id
+          polarity: exclude
+        hubspot:
+        - condition: condition
+          id: id
+          polarity: exclude
+        - condition: condition
+          id: id
+          polarity: exclude
+      properties:
+        salesforce:
+          description: Clauses resolved against Salesforce.
+          items:
+            $ref: "#/components/schemas/CrmFilterClause"
+          type: array
+        hubspot:
+          description: Clauses resolved against HubSpot.
+          items:
+            $ref: "#/components/schemas/CrmFilterClause"
+          type: array
+      title: CrmFilterSections
     CsvImportRequest:
       additionalProperties: {}
       example:
@@ -1664,6 +4383,59 @@ components:
       - rows_parsed
       - rows_skipped
       title: CsvImportResponse
+    CurrentRoleEvidence:
+      additionalProperties: false
+      example:
+        company_industry: company_industry
+        domain: domain
+        company_industries_truncated: true
+        company_headcount: 7
+        company: company
+        company_linkedin_url: company_linkedin_url
+        title: title
+        company_founded_year: 2
+        company_industries:
+        - company_industries
+        - company_industries
+        seniority: seniority
+        company_headcount_range: company_headcount_range
+      properties:
+        title:
+          nullable: true
+          type: string
+        company:
+          nullable: true
+          type: string
+        domain:
+          nullable: true
+          type: string
+        company_linkedin_url:
+          nullable: true
+          type: string
+        company_founded_year:
+          nullable: true
+          type: integer
+        company_industry:
+          nullable: true
+          type: string
+        company_industries:
+          items:
+            type: string
+          nullable: true
+          type: array
+        company_industries_truncated:
+          nullable: true
+          type: boolean
+        company_headcount:
+          nullable: true
+          type: integer
+        company_headcount_range:
+          nullable: true
+          type: string
+        seniority:
+          nullable: true
+          type: string
+      title: CurrentRoleEvidence
     DeleteListResponse:
       additionalProperties: {}
       example:
@@ -1822,6 +4594,9 @@ components:
           - company
           title: Entity Kind
           type: string
+        list_id:
+          nullable: true
+          type: string
         workflow_id:
           nullable: true
           type: string
@@ -1961,6 +4736,13 @@ components:
             is capped at the quote's max_credits.
           title: Quote Id
           type: string
+        lead_ids:
+          items:
+            type: string
+          maxItems: 500
+          minItems: 1
+          nullable: true
+          type: array
       required:
       - list_id
       - quote_id
@@ -2151,135 +4933,6 @@ components:
       - status
       - workflow_id
       title: EnrichPersonResponse
-    EstimateCostRequest:
-      additionalProperties: {}
-      example:
-        include_phone: true
-        list_id: list_7a1b2c3d
-        scope: full
-        tool: enrich_list
-      properties:
-        tool:
-          description: "Tool to price. Must be a key in the server's cost table (e.g.\
-            \ `enrich_list`, `enrich_person`, `run_smart_agent`, `sync_to_crm`, `add_person_enrichments`).\
-            \ Unknown tools return a 400."
-          title: Tool
-          type: string
-        list_id:
-          nullable: true
-          type: string
-        filters:
-          additionalProperties: false
-          nullable: true
-          type: object
-        row_count:
-          nullable: true
-          type: integer
-        scope:
-          nullable: true
-          type: string
-        agent_type:
-          nullable: true
-          type: string
-        include_phone:
-          default: false
-          description: Legacy boolean that requests phone enrichment when `enrichment_type`/`scope`
-            are not set. Kept for back-compat; prefer `scope`/`enrichment_type`.
-          title: Include Phone
-          type: boolean
-        provider:
-          nullable: true
-          type: string
-        sub_action:
-          nullable: true
-          type: string
-        enrichment_type:
-          nullable: true
-          type: string
-        task_id:
-          nullable: true
-          type: string
-        data_points:
-          items:
-            type: string
-          nullable: true
-          type: array
-        entity_ids:
-          items:
-            type: string
-          nullable: true
-          type: array
-        extra:
-          additionalProperties: false
-          nullable: true
-          type: object
-      required:
-      - tool
-      title: EstimateCostRequest
-    EstimateCostResponse:
-      additionalProperties: {}
-      example:
-        available_credits: 4820
-        estimated_cost: 275
-        expires_at: 1751405100
-        filter_hash: 3f8a1c9d2e4b6a70
-        quote_id: qte_v1_1751404800_9a3f2c1b8e7d6a5f4c3b2a1908f7e6d5c4b3a2910f8e7d6c5b4a3928170
-        row_count: 25
-        sufficient: true
-        tool: enrich_list
-      properties:
-        quote_id:
-          description: "HMAC-signed quote handle (`qte_<kid>_<issued_at>_<sig>`) that\
-            \ the paired paid tool must present at execution time. Single-use and\
-            \ bound to the canonical request (tool, list/filters, scope, row_count,\
-            \ org)."
-          title: Quote Id
-          type: string
-        expires_at:
-          description: "Unix epoch SECONDS at which the quote expires (issue time\
-            \ + `CLEANLIST_QUOTE_TTL_SECONDS`, 5 min default). Re-estimate after this\
-            \ to obtain a fresh quote."
-          title: Expires At
-          type: integer
-        estimated_cost:
-          description: Credits this operation will cost — the authoritative signed
-            spend cap. Execution rejects (`spend_cap_exceeded`) if the recomputed
-            cost would exceed it.
-          title: Estimated Cost
-          type: integer
-        tool:
-          description: Echo of the priced tool.
-          title: Tool
-          type: string
-        row_count:
-          description: "Number of rows/entities the estimate priced — derived from\
-            \ the list or cohort when applicable, not the caller's raw input."
-          title: Row Count
-          type: integer
-        filter_hash:
-          description: Stable digest of the canonical filter/list/cohort shape bound
-            into the quote signature; `none` when there is no filter object.
-          title: Filter Hash
-          type: string
-        available_credits:
-          description: The organization's current credit balance at estimate time.
-          title: Available Credits
-          type: integer
-        sufficient:
-          description: True when `available_credits >= estimated_cost`. False signals
-            the org must top up at billing before the operation can run.
-          title: Sufficient
-          type: boolean
-      required:
-      - available_credits
-      - estimated_cost
-      - expires_at
-      - filter_hash
-      - quote_id
-      - row_count
-      - sufficient
-      - tool
-      title: EstimateCostResponse
     ExportCsvRequest:
       additionalProperties: {}
       example:
@@ -2409,19 +5062,224 @@ components:
       - list_id
       - total
       title: ExportJsonResponse
-    HTTPValidationError:
+    FilterOption:
+      additionalProperties: false
       example:
-        detail:
-        - msg: msg
-          loc:
-          - ValidationError_loc_inner
-          - ValidationError_loc_inner
-          type: type
-        - msg: msg
-          loc:
-          - ValidationError_loc_inner
-          - ValidationError_loc_inner
-          type: type
+        description: description
+        id: id
+        label: label
+      properties:
+        id:
+          title: Id
+          type: string
+        label:
+          title: Label
+          type: string
+        description:
+          nullable: true
+          type: string
+      required:
+      - id
+      - label
+      title: FilterOption
+    FindPeopleRequest:
+      additionalProperties: false
+      example:
+        company_ids:
+        - company_ids
+        - company_ids
+        - company_ids
+        - company_ids
+        - company_ids
+        seniority_levels:
+        - seniority_levels
+        - seniority_levels
+        limit_per_company: 2
+        job_titles:
+        - job_titles
+        - job_titles
+        location_country: location_country
+        location_state: location_state
+      properties:
+        company_ids:
+          description: Companies to find people at. Must be companies already in lead_list_id
+            (directly added or lead-derived); ids outside that set are dropped.
+          items:
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+        job_titles:
+          items:
+            type: string
+          type: array
+        seniority_levels:
+          items:
+            type: string
+          type: array
+        limit_per_company:
+          default: 5
+          maximum: 25.0
+          minimum: 1.0
+          title: Limit Per Company
+          type: integer
+        location_state:
+          nullable: true
+          type: string
+        location_country:
+          nullable: true
+          type: string
+      required:
+      - company_ids
+      title: FindPeopleRequest
+    FindPeopleResponse:
+      additionalProperties: false
+      example:
+        workflow_id: workflow_id
+        usage: usage
+        agent_instructions: agent_instructions
+        task_id: task_id
+        timestamp_ms: 0
+        estimated_credits: 1.4658129805029452
+        lead_list_id: lead_list_id
+        total_companies: 6
+        message: message
+        poll_url: poll_url
+        status: status
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        workflow_id:
+          title: Workflow Id
+          type: string
+        status:
+          title: Status
+          type: string
+        total_companies:
+          title: Total Companies
+          type: integer
+        estimated_credits:
+          title: Estimated Credits
+          type: number
+        lead_list_id:
+          title: Lead List Id
+          type: string
+        poll_url:
+          title: Poll Url
+          type: string
+      required:
+      - estimated_credits
+      - lead_list_id
+      - poll_url
+      - status
+      - total_companies
+      - workflow_id
+      title: FindPeopleResponse
+    FindPeopleStatusResponse:
+      additionalProperties: false
+      example:
+        people_imported: 1
+        workflow_id: workflow_id
+        usage: usage
+        agent_instructions: agent_instructions
+        task_id: task_id
+        timestamp_ms: 0
+        message: message
+        lead_ids:
+        - lead_ids
+        - lead_ids
+        credits_used: 5.962133916683182
+        errors:
+        - errors
+        - errors
+        status: status
+        people_found: 6
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        workflow_id:
+          title: Workflow Id
+          type: string
+        status:
+          title: Status
+          type: string
+        people_found:
+          nullable: true
+          type: integer
+        people_imported:
+          nullable: true
+          type: integer
+        credits_used:
+          nullable: true
+          type: number
+        lead_ids:
+          items:
+            type: string
+          nullable: true
+          type: array
+        errors:
+          items:
+            type: string
+          nullable: true
+          type: array
+      required:
+      - status
+      - workflow_id
+      title: FindPeopleStatusResponse
+    GeoRadius:
+      additionalProperties: false
+      description: "``SearchFilters.geoRadius``: a free-text center plus a distance."
+      example:
+        unit: km
+        center: ""
+        radius: 0.8008281904610115
+      properties:
+        center:
+          default: ""
+          description: Free-text location the radius is measured from.
+          title: Center
+          type: string
+        radius:
+          default: 0
+          description: Distance from the center; must be greater than 0 to apply.
+          title: Radius
+          type: number
+        unit:
+          default: km
+          description: "Distance unit: km or mi."
+          enum:
+          - km
+          - mi
+          title: Unit
+          type: string
+      title: GeoRadius
+    HTTPValidationError:
       properties:
         detail:
           items:
@@ -2747,6 +5605,1351 @@ components:
       - lists
       - total
       title: ListsPageResponse
+    PeopleByCompaniesRequest:
+      additionalProperties: {}
+      example:
+        company_linkedin_urls:
+        - company_linkedin_urls
+        - company_linkedin_urls
+        cursor: cursor
+        company_filter: "{}"
+        person_filter: "{}"
+        limit: 81
+        sorts:
+        - "{}"
+        - "{}"
+        post_processing: "{}"
+      properties:
+        company_filter:
+          additionalProperties: false
+          nullable: true
+          type: object
+        company_linkedin_urls:
+          items:
+            type: string
+          nullable: true
+          type: array
+        person_filter:
+          additionalProperties: false
+          description: Required PersonDB filter blob (same shape as /people/find).
+            AND-ed with the resolved company set.
+          title: Person Filter
+          type: object
+        limit:
+          default: 100
+          maximum: 1000.0
+          minimum: 1.0
+          title: Limit
+          type: integer
+        cursor:
+          nullable: true
+          type: string
+        sorts:
+          items:
+            additionalProperties: false
+            nullable: true
+            type: object
+          nullable: true
+          type: array
+        post_processing:
+          additionalProperties: false
+          nullable: true
+          type: object
+      required:
+      - person_filter
+      title: PeopleByCompaniesRequest
+    PeopleFiltersResponse:
+      additionalProperties: false
+      example:
+        field: field
+        options:
+        - description: description
+          id: id
+          label: label
+        - description: description
+          id: id
+          label: label
+      properties:
+        field:
+          title: Field
+          type: string
+        options:
+          items:
+            $ref: "#/components/schemas/FilterOption"
+          type: array
+      required:
+      - field
+      - options
+      title: PeopleFiltersResponse
+    PeopleMatchEvidence:
+      additionalProperties: false
+      example:
+        scope: current_role_and_company
+        warnings:
+        - warnings
+        - warnings
+        title_match_mode: contains
+        company_scope_match: true
+        status: matched
+      properties:
+        status:
+          enum:
+          - matched
+          - unverified
+          title: Status
+          type: string
+        scope:
+          default: current_role_and_company
+          enum:
+          - current_role_and_company
+          title: Scope
+          type: string
+        title_match_mode:
+          enum:
+          - contains
+          - exact
+          - similar
+          nullable: true
+          type: string
+        company_scope_match:
+          nullable: true
+          type: boolean
+        warnings:
+          items:
+            type: string
+          type: array
+      required:
+      - status
+      title: PeopleMatchEvidence
+    PeopleSearchCriteria:
+      additionalProperties: false
+      description: "``SearchFilters``: the People Finder's filter blob, one field\
+        \ per control."
+      example:
+        excludeCrmOwnedByOthers: false
+        neverWorkedAtCompanies:
+        - neverWorkedAtCompanies
+        - neverWorkedAtCompanies
+        jobTitlesExclude:
+        - jobTitlesExclude
+        - jobTitlesExclude
+        pastCompanies:
+        - pastCompanies
+        - pastCompanies
+        connectionsMax: ""
+        companyFilterCompositeMode: false
+        excludeCrmOwner: ""
+        skills:
+        - skills
+        - skills
+        keywordsBooleanQuery: ""
+        crmFilterSections:
+          salesforce:
+          - condition: condition
+            id: id
+            polarity: exclude
+          - condition: condition
+            id: id
+            polarity: exclude
+          hubspot:
+          - condition: condition
+            id: id
+            polarity: exclude
+          - condition: condition
+            id: id
+            polarity: exclude
+        companyCountriesExclude:
+        - companyCountriesExclude
+        - companyCountriesExclude
+        currentCompanyNames:
+        - currentCompanyNames
+        - currentCompanyNames
+        linkedinUrls:
+        - linkedinUrls
+        - linkedinUrls
+        pastTitles:
+        - pastTitles
+        - pastTitles
+        pastSeniority:
+        - pastSeniority
+        - pastSeniority
+        excludeCrmAccountStatus: ""
+        maxResults: 6
+        companySizes:
+        - companySizes
+        - companySizes
+        companyCitiesExclude:
+        - companyCitiesExclude
+        - companyCitiesExclude
+        excludeInCleanlist: "off"
+        companyCountries:
+        - companyCountries
+        - companyCountries
+        excludeCrmCustomers: false
+        schoolNames:
+        - schoolNames
+        - schoolNames
+        companyCities:
+        - companyCities
+        - companyCities
+        openToCards:
+        - openToCards
+        - openToCards
+        contactRegionsExclude:
+        - contactRegionsExclude
+        - contactRegionsExclude
+        excludeCompanyDomains:
+        - excludeCompanyDomains
+        - excludeCompanyDomains
+        contactCountries:
+        - contactCountries
+        - contactCountries
+        companyRegions:
+        - companyRegions
+        - companyRegions
+        degreeTypes:
+        - degreeTypes
+        - degreeTypes
+        companyNameFilter: ""
+        companyNameMatchType: contains
+        firstName: ""
+        functionCategoriesInclude:
+        - functionCategoriesInclude
+        - functionCategoriesInclude
+        followersMin: ""
+        fieldsOfStudy:
+        - fieldsOfStudy
+        - fieldsOfStudy
+        twitterHandle: ""
+        excludeProfileUrls:
+        - excludeProfileUrls
+        - excludeProfileUrls
+        jobTitlesInclude:
+        - jobTitlesInclude
+        - jobTitlesInclude
+        lastName: ""
+        pastFunctionCategoriesInclude:
+        - pastFunctionCategoriesInclude
+        - pastFunctionCategoriesInclude
+        currentCompanyDomains:
+        - currentCompanyDomains
+        - currentCompanyDomains
+        certificationKeywords:
+        - certificationKeywords
+        - certificationKeywords
+        followersMax: ""
+        joinedCurrentAfter: ""
+        pastCompanyLinkedInUrls:
+        - pastCompanyLinkedInUrls
+        - pastCompanyLinkedInUrls
+        recentlyChangedJobs: false
+        currentCompanyLinkedInUrls:
+        - currentCompanyLinkedInUrls
+        - currentCompanyLinkedInUrls
+        limitPerCompany: ""
+        jobTitleMatchType: contains
+        yearsOfExperience: ""
+        contactCitiesExclude:
+        - contactCitiesExclude
+        - contactCitiesExclude
+        neverHeldTitles:
+        - neverHeldTitles
+        - neverHeldTitles
+        profileUpdatedAfter: ""
+        industriesExclude:
+        - industriesExclude
+        - industriesExclude
+        excludeCrmActiveOpportunities: false
+        languages:
+        - languages
+        - languages
+        titleBooleanQuery: ""
+        geoRadius:
+          unit: km
+          center: ""
+          radius: 0.8008281904610115
+        yearsAtCompany: ""
+        pastCompaniesRequireAll: false
+        industriesInclude:
+        - industriesInclude
+        - industriesInclude
+        contactRegions:
+        - contactRegions
+        - contactRegions
+        companyRegionsExclude:
+        - companyRegionsExclude
+        - companyRegionsExclude
+        pastLeftCompanyAfter: ""
+        excludeCrmOwnedByMe: false
+        excludeInCleanlistListIds:
+        - excludeInCleanlistListIds
+        - excludeInCleanlistListIds
+        contactCities:
+        - contactCities
+        - contactCities
+        summaryContains: ""
+        headlineContains: ""
+        contactCountriesExclude:
+        - contactCountriesExclude
+        - contactCountriesExclude
+        seniority:
+        - seniority
+        - seniority
+        connectionsMin: ""
+      properties:
+        industriesInclude:
+          description: "Current employer industries to include: LinkedIn industry\
+            \ names or industry group tokens, which expand to their member industries."
+          items:
+            type: string
+          type: array
+        industriesExclude:
+          description: "Current employer industries to exclude: LinkedIn industry\
+            \ names or industry group tokens."
+          items:
+            type: string
+          type: array
+        companySizes:
+          description: "Current employer headcount buckets, e.g. 51-200 or 501-1,000."
+          items:
+            type: string
+          type: array
+        seniority:
+          description: "Current seniority levels, e.g. Director or Vice President."
+          items:
+            type: string
+          type: array
+        jobTitlesInclude:
+          description: Current job titles to match; abbreviations expand to synonyms
+            unless the match type is exact.
+          items:
+            type: string
+          type: array
+        jobTitlesExclude:
+          description: "Current job titles to exclude, matched exactly."
+          items:
+            type: string
+          type: array
+        jobTitleMatchType:
+          default: contains
+          description: "How job titles match: contains (substring), exact, or similar."
+          enum:
+          - contains
+          - exact
+          - similar
+          title: Jobtitlematchtype
+          type: string
+        yearsOfExperience:
+          default: ""
+          description: "Total experience bucket: 0-1, 1-2, 3-5, 6-10 or 10+."
+          title: Yearsofexperience
+          type: string
+        contactCountries:
+          description: "Person countries to include: iso3 codes, country names or\
+            \ group tokens such as EMEA."
+          items:
+            type: string
+          type: array
+        contactCountriesExclude:
+          description: "Person countries to exclude, in any spelling the include accepts."
+          items:
+            type: string
+          type: array
+        contactRegions:
+          description: "Person states or regions to include, e.g. \"Texas, United\
+            \ States\"."
+          items:
+            type: string
+          type: array
+        contactRegionsExclude:
+          description: Person states or regions to exclude.
+          items:
+            type: string
+          type: array
+        contactCities:
+          description: "Person cities to include, e.g. \"Austin, Texas, United States\"\
+            ."
+          items:
+            type: string
+          type: array
+        contactCitiesExclude:
+          description: Person cities to exclude.
+          items:
+            type: string
+          type: array
+        companyCountries:
+          description: Current employer HQ countries to include.
+          items:
+            type: string
+          type: array
+        companyCountriesExclude:
+          description: Current employer HQ countries to exclude.
+          items:
+            type: string
+          type: array
+        companyRegions:
+          description: Current employer HQ states or regions to include.
+          items:
+            type: string
+          type: array
+        companyRegionsExclude:
+          description: Current employer HQ states or regions to exclude.
+          items:
+            type: string
+          type: array
+        companyCities:
+          description: Current employer HQ cities to include.
+          items:
+            type: string
+          type: array
+        companyCitiesExclude:
+          description: Current employer HQ cities to exclude.
+          items:
+            type: string
+          type: array
+        skills:
+          description: "Skills listed on the profile, substring matched."
+          items:
+            type: string
+          type: array
+        connectionsMin:
+          default: ""
+          description: Minimum number of LinkedIn connections.
+          title: Connectionsmin
+          type: string
+        connectionsMax:
+          default: ""
+          description: Maximum number of LinkedIn connections.
+          title: Connectionsmax
+          type: string
+        degreeTypes:
+          description: "Degree types, e.g. MBA or PhD."
+          items:
+            type: string
+          type: array
+        schoolNames:
+          description: "Institution names, matched exactly."
+          items:
+            type: string
+          type: array
+        fieldsOfStudy:
+          description: "Fields of study, matched exactly."
+          items:
+            type: string
+          type: array
+        certificationKeywords:
+          description: "Certification names, matched exactly."
+          items:
+            type: string
+          type: array
+        companyNameFilter:
+          default: ""
+          description: "One current employer name, ANDed."
+          title: Companynamefilter
+          type: string
+        companyNameMatchType:
+          default: contains
+          description: "How employer NAMES match — governs both company_name_filter\
+            \ and current_company_names: contains (substring), exact, or similar.\
+            \ Domains and LinkedIn URLs are always exact."
+          enum:
+          - contains
+          - exact
+          - similar
+          title: Companynamematchtype
+          type: string
+        firstName:
+          default: ""
+          description: "First name, exact."
+          title: Firstname
+          type: string
+        lastName:
+          default: ""
+          description: "Last name, exact."
+          title: Lastname
+          type: string
+        linkedinUrls:
+          description: Person LinkedIn vanity URLs; any of them matches.
+          items:
+            type: string
+          type: array
+        pastCompanies:
+          description: "Past employer names, substring matched."
+          items:
+            type: string
+          type: array
+        pastTitles:
+          description: "Past job titles, substring matched."
+          items:
+            type: string
+          type: array
+        yearsAtCompany:
+          default: ""
+          description: "Years in the current role bucket: 0-1, 1-2, 2-5, 5-10 or 10+."
+          title: Yearsatcompany
+          type: string
+        recentlyChangedJobs:
+          default: false
+          description: Only people who changed jobs recently.
+          title: Recentlychangedjobs
+          type: boolean
+        currentCompanyLinkedInUrls:
+          description: Current employer LinkedIn company URLs; ORed with domains and
+            names.
+          items:
+            type: string
+          type: array
+        currentCompanyDomains:
+          description: Current employer website domains; ORed with URLs and names.
+          items:
+            type: string
+          type: array
+        currentCompanyNames:
+          description: Current employer names; ORed with URLs and domains.
+          items:
+            type: string
+          type: array
+        pastCompanyLinkedInUrls:
+          description: Past employer LinkedIn company URLs.
+          items:
+            type: string
+          type: array
+        functionCategoriesInclude:
+          description: "Current job functions, e.g. Engineering or Sales."
+          items:
+            type: string
+          type: array
+        pastFunctionCategoriesInclude:
+          description: Past job functions.
+          items:
+            type: string
+          type: array
+        pastSeniority:
+          description: Past seniority levels.
+          items:
+            type: string
+          type: array
+        pastCompaniesRequireAll:
+          default: false
+          description: "When true, every past company and past company URL must appear\
+            \ in the person's history instead of any one of them."
+          title: Pastcompaniesrequireall
+          type: boolean
+        neverWorkedAtCompanies:
+          description: LinkedIn company URLs the person must never have worked at;
+            unsupported values are rejected.
+          items:
+            type: string
+          type: array
+        neverHeldTitles:
+          description: "Titles the person must never have held, matched exactly."
+          items:
+            type: string
+          type: array
+        followersMin:
+          default: ""
+          description: Minimum number of followers.
+          title: Followersmin
+          type: string
+        followersMax:
+          default: ""
+          description: Maximum number of followers.
+          title: Followersmax
+          type: string
+        languages:
+          description: "Languages listed on the profile, substring matched."
+          items:
+            type: string
+          type: array
+        openToCards:
+          description: "LinkedIn open-to cards: CAREER_INTEREST, HIRING_MANAGER, VOLUNTEERING."
+          items:
+            type: string
+          type: array
+        profileUpdatedAfter:
+          default: ""
+          description: Profile last updated on or after this YYYY-MM-DD date.
+          title: Profileupdatedafter
+          type: string
+        headlineContains:
+          default: ""
+          description: Substring the profile headline must contain.
+          title: Headlinecontains
+          type: string
+        summaryContains:
+          default: ""
+          description: Substring the profile summary must contain.
+          title: Summarycontains
+          type: string
+        twitterHandle:
+          default: ""
+          description: "Twitter handle, exact; a leading @ is stripped."
+          title: Twitterhandle
+          type: string
+        titleBooleanQuery:
+          default: ""
+          description: "Boolean expression over the current title using AND, OR, parentheses\
+            \ and quoted phrases."
+          title: Titlebooleanquery
+          type: string
+        keywordsBooleanQuery:
+          default: ""
+          description: Boolean expression matched against the headline or summary.
+          title: Keywordsbooleanquery
+          type: string
+        joinedCurrentAfter:
+          default: ""
+          description: Started the current role on or after this YYYY-MM-DD date.
+          title: Joinedcurrentafter
+          type: string
+        pastLeftCompanyAfter:
+          default: ""
+          description: Left a past company on or after this YYYY-MM-DD date.
+          title: Pastleftcompanyafter
+          type: string
+        excludeProfileUrls:
+          description: Person LinkedIn URLs to exclude; resolved by the exclusions
+            step.
+          items:
+            type: string
+          type: array
+        excludeCompanyDomains:
+          description: Current employer domains to exclude; resolved by the exclusions
+            step.
+          items:
+            type: string
+          type: array
+        excludeCrmCustomers:
+          default: false
+          description: Exclude current CRM customers (legacy flat CRM toggle).
+          title: Excludecrmcustomers
+          type: boolean
+        excludeCrmActiveOpportunities:
+          default: false
+          description: Exclude CRM accounts with active opportunities (legacy toggle).
+          title: Excludecrmactiveopportunities
+          type: boolean
+        excludeCrmOwnedByMe:
+          default: false
+          description: Exclude CRM records owned by the caller (legacy toggle).
+          title: Excludecrmownedbyme
+          type: boolean
+        excludeCrmOwnedByOthers:
+          default: false
+          description: Exclude CRM records owned by other users (legacy toggle).
+          title: Excludecrmownedbyothers
+          type: boolean
+        excludeCrmOwner:
+          default: ""
+          description: CRM user id whose owned records are excluded (legacy field).
+          title: Excludecrmowner
+          type: string
+        excludeCrmAccountStatus:
+          default: ""
+          description: CRM account status value to exclude (legacy field).
+          title: Excludecrmaccountstatus
+          type: string
+        crmFilterSections:
+          $ref: "#/components/schemas/CrmFilterSections"
+        excludeInCleanlist:
+          default: "off"
+          description: "Cleanlist dedupe scope: off, any list in the org, or specific\
+            \ lists."
+          enum:
+          - "off"
+          - any
+          - list
+          title: Excludeincleanlist
+          type: string
+        excludeInCleanlistListIds:
+          description: Lead list ids the list scope resolves against.
+          items:
+            type: string
+          type: array
+        companyFilterCompositeMode:
+          default: false
+          description: Routing override that targets the company-first composite search.
+          title: Companyfiltercompositemode
+          type: boolean
+        geoRadius:
+          $ref: "#/components/schemas/GeoRadius"
+        maxResults:
+          default: 100
+          description: "Portal result cap. In the public API, explicitly setting this\
+            \ applies a per-response ceiling of 1-500 rows, combined with limit using\
+            \ the smaller value. The default is non-binding; continuation pages are\
+            \ separate. Not a provider filter."
+          title: Maxresults
+          type: integer
+        limitPerCompany:
+          default: ""
+          description: "Portal client-side company cap. In the public API, 1-100 caps\
+            \ each returned page by its selected matching company; unknown-company\
+            \ rows are omitted with a warning. Continuation pages may return more\
+            \ from that company. Empty means unset."
+          title: Limitpercompany
+          type: string
+      title: PeopleSearchCriteria
+    PeopleSearchRequest:
+      additionalProperties: {}
+      example:
+        cursor: cursor
+        criteria:
+          excludeCrmOwnedByOthers: false
+          neverWorkedAtCompanies:
+          - neverWorkedAtCompanies
+          - neverWorkedAtCompanies
+          jobTitlesExclude:
+          - jobTitlesExclude
+          - jobTitlesExclude
+          pastCompanies:
+          - pastCompanies
+          - pastCompanies
+          connectionsMax: ""
+          companyFilterCompositeMode: false
+          excludeCrmOwner: ""
+          skills:
+          - skills
+          - skills
+          keywordsBooleanQuery: ""
+          crmFilterSections:
+            salesforce:
+            - condition: condition
+              id: id
+              polarity: exclude
+            - condition: condition
+              id: id
+              polarity: exclude
+            hubspot:
+            - condition: condition
+              id: id
+              polarity: exclude
+            - condition: condition
+              id: id
+              polarity: exclude
+          companyCountriesExclude:
+          - companyCountriesExclude
+          - companyCountriesExclude
+          currentCompanyNames:
+          - currentCompanyNames
+          - currentCompanyNames
+          linkedinUrls:
+          - linkedinUrls
+          - linkedinUrls
+          pastTitles:
+          - pastTitles
+          - pastTitles
+          pastSeniority:
+          - pastSeniority
+          - pastSeniority
+          excludeCrmAccountStatus: ""
+          maxResults: 6
+          companySizes:
+          - companySizes
+          - companySizes
+          companyCitiesExclude:
+          - companyCitiesExclude
+          - companyCitiesExclude
+          excludeInCleanlist: "off"
+          companyCountries:
+          - companyCountries
+          - companyCountries
+          excludeCrmCustomers: false
+          schoolNames:
+          - schoolNames
+          - schoolNames
+          companyCities:
+          - companyCities
+          - companyCities
+          openToCards:
+          - openToCards
+          - openToCards
+          contactRegionsExclude:
+          - contactRegionsExclude
+          - contactRegionsExclude
+          excludeCompanyDomains:
+          - excludeCompanyDomains
+          - excludeCompanyDomains
+          contactCountries:
+          - contactCountries
+          - contactCountries
+          companyRegions:
+          - companyRegions
+          - companyRegions
+          degreeTypes:
+          - degreeTypes
+          - degreeTypes
+          companyNameFilter: ""
+          companyNameMatchType: contains
+          firstName: ""
+          functionCategoriesInclude:
+          - functionCategoriesInclude
+          - functionCategoriesInclude
+          followersMin: ""
+          fieldsOfStudy:
+          - fieldsOfStudy
+          - fieldsOfStudy
+          twitterHandle: ""
+          excludeProfileUrls:
+          - excludeProfileUrls
+          - excludeProfileUrls
+          jobTitlesInclude:
+          - jobTitlesInclude
+          - jobTitlesInclude
+          lastName: ""
+          pastFunctionCategoriesInclude:
+          - pastFunctionCategoriesInclude
+          - pastFunctionCategoriesInclude
+          currentCompanyDomains:
+          - currentCompanyDomains
+          - currentCompanyDomains
+          certificationKeywords:
+          - certificationKeywords
+          - certificationKeywords
+          followersMax: ""
+          joinedCurrentAfter: ""
+          pastCompanyLinkedInUrls:
+          - pastCompanyLinkedInUrls
+          - pastCompanyLinkedInUrls
+          recentlyChangedJobs: false
+          currentCompanyLinkedInUrls:
+          - currentCompanyLinkedInUrls
+          - currentCompanyLinkedInUrls
+          limitPerCompany: ""
+          jobTitleMatchType: contains
+          yearsOfExperience: ""
+          contactCitiesExclude:
+          - contactCitiesExclude
+          - contactCitiesExclude
+          neverHeldTitles:
+          - neverHeldTitles
+          - neverHeldTitles
+          profileUpdatedAfter: ""
+          industriesExclude:
+          - industriesExclude
+          - industriesExclude
+          excludeCrmActiveOpportunities: false
+          languages:
+          - languages
+          - languages
+          titleBooleanQuery: ""
+          geoRadius:
+            unit: km
+            center: ""
+            radius: 0.8008281904610115
+          yearsAtCompany: ""
+          pastCompaniesRequireAll: false
+          industriesInclude:
+          - industriesInclude
+          - industriesInclude
+          contactRegions:
+          - contactRegions
+          - contactRegions
+          companyRegionsExclude:
+          - companyRegionsExclude
+          - companyRegionsExclude
+          pastLeftCompanyAfter: ""
+          excludeCrmOwnedByMe: false
+          excludeInCleanlistListIds:
+          - excludeInCleanlistListIds
+          - excludeInCleanlistListIds
+          contactCities:
+          - contactCities
+          - contactCities
+          summaryContains: ""
+          headlineContains: ""
+          contactCountriesExclude:
+          - contactCountriesExclude
+          - contactCountriesExclude
+          seniority:
+          - seniority
+          - seniority
+          connectionsMin: ""
+        company_criteria:
+          headcountLatestMax: ""
+          revenueMax: ""
+          companyName: ""
+          yearFoundedMax: ""
+          fundingRoundTypes:
+          - fundingRoundTypes
+          - fundingRoundTypes
+          fundingRoundTypesExclude:
+          - fundingRoundTypesExclude
+          - fundingRoundTypesExclude
+          lastFundingRoundAmountMax: ""
+          crmFilterSections:
+            salesforce:
+            - condition: condition
+              id: id
+              polarity: exclude
+            - condition: condition
+              id: id
+              polarity: exclude
+            hubspot:
+            - condition: condition
+              id: id
+              polarity: exclude
+            - condition: condition
+              id: id
+              polarity: exclude
+          companyNamesList:
+          - companyNamesList
+          - companyNamesList
+          crunchbaseCategoriesExclude:
+          - crunchbaseCategoriesExclude
+          - crunchbaseCategoriesExclude
+          followersGrowth12mMin: ""
+          investorsExclude:
+          - investorsExclude
+          - investorsExclude
+          excludeInCleanlist: "off"
+          lastFundingDateAfter: ""
+          excludeCompanyDomains:
+          - excludeCompanyDomains
+          - excludeCompanyDomains
+          hqStates:
+          - hqStates
+          - hqStates
+          lastFundingRoundAmountMin: ""
+          yearFoundedMin: ""
+          headcountRanges:
+          - headcountRanges
+          - headcountRanges
+          growth3mMin: ""
+          growth1mMin: ""
+          companyNameMatchType: contains
+          headcountLatestMin: ""
+          followersMin: ""
+          ipoDateAfter: ""
+          twitterHandle: ""
+          domain: ""
+          hqCountriesIso3Exclude:
+          - hqCountriesIso3Exclude
+          - hqCountriesIso3Exclude
+          stockListings:
+          - stockListings
+          - stockListings
+          descriptionKeyword: ""
+          investorsInclude:
+          - investorsInclude
+          - investorsInclude
+          revenueMin: ""
+          updatedAfter: ""
+          growthMin: ""
+          stockSymbols:
+          - stockSymbols
+          - stockSymbols
+          valuationMax: ""
+          acquiredOnly: false
+          crunchbaseCategoriesInclude:
+          - crunchbaseCategoriesInclude
+          - crunchbaseCategoriesInclude
+          linkedinCategoriesInclude:
+          - linkedinCategoriesInclude
+          - linkedinCategoriesInclude
+          compositeMode: false
+          domainsList:
+          - domainsList
+          - domainsList
+          fundingAmountMin: ""
+          growth12mMin: ""
+          hqCitiesExclude:
+          - hqCitiesExclude
+          - hqCitiesExclude
+          growthMax: ""
+          largestHeadcountCountriesIso3:
+          - largestHeadcountCountriesIso3
+          - largestHeadcountCountriesIso3
+          hqCities:
+          - hqCities
+          - hqCities
+          industriesExclude:
+          - industriesExclude
+          - industriesExclude
+          companyType:
+          - companyType
+          - companyType
+          industriesInclude:
+          - industriesInclude
+          - industriesInclude
+          excludeInCleanlistListIds:
+          - excludeInCleanlistListIds
+          - excludeInCleanlistListIds
+          hqCountriesIso3:
+          - hqCountriesIso3
+          - hqCountriesIso3
+          workforceRules:
+          - op: '>='
+            role: role
+            metric: percent
+            threshold: 1.4658129805029452
+          - op: '>='
+            role: role
+            metric: percent
+            threshold: 1.4658129805029452
+          companyTypeExclude:
+          - companyTypeExclude
+          - companyTypeExclude
+          followersGrowth6mMin: ""
+          headcountRangesExclude:
+          - headcountRangesExclude
+          - headcountRangesExclude
+          valuationMin: ""
+          bootstrappedOnly: false
+          hqStatesExclude:
+          - hqStatesExclude
+          - hqStatesExclude
+        limit: 298
+        filters: "{}"
+        sort: sort
+        crm: crm
+      properties:
+        filters:
+          additionalProperties: false
+          nullable: true
+          type: object
+        criteria:
+          $ref: "#/components/schemas/PeopleSearchCriteria"
+        company_criteria:
+          $ref: "#/components/schemas/CompanySearchCriteria"
+        crm:
+          nullable: true
+          type: string
+        limit:
+          default: 25
+          description: "Maximum rows for this response. When criteria.maxResults is\
+            \ explicitly provided, the smaller of the two limits applies. Continuation\
+            \ pages are separate."
+          maximum: 500.0
+          minimum: 1.0
+          title: Limit
+          type: integer
+        cursor:
+          nullable: true
+          type: string
+        sort:
+          nullable: true
+          type: string
+      title: PeopleSearchRequest
+    PeopleSearchResponse:
+      additionalProperties: {}
+      example:
+        search_handoff:
+          unavailable_reason: unavailable_reason
+          url: url
+        cursor: cursor
+        usage: usage
+        warnings:
+        - warnings
+        - warnings
+        credits_charged: 3
+        agent_instructions: agent_instructions
+        task_id: task_id
+        timestamp_ms: 0
+        message: message
+        entity_kind: person
+        total: 9
+        route: "{}"
+        exclusions_applied:
+          key: 6
+        truncation_warning: truncation_warning
+        results:
+        - match_evidence:
+            scope: current_role_and_company
+            warnings:
+            - warnings
+            - warnings
+            title_match_mode: contains
+            company_scope_match: true
+            status: matched
+          current_roles:
+          - company_industry: company_industry
+            domain: domain
+            company_industries_truncated: true
+            company_headcount: 7
+            company: company
+            company_linkedin_url: company_linkedin_url
+            title: title
+            company_founded_year: 2
+            company_industries:
+            - company_industries
+            - company_industries
+            seniority: seniority
+            company_headcount_range: company_headcount_range
+          - company_industry: company_industry
+            domain: domain
+            company_industries_truncated: true
+            company_headcount: 7
+            company: company
+            company_linkedin_url: company_linkedin_url
+            title: title
+            company_founded_year: 2
+            company_industries:
+            - company_industries
+            - company_industries
+            seniority: seniority
+            company_headcount_range: company_headcount_range
+          company_industries_truncated: true
+          last_name: last_name
+          company_headcount: 5
+          profile_image_url: profile_image_url
+          company_linkedin_url: company_linkedin_url
+          title: title
+          company_founded_year: 5
+          company_headcount_range: company_headcount_range
+          company_industry: company_industry
+          full_name: full_name
+          domain: domain
+          confidence_score: 1
+          company: company
+          location: location
+          linkedin_url: linkedin_url
+          company_industries:
+          - company_industries
+          - company_industries
+          first_name: first_name
+          lead_id: lead_id
+          seniority: seniority
+        - match_evidence:
+            scope: current_role_and_company
+            warnings:
+            - warnings
+            - warnings
+            title_match_mode: contains
+            company_scope_match: true
+            status: matched
+          current_roles:
+          - company_industry: company_industry
+            domain: domain
+            company_industries_truncated: true
+            company_headcount: 7
+            company: company
+            company_linkedin_url: company_linkedin_url
+            title: title
+            company_founded_year: 2
+            company_industries:
+            - company_industries
+            - company_industries
+            seniority: seniority
+            company_headcount_range: company_headcount_range
+          - company_industry: company_industry
+            domain: domain
+            company_industries_truncated: true
+            company_headcount: 7
+            company: company
+            company_linkedin_url: company_linkedin_url
+            title: title
+            company_founded_year: 2
+            company_industries:
+            - company_industries
+            - company_industries
+            seniority: seniority
+            company_headcount_range: company_headcount_range
+          company_industries_truncated: true
+          last_name: last_name
+          company_headcount: 5
+          profile_image_url: profile_image_url
+          company_linkedin_url: company_linkedin_url
+          title: title
+          company_founded_year: 5
+          company_headcount_range: company_headcount_range
+          company_industry: company_industry
+          full_name: full_name
+          domain: domain
+          confidence_score: 1
+          company: company
+          location: location
+          linkedin_url: linkedin_url
+          company_industries:
+          - company_industries
+          - company_industries
+          first_name: first_name
+          lead_id: lead_id
+          seniority: seniority
+      properties:
+        task_id:
+          nullable: true
+          type: string
+        timestamp_ms:
+          nullable: true
+          type: integer
+        agent_instructions:
+          nullable: true
+          type: string
+        usage:
+          nullable: true
+          type: string
+        message:
+          nullable: true
+          type: string
+        entity_kind:
+          default: person
+          enum:
+          - person
+          title: Entity Kind
+          type: string
+        search_handoff:
+          $ref: "#/components/schemas/SearchHandoff"
+        route:
+          additionalProperties: false
+          nullable: true
+          type: object
+        warnings:
+          items:
+            type: string
+          type: array
+        exclusions_applied:
+          additionalProperties:
+            type: integer
+          nullable: true
+        results:
+          items:
+            $ref: "#/components/schemas/PeopleSearchResultRow"
+          type: array
+        total:
+          nullable: true
+          type: integer
+        cursor:
+          nullable: true
+          type: string
+        credits_charged:
+          title: Credits Charged
+          type: integer
+        truncation_warning:
+          nullable: true
+          type: string
+      required:
+      - credits_charged
+      - results
+      - total
+      title: PeopleSearchResponse
+    PeopleSearchResultRow:
+      additionalProperties: false
+      example:
+        match_evidence:
+          scope: current_role_and_company
+          warnings:
+          - warnings
+          - warnings
+          title_match_mode: contains
+          company_scope_match: true
+          status: matched
+        current_roles:
+        - company_industry: company_industry
+          domain: domain
+          company_industries_truncated: true
+          company_headcount: 7
+          company: company
+          company_linkedin_url: company_linkedin_url
+          title: title
+          company_founded_year: 2
+          company_industries:
+          - company_industries
+          - company_industries
+          seniority: seniority
+          company_headcount_range: company_headcount_range
+        - company_industry: company_industry
+          domain: domain
+          company_industries_truncated: true
+          company_headcount: 7
+          company: company
+          company_linkedin_url: company_linkedin_url
+          title: title
+          company_founded_year: 2
+          company_industries:
+          - company_industries
+          - company_industries
+          seniority: seniority
+          company_headcount_range: company_headcount_range
+        company_industries_truncated: true
+        last_name: last_name
+        company_headcount: 5
+        profile_image_url: profile_image_url
+        company_linkedin_url: company_linkedin_url
+        title: title
+        company_founded_year: 5
+        company_headcount_range: company_headcount_range
+        company_industry: company_industry
+        full_name: full_name
+        domain: domain
+        confidence_score: 1
+        company: company
+        location: location
+        linkedin_url: linkedin_url
+        company_industries:
+        - company_industries
+        - company_industries
+        first_name: first_name
+        lead_id: lead_id
+        seniority: seniority
+      properties:
+        lead_id:
+          nullable: true
+          type: string
+        first_name:
+          nullable: true
+          type: string
+        last_name:
+          nullable: true
+          type: string
+        full_name:
+          nullable: true
+          type: string
+        title:
+          nullable: true
+          type: string
+        company:
+          nullable: true
+          type: string
+        domain:
+          nullable: true
+          type: string
+        location:
+          nullable: true
+          type: string
+        linkedin_url:
+          nullable: true
+          type: string
+        seniority:
+          nullable: true
+          type: string
+        profile_image_url:
+          nullable: true
+          type: string
+        confidence_score:
+          nullable: true
+          type: integer
+        company_linkedin_url:
+          nullable: true
+          type: string
+        company_founded_year:
+          nullable: true
+          type: integer
+        company_industry:
+          nullable: true
+          type: string
+        company_industries:
+          items:
+            type: string
+          nullable: true
+          type: array
+        company_industries_truncated:
+          nullable: true
+          type: boolean
+        company_headcount:
+          nullable: true
+          type: integer
+        company_headcount_range:
+          nullable: true
+          type: string
+        current_roles:
+          items:
+            $ref: "#/components/schemas/CurrentRoleEvidence"
+          nullable: true
+          type: array
+        match_evidence:
+          $ref: "#/components/schemas/PeopleMatchEvidence"
+      title: PeopleSearchResultRow
     PublicLeadListUpdate:
       additionalProperties: false
       description: |-
@@ -2854,18 +7057,22 @@ components:
           type: string
         column_name:
           description: Display name for the new column that stores each lead's agent
-            output. Re-using an existing column name appends to it unless `overwrite=true`
-            is set.
+            output for custom/preset agents. Existing completed outputs are preserved
+            unless `overwrite=true` is quoted. Cold intro email uses the platform's
+            built-in email column.
           maxLength: 100
           minLength: 1
           title: Column Name
           type: string
+        template_id:
+          nullable: true
+          type: string
         lead_scope:
           default: subset
           description: "`subset` runs on up to `max_rows` leads (the fast, cheap path).\
-            \ `all` runs on the entire list, but any `all` run above the configured\
-            \ threshold (default 500 leads) is blocked with a 400 `approval_required`\
-            \ until you narrow scope or route a human approval."
+            \ `all` selects the entire list. Any selection above the configured threshold\
+            \ (default 500 leads) is blocked with a 400 `approval_required` until\
+            \ you narrow scope or route a human approval."
           enum:
           - subset
           - all
@@ -2890,8 +7097,8 @@ components:
         overwrite:
           default: false
           description: "When true, existing values in a column of the same name are\
-            \ overwritten instead of preserved. Passed through to the workflow via\
-            \ column metadata."
+            \ overwritten instead of preserved. Included in the signed quote and applied\
+            \ while resolving the exact eligible lead IDs."
           title: Overwrite
           type: boolean
       required:
@@ -2978,6 +7185,20 @@ components:
       - smart_agent_task_id
       - status
       title: RunSmartAgentResponse
+    SearchHandoff:
+      additionalProperties: false
+      example:
+        unavailable_reason: unavailable_reason
+        url: url
+      properties:
+        url:
+          maxLength: 8192
+          nullable: true
+          type: string
+        unavailable_reason:
+          nullable: true
+          type: string
+      title: SearchHandoff
     SingleEnrichmentResultRead:
       additionalProperties: false
       description: |-
@@ -3256,7 +7477,7 @@ components:
         - calls: 176
           credits_spent: 0.0
           errors: 2
-          group: /api/v1/public/search/people
+          group: /api/v2/people/find
         total_calls: 318
         total_credits_spent: 0.0
         total_errors: 5
@@ -3297,12 +7518,6 @@ components:
       - total_errors
       title: UsageReportResponse
     ValidationError:
-      example:
-        msg: msg
-        loc:
-        - ValidationError_loc_inner
-        - ValidationError_loc_inner
-        type: type
       properties:
         loc:
           items:
@@ -3522,7 +7737,7 @@ components:
           $ref: "#/components/schemas/SingleEnrichmentResultRead"
         credits_charged:
           nullable: true
-          type: integer
+          type: number
         credits_refunded:
           nullable: true
           type: integer
@@ -3530,6 +7745,176 @@ components:
       - status
       - workflow_id
       title: WorkflowStatusResponse
+    WorkforceRule:
+      additionalProperties: false
+      description: One CompanyDB role distribution or role growth rule.
+      example:
+        op: '>='
+        role: role
+        metric: percent
+        threshold: 1.4658129805029452
+      properties:
+        role:
+          description: "Workforce role, one of WORKFORCE_ROLES."
+          title: Role
+          type: string
+        metric:
+          description: "Role distribution percent, six-month growth (growth_6m), or\
+            \ year-over-year growth (growth_yoy)."
+          enum:
+          - percent
+          - growth_6m
+          - growth_yoy
+          title: Metric
+          type: string
+        op:
+          description: Comparison direction.
+          enum:
+          - '>='
+          - <=
+          title: Op
+          type: string
+        threshold:
+          description: Finite percentage threshold; growth thresholds may be negative.
+          title: Threshold
+          type: number
+      required:
+      - metric
+      - op
+      - role
+      - threshold
+      title: WorkforceRule
+    SuggestedAction:
+      additionalProperties: {}
+      description: A follow-up suggestion the agent can present or call directly.
+      example:
+        arguments: "{}"
+        label: label
+        tool: tool
+        url: url
+      properties:
+        label:
+          title: Label
+          type: string
+        tool:
+          nullable: true
+          type: string
+        arguments:
+          additionalProperties: false
+          nullable: true
+          type: object
+        url:
+          nullable: true
+          type: string
+      required:
+      - label
+      title: SuggestedAction
+    PublicApiErrorPayload:
+      additionalProperties: {}
+      description: The `error` field of every public-API error response.
+      example:
+        retryable: false
+        suggested_actions:
+        - arguments: "{}"
+          label: label
+          tool: tool
+          url: url
+        - arguments: "{}"
+          label: label
+          tool: tool
+          url: url
+        code: code
+        cause: cause
+        retry_after_ms: 0
+        docs_url: docs_url
+        shortfall_credits: 5
+        problem: problem
+        fix: fix
+        available_credits: 1
+        estimated_cost_credits: 6
+        details: "{}"
+        request_id: request_id
+      properties:
+        code:
+          title: Code
+          type: string
+        problem:
+          title: Problem
+          type: string
+        cause:
+          nullable: true
+          type: string
+        fix:
+          nullable: true
+          type: string
+        retryable:
+          default: false
+          title: Retryable
+          type: boolean
+        retry_after_ms:
+          nullable: true
+          type: integer
+        docs_url:
+          title: Docs Url
+          type: string
+        request_id:
+          title: Request Id
+          type: string
+        estimated_cost_credits:
+          nullable: true
+          type: integer
+        available_credits:
+          nullable: true
+          type: integer
+        shortfall_credits:
+          nullable: true
+          type: integer
+        suggested_actions:
+          items:
+            $ref: "#/components/schemas/SuggestedAction"
+          nullable: true
+          type: array
+        details:
+          additionalProperties: false
+          nullable: true
+          type: object
+      required:
+      - code
+      - docs_url
+      - problem
+      - request_id
+      title: ErrorPayload
+    PublicApiError:
+      description: Canonical Cleanlist public API error envelope.
+      example:
+        error:
+          retryable: false
+          suggested_actions:
+          - arguments: "{}"
+            label: label
+            tool: tool
+            url: url
+          - arguments: "{}"
+            label: label
+            tool: tool
+            url: url
+          code: code
+          cause: cause
+          retry_after_ms: 0
+          docs_url: docs_url
+          shortfall_credits: 5
+          problem: problem
+          fix: fix
+          available_credits: 1
+          estimated_cost_credits: 6
+          details: "{}"
+          request_id: request_id
+      properties:
+        error:
+          $ref: "#/components/schemas/PublicApiErrorPayload"
+      required:
+      - error
+      title: PublicApiError
     Body:
       oneOf:
       - $ref: "#/components/schemas/AddByLeadIds"

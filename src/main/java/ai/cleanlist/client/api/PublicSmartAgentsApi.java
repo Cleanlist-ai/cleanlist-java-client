@@ -27,8 +27,8 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
-import ai.cleanlist.client.model.HTTPValidationError;
 import ai.cleanlist.client.model.ListSmartAgentsResponse;
+import ai.cleanlist.client.model.PublicApiError;
 import ai.cleanlist.client.model.RunSmartAgentRequest;
 import ai.cleanlist.client.model.RunSmartAgentResponse;
 import ai.cleanlist.client.model.SmartAgentResultsResponse;
@@ -87,7 +87,15 @@ public class PublicSmartAgentsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call getSmartAgentResultsCall(@javax.annotation.Nonnull String smartAgentTaskId, final ApiCallback _callback) throws ApiException {
@@ -157,7 +165,15 @@ public class PublicSmartAgentsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public SmartAgentResultsResponse getSmartAgentResults(@javax.annotation.Nonnull String smartAgentTaskId) throws ApiException {
@@ -176,7 +192,15 @@ public class PublicSmartAgentsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<SmartAgentResultsResponse> getSmartAgentResultsWithHttpInfo(@javax.annotation.Nonnull String smartAgentTaskId) throws ApiException {
@@ -197,7 +221,15 @@ public class PublicSmartAgentsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call getSmartAgentResultsAsync(@javax.annotation.Nonnull String smartAgentTaskId, final ApiCallback<SmartAgentResultsResponse> _callback) throws ApiException {
@@ -219,7 +251,15 @@ public class PublicSmartAgentsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call listSmartAgentsCall(@javax.annotation.Nullable String listId, @javax.annotation.Nullable Integer limit, final ApiCallback _callback) throws ApiException {
@@ -292,7 +332,15 @@ public class PublicSmartAgentsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ListSmartAgentsResponse listSmartAgents(@javax.annotation.Nullable String listId, @javax.annotation.Nullable Integer limit) throws ApiException {
@@ -312,7 +360,15 @@ public class PublicSmartAgentsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<ListSmartAgentsResponse> listSmartAgentsWithHttpInfo(@javax.annotation.Nullable String listId, @javax.annotation.Nullable Integer limit) throws ApiException {
@@ -334,7 +390,15 @@ public class PublicSmartAgentsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call listSmartAgentsAsync(@javax.annotation.Nullable String listId, @javax.annotation.Nullable Integer limit, final ApiCallback<ListSmartAgentsResponse> _callback) throws ApiException {
@@ -355,7 +419,15 @@ public class PublicSmartAgentsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call runSmartAgentCall(@javax.annotation.Nonnull RunSmartAgentRequest runSmartAgentRequest, final ApiCallback _callback) throws ApiException {
@@ -416,7 +488,7 @@ public class PublicSmartAgentsApi {
 
     /**
      * Run a smart agent
-     * Launch an AI smart agent over the leads in a list and return a run id.  Pick an &#x60;agent_type&#x60; — &#x60;custom_ai&#x60; (your own &#x60;prompt&#x60;), &#x60;cold_intro_email&#x60; (personalized opener), or a preset research agent — and the run executes asynchronously as a smart column, one AI call per lead. Runs are metered per lead by agent type (e.g. &#x60;custom_ai&#x60; ≈ 1 credit/lead, &#x60;cold_intro_email&#x60; ≈ 3 credits/lead) and require a single-use &#x60;quote_id&#x60; from POST /credits/estimate; credits are debited as rows complete. Scope with &#x60;lead_scope&#x3D;\&quot;subset\&quot;&#x60; + &#x60;max_rows&#x60; for speed and cost control — a &#x60;lead_scope&#x3D;\&quot;all\&quot;&#x60; run above the approval threshold (default 500 leads) is blocked with a 400 &#x60;approval_required&#x60; until you narrow it or route a human approval. The response returns immediately with &#x60;status&#x3D;\&quot;pending\&quot;&#x60;; poll GET /smart-agents/{smart_agent_task_id} for progress and per-lead results.  **📖 Docs:** https://docs.cleanlist.ai/guides/using-ai-agents
+     * Launch an AI smart agent over the leads in a list and return a run id.  Pick an &#x60;agent_type&#x60; — &#x60;custom_ai&#x60; (your own &#x60;prompt&#x60;), &#x60;cold_intro_email&#x60; (personalized opener), or a preset research agent — and the run executes asynchronously as a smart column, one AI call per lead. Runs are metered per lead by agent type (&#x60;custom_ai&#x60; is priced from its &#x60;prompt&#x60;, so read its price from the quote; &#x60;cold_intro_email&#x60; ≈ 3 credits/lead) and require a single-use &#x60;quote_id&#x60; from POST /credits/estimate; credits are debited before dispatch. Cold intro email requires enriched profiles and an active organization email template. Scope with &#x60;lead_scope&#x3D;\&quot;subset\&quot;&#x60; + &#x60;max_rows&#x60; for cost control. Any selection above the approval threshold (default 500 leads) is blocked with &#x60;approval_required&#x60;; this public route requires a smaller selection. The response returns immediately with &#x60;status&#x3D;\&quot;pending\&quot;&#x60;; poll GET /smart-agents/{smart_agent_task_id} for progress and per-lead results.  **📖 Docs:** https://docs.cleanlist.ai/guides/using-ai-agents
      * @param runSmartAgentRequest  (required)
      * @return RunSmartAgentResponse
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
@@ -425,7 +497,15 @@ public class PublicSmartAgentsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public RunSmartAgentResponse runSmartAgent(@javax.annotation.Nonnull RunSmartAgentRequest runSmartAgentRequest) throws ApiException {
@@ -435,7 +515,7 @@ public class PublicSmartAgentsApi {
 
     /**
      * Run a smart agent
-     * Launch an AI smart agent over the leads in a list and return a run id.  Pick an &#x60;agent_type&#x60; — &#x60;custom_ai&#x60; (your own &#x60;prompt&#x60;), &#x60;cold_intro_email&#x60; (personalized opener), or a preset research agent — and the run executes asynchronously as a smart column, one AI call per lead. Runs are metered per lead by agent type (e.g. &#x60;custom_ai&#x60; ≈ 1 credit/lead, &#x60;cold_intro_email&#x60; ≈ 3 credits/lead) and require a single-use &#x60;quote_id&#x60; from POST /credits/estimate; credits are debited as rows complete. Scope with &#x60;lead_scope&#x3D;\&quot;subset\&quot;&#x60; + &#x60;max_rows&#x60; for speed and cost control — a &#x60;lead_scope&#x3D;\&quot;all\&quot;&#x60; run above the approval threshold (default 500 leads) is blocked with a 400 &#x60;approval_required&#x60; until you narrow it or route a human approval. The response returns immediately with &#x60;status&#x3D;\&quot;pending\&quot;&#x60;; poll GET /smart-agents/{smart_agent_task_id} for progress and per-lead results.  **📖 Docs:** https://docs.cleanlist.ai/guides/using-ai-agents
+     * Launch an AI smart agent over the leads in a list and return a run id.  Pick an &#x60;agent_type&#x60; — &#x60;custom_ai&#x60; (your own &#x60;prompt&#x60;), &#x60;cold_intro_email&#x60; (personalized opener), or a preset research agent — and the run executes asynchronously as a smart column, one AI call per lead. Runs are metered per lead by agent type (&#x60;custom_ai&#x60; is priced from its &#x60;prompt&#x60;, so read its price from the quote; &#x60;cold_intro_email&#x60; ≈ 3 credits/lead) and require a single-use &#x60;quote_id&#x60; from POST /credits/estimate; credits are debited before dispatch. Cold intro email requires enriched profiles and an active organization email template. Scope with &#x60;lead_scope&#x3D;\&quot;subset\&quot;&#x60; + &#x60;max_rows&#x60; for cost control. Any selection above the approval threshold (default 500 leads) is blocked with &#x60;approval_required&#x60;; this public route requires a smaller selection. The response returns immediately with &#x60;status&#x3D;\&quot;pending\&quot;&#x60;; poll GET /smart-agents/{smart_agent_task_id} for progress and per-lead results.  **📖 Docs:** https://docs.cleanlist.ai/guides/using-ai-agents
      * @param runSmartAgentRequest  (required)
      * @return ApiResponse&lt;RunSmartAgentResponse&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
@@ -444,7 +524,15 @@ public class PublicSmartAgentsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<RunSmartAgentResponse> runSmartAgentWithHttpInfo(@javax.annotation.Nonnull RunSmartAgentRequest runSmartAgentRequest) throws ApiException {
@@ -455,7 +543,7 @@ public class PublicSmartAgentsApi {
 
     /**
      * Run a smart agent (asynchronously)
-     * Launch an AI smart agent over the leads in a list and return a run id.  Pick an &#x60;agent_type&#x60; — &#x60;custom_ai&#x60; (your own &#x60;prompt&#x60;), &#x60;cold_intro_email&#x60; (personalized opener), or a preset research agent — and the run executes asynchronously as a smart column, one AI call per lead. Runs are metered per lead by agent type (e.g. &#x60;custom_ai&#x60; ≈ 1 credit/lead, &#x60;cold_intro_email&#x60; ≈ 3 credits/lead) and require a single-use &#x60;quote_id&#x60; from POST /credits/estimate; credits are debited as rows complete. Scope with &#x60;lead_scope&#x3D;\&quot;subset\&quot;&#x60; + &#x60;max_rows&#x60; for speed and cost control — a &#x60;lead_scope&#x3D;\&quot;all\&quot;&#x60; run above the approval threshold (default 500 leads) is blocked with a 400 &#x60;approval_required&#x60; until you narrow it or route a human approval. The response returns immediately with &#x60;status&#x3D;\&quot;pending\&quot;&#x60;; poll GET /smart-agents/{smart_agent_task_id} for progress and per-lead results.  **📖 Docs:** https://docs.cleanlist.ai/guides/using-ai-agents
+     * Launch an AI smart agent over the leads in a list and return a run id.  Pick an &#x60;agent_type&#x60; — &#x60;custom_ai&#x60; (your own &#x60;prompt&#x60;), &#x60;cold_intro_email&#x60; (personalized opener), or a preset research agent — and the run executes asynchronously as a smart column, one AI call per lead. Runs are metered per lead by agent type (&#x60;custom_ai&#x60; is priced from its &#x60;prompt&#x60;, so read its price from the quote; &#x60;cold_intro_email&#x60; ≈ 3 credits/lead) and require a single-use &#x60;quote_id&#x60; from POST /credits/estimate; credits are debited before dispatch. Cold intro email requires enriched profiles and an active organization email template. Scope with &#x60;lead_scope&#x3D;\&quot;subset\&quot;&#x60; + &#x60;max_rows&#x60; for cost control. Any selection above the approval threshold (default 500 leads) is blocked with &#x60;approval_required&#x60;; this public route requires a smaller selection. The response returns immediately with &#x60;status&#x3D;\&quot;pending\&quot;&#x60;; poll GET /smart-agents/{smart_agent_task_id} for progress and per-lead results.  **📖 Docs:** https://docs.cleanlist.ai/guides/using-ai-agents
      * @param runSmartAgentRequest  (required)
      * @param _callback The callback to be executed when the API call finishes
      * @return The request call
@@ -465,7 +553,15 @@ public class PublicSmartAgentsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call runSmartAgentAsync(@javax.annotation.Nonnull RunSmartAgentRequest runSmartAgentRequest, final ApiCallback<RunSmartAgentResponse> _callback) throws ApiException {

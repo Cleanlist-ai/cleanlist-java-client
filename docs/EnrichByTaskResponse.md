@@ -13,6 +13,7 @@
 |**usage** | **String** |  |  [optional] |
 |**message** | **String** |  |  [optional] |
 |**entityKind** | [**EntityKindEnum**](#EntityKindEnum) | Resolved entity type of the task. &#39;person&#39; → async workflow; &#39;company&#39; → synchronous inline results. |  |
+|**listId** | **String** |  |  [optional] |
 |**workflowId** | **String** |  |  [optional] |
 |**status** | [**StatusEnum**](#StatusEnum) | &#39;pending&#39; for person tasks (workflow running); &#39;completed&#39; for company tasks (results already attached). |  |
 |**totalEntities** | **Integer** | Number of cohort entities dispatched for enrichment. |  |

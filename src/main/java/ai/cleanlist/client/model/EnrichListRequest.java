@@ -21,7 +21,10 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -121,6 +124,11 @@ public class EnrichListRequest {
   @javax.annotation.Nonnull
   private String quoteId;
 
+  public static final String SERIALIZED_NAME_LEAD_IDS = "lead_ids";
+  @SerializedName(SERIALIZED_NAME_LEAD_IDS)
+  @javax.annotation.Nullable
+  private List<String> leadIds;
+
   public EnrichListRequest() {
   }
 
@@ -181,6 +189,33 @@ public class EnrichListRequest {
   }
 
 
+  public EnrichListRequest leadIds(@javax.annotation.Nullable List<String> leadIds) {
+    this.leadIds = leadIds;
+    return this;
+  }
+
+  public EnrichListRequest addLeadIdsItem(String leadIdsItem) {
+    if (this.leadIds == null) {
+      this.leadIds = new ArrayList<>();
+    }
+    this.leadIds.add(leadIdsItem);
+    return this;
+  }
+
+  /**
+   * Get leadIds
+   * @return leadIds
+   */
+  @javax.annotation.Nullable
+  public List<String> getLeadIds() {
+    return leadIds;
+  }
+
+  public void setLeadIds(@javax.annotation.Nullable List<String> leadIds) {
+    this.leadIds = leadIds;
+  }
+
+
 
   @Override
   public boolean equals(Object o) {
@@ -193,12 +228,24 @@ public class EnrichListRequest {
     EnrichListRequest enrichListRequest = (EnrichListRequest) o;
     return Objects.equals(this.listId, enrichListRequest.listId) &&
         Objects.equals(this.scope, enrichListRequest.scope) &&
-        Objects.equals(this.quoteId, enrichListRequest.quoteId);
+        Objects.equals(this.quoteId, enrichListRequest.quoteId) &&
+        Objects.equals(this.leadIds, enrichListRequest.leadIds);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(listId, scope, quoteId);
+    return Objects.hash(listId, scope, quoteId, leadIds);
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override
@@ -208,6 +255,7 @@ public class EnrichListRequest {
     sb.append("    listId: ").append(toIndentedString(listId)).append("\n");
     sb.append("    scope: ").append(toIndentedString(scope)).append("\n");
     sb.append("    quoteId: ").append(toIndentedString(quoteId)).append("\n");
+    sb.append("    leadIds: ").append(toIndentedString(leadIds)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -229,7 +277,7 @@ public class EnrichListRequest {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("list_id", "scope", "quote_id"));
+    openapiFields = new HashSet<String>(Arrays.asList("list_id", "scope", "quote_id", "lead_ids"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("list_id", "quote_id"));
@@ -275,6 +323,10 @@ public class EnrichListRequest {
       }
       if (!jsonObj.get("quote_id").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `quote_id` to be a primitive type in the JSON string but got `%s`", jsonObj.get("quote_id").toString()));
+      }
+      // ensure the optional json data is an array if present
+      if (jsonObj.get("lead_ids") != null && !jsonObj.get("lead_ids").isJsonNull() && !jsonObj.get("lead_ids").isJsonArray()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `lead_ids` to be an array in the JSON string but got `%s`", jsonObj.get("lead_ids").toString()));
       }
   }
 
