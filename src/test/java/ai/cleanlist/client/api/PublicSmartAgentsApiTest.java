@@ -14,8 +14,8 @@
 package ai.cleanlist.client.api;
 
 import ai.cleanlist.client.ApiException;
-import ai.cleanlist.client.model.HTTPValidationError;
 import ai.cleanlist.client.model.ListSmartAgentsResponse;
+import ai.cleanlist.client.model.PublicApiError;
 import ai.cleanlist.client.model.RunSmartAgentRequest;
 import ai.cleanlist.client.model.RunSmartAgentResponse;
 import ai.cleanlist.client.model.SmartAgentResultsResponse;
@@ -67,7 +67,7 @@ public class PublicSmartAgentsApiTest {
     /**
      * Run a smart agent
      *
-     * Launch an AI smart agent over the leads in a list and return a run id.  Pick an &#x60;agent_type&#x60; — &#x60;custom_ai&#x60; (your own &#x60;prompt&#x60;), &#x60;cold_intro_email&#x60; (personalized opener), or a preset research agent — and the run executes asynchronously as a smart column, one AI call per lead. Runs are metered per lead by agent type (e.g. &#x60;custom_ai&#x60; ≈ 1 credit/lead, &#x60;cold_intro_email&#x60; ≈ 3 credits/lead) and require a single-use &#x60;quote_id&#x60; from POST /credits/estimate; credits are debited as rows complete. Scope with &#x60;lead_scope&#x3D;\&quot;subset\&quot;&#x60; + &#x60;max_rows&#x60; for speed and cost control — a &#x60;lead_scope&#x3D;\&quot;all\&quot;&#x60; run above the approval threshold (default 500 leads) is blocked with a 400 &#x60;approval_required&#x60; until you narrow it or route a human approval. The response returns immediately with &#x60;status&#x3D;\&quot;pending\&quot;&#x60;; poll GET /smart-agents/{smart_agent_task_id} for progress and per-lead results.  **📖 Docs:** https://docs.cleanlist.ai/guides/using-ai-agents
+     * Launch an AI smart agent over the leads in a list and return a run id.  Pick an &#x60;agent_type&#x60; — &#x60;custom_ai&#x60; (your own &#x60;prompt&#x60;), &#x60;cold_intro_email&#x60; (personalized opener), or a preset research agent — and the run executes asynchronously as a smart column, one AI call per lead. Runs are metered per lead by agent type (&#x60;custom_ai&#x60; is priced from its &#x60;prompt&#x60;, so read its price from the quote; &#x60;cold_intro_email&#x60; ≈ 3 credits/lead) and require a single-use &#x60;quote_id&#x60; from POST /credits/estimate; credits are debited before dispatch. Cold intro email requires enriched profiles and an active organization email template. Scope with &#x60;lead_scope&#x3D;\&quot;subset\&quot;&#x60; + &#x60;max_rows&#x60; for cost control. Any selection above the approval threshold (default 500 leads) is blocked with &#x60;approval_required&#x60;; this public route requires a smaller selection. The response returns immediately with &#x60;status&#x3D;\&quot;pending\&quot;&#x60;; poll GET /smart-agents/{smart_agent_task_id} for progress and per-lead results.  **📖 Docs:** https://docs.cleanlist.ai/guides/using-ai-agents
      *
      * @throws ApiException if the Api call fails
      */

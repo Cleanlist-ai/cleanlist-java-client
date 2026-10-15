@@ -8,6 +8,8 @@ All URIs are relative to *https://api.cleanlist.ai*
 | [**createList**](PublicLeadListsApi.md#createList) | **POST** /api/v2/lead-lists | Create a lead list |
 | [**csvImport**](PublicLeadListsApi.md#csvImport) | **POST** /api/v2/lead-lists/{list_id}/csv-import | Import leads from CSV |
 | [**deleteList**](PublicLeadListsApi.md#deleteList) | **DELETE** /api/v2/lead-lists/{list_id} | Delete a lead list |
+| [**findPeople**](PublicLeadListsApi.md#findPeople) | **POST** /api/v2/lead-lists/{list_id}/find-people | Find people at companies already in a list and import them (async) |
+| [**findPeopleStatus**](PublicLeadListsApi.md#findPeopleStatus) | **GET** /api/v2/lead-lists/{list_id}/find-people/status/{workflow_id} | Poll a find-people job |
 | [**getList**](PublicLeadListsApi.md#getList) | **GET** /api/v2/lead-lists/{list_id} | Get a lead list |
 | [**listLeadsInList**](PublicLeadListsApi.md#listLeadsInList) | **GET** /api/v2/lead-lists/{list_id}/leads | List leads in a list |
 | [**listLists**](PublicLeadListsApi.md#listLists) | **GET** /api/v2/lead-lists | List lead lists |
@@ -83,7 +85,15 @@ public class Example {
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 
 <a id="createList"></a>
 # **createList**
@@ -151,7 +161,16 @@ public class Example {
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **201** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **200** | Existing same-name list reused (idempotent); &#x60;reused&#x60; is true. |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 
 <a id="csvImport"></a>
 # **csvImport**
@@ -221,7 +240,15 @@ public class Example {
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **201** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 
 <a id="deleteList"></a>
 # **deleteList**
@@ -289,7 +316,171 @@ public class Example {
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
+
+<a id="findPeople"></a>
+# **findPeople**
+> FindPeopleResponse findPeople(listId, findPeopleRequest)
+
+Find people at companies already in a list and import them (async)
+
+Start an async job that finds people at the given companies (which must already belong to &#x60;&#x60;list_id&#x60;&#x60;) and imports them into that list.  Returns a &#x60;&#x60;workflow_id&#x60;&#x60; immediately; poll &#x60;&#x60;poll_url&#x60;&#x60; (GET /lead-lists/{list_id}/find-people/status/{workflow_id}) until &#x60;&#x60;status&#x60;&#x60; is terminal. Discovery is free; imports bill the standard per-new-lead cost.
+
+### Example
+```java
+// Import classes:
+import ai.cleanlist.client.ApiClient;
+import ai.cleanlist.client.ApiException;
+import ai.cleanlist.client.Configuration;
+import ai.cleanlist.client.auth.*;
+import ai.cleanlist.client.models.*;
+import ai.cleanlist.client.api.PublicLeadListsApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.cleanlist.ai");
+    
+    // Configure HTTP bearer authorization: HTTPBearer
+    HttpBearerAuth HTTPBearer = (HttpBearerAuth) defaultClient.getAuthentication("HTTPBearer");
+    HTTPBearer.setBearerToken("BEARER TOKEN");
+
+    PublicLeadListsApi apiInstance = new PublicLeadListsApi(defaultClient);
+    String listId = "listId_example"; // String | 
+    FindPeopleRequest findPeopleRequest = new FindPeopleRequest(); // FindPeopleRequest | 
+    try {
+      FindPeopleResponse result = apiInstance.findPeople(listId, findPeopleRequest);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling PublicLeadListsApi#findPeople");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **listId** | **String**|  | |
+| **findPeopleRequest** | [**FindPeopleRequest**](FindPeopleRequest.md)|  | |
+
+### Return type
+
+[**FindPeopleResponse**](FindPeopleResponse.md)
+
+### Authorization
+
+[HTTPBearer](../README.md#HTTPBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Successful Response |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
+
+<a id="findPeopleStatus"></a>
+# **findPeopleStatus**
+> FindPeopleStatusResponse findPeopleStatus(listId, workflowId)
+
+Poll a find-people job
+
+Poll a find-people job started by &#x60;&#x60;POST /lead-lists/{list_id}/find-people&#x60;&#x60;. Free and idempotent — call until &#x60;&#x60;status&#x60;&#x60; is terminal (&#x60;&#x60;completed&#x60;&#x60; / &#x60;&#x60;failed&#x60;&#x60; / &#x60;&#x60;cancelled&#x60;&#x60;). Cross-tenant workflow ids fail closed as 404. &#x60;&#x60;list_id&#x60;&#x60; is for path nesting; the lookup is by &#x60;&#x60;workflow_id&#x60;&#x60; + org.
+
+### Example
+```java
+// Import classes:
+import ai.cleanlist.client.ApiClient;
+import ai.cleanlist.client.ApiException;
+import ai.cleanlist.client.Configuration;
+import ai.cleanlist.client.auth.*;
+import ai.cleanlist.client.models.*;
+import ai.cleanlist.client.api.PublicLeadListsApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.cleanlist.ai");
+    
+    // Configure HTTP bearer authorization: HTTPBearer
+    HttpBearerAuth HTTPBearer = (HttpBearerAuth) defaultClient.getAuthentication("HTTPBearer");
+    HTTPBearer.setBearerToken("BEARER TOKEN");
+
+    PublicLeadListsApi apiInstance = new PublicLeadListsApi(defaultClient);
+    String listId = "listId_example"; // String | 
+    String workflowId = "workflowId_example"; // String | 
+    try {
+      FindPeopleStatusResponse result = apiInstance.findPeopleStatus(listId, workflowId);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling PublicLeadListsApi#findPeopleStatus");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **listId** | **String**|  | |
+| **workflowId** | **String**|  | |
+
+### Return type
+
+[**FindPeopleStatusResponse**](FindPeopleStatusResponse.md)
+
+### Authorization
+
+[HTTPBearer](../README.md#HTTPBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Successful Response |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 
 <a id="getList"></a>
 # **getList**
@@ -357,7 +548,15 @@ public class Example {
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 
 <a id="listLeadsInList"></a>
 # **listLeadsInList**
@@ -429,7 +628,15 @@ public class Example {
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 
 <a id="listLists"></a>
 # **listLists**
@@ -501,7 +708,15 @@ public class Example {
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 
 <a id="removeLeadsFromList"></a>
 # **removeLeadsFromList**
@@ -571,7 +786,15 @@ public class Example {
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 
 <a id="updateList"></a>
 # **updateList**
@@ -641,5 +864,13 @@ public class Example {
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 

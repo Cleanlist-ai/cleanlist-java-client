@@ -22,6 +22,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import org.openapitools.jackson.nullable.JsonNullable;
 
@@ -199,7 +200,7 @@ public class WorkflowStatusResponse {
   public static final String SERIALIZED_NAME_CREDITS_CHARGED = "credits_charged";
   @SerializedName(SERIALIZED_NAME_CREDITS_CHARGED)
   @javax.annotation.Nullable
-  private Integer creditsCharged;
+  private BigDecimal creditsCharged;
 
   public static final String SERIALIZED_NAME_CREDITS_REFUNDED = "credits_refunded";
   @SerializedName(SERIALIZED_NAME_CREDITS_REFUNDED)
@@ -551,7 +552,7 @@ public class WorkflowStatusResponse {
   }
 
 
-  public WorkflowStatusResponse creditsCharged(@javax.annotation.Nullable Integer creditsCharged) {
+  public WorkflowStatusResponse creditsCharged(@javax.annotation.Nullable BigDecimal creditsCharged) {
     this.creditsCharged = creditsCharged;
     return this;
   }
@@ -561,11 +562,11 @@ public class WorkflowStatusResponse {
    * @return creditsCharged
    */
   @javax.annotation.Nullable
-  public Integer getCreditsCharged() {
+  public BigDecimal getCreditsCharged() {
     return creditsCharged;
   }
 
-  public void setCreditsCharged(@javax.annotation.Nullable Integer creditsCharged) {
+  public void setCreditsCharged(@javax.annotation.Nullable BigDecimal creditsCharged) {
     this.creditsCharged = creditsCharged;
   }
 

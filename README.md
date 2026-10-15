@@ -31,7 +31,7 @@ System.out.println("created list: " + list.getListId());
 - [Quickstart](#quickstart)
 - [Configuration](#configuration)
 - [Core concepts](#core-concepts)
-  - [Credits & the estimate → quote flow](#credits--the-estimate--quote-flow)
+  - [Credits & quotes](#credits--quotes)
   - [Enrichment is asynchronous — poll for results](#enrichment-is-asynchronous--poll-for-results)
 - [Endpoint reference](#endpoint-reference)
   - [Workspace](#workspace-clworkspace)
@@ -135,25 +135,20 @@ cl.getApiClient().setReadTimeout(30_000);
 
 ## Core concepts
 
-### Credits & the estimate → quote flow
+### Credits & quotes
 
 Search and list management are free; **enrichment and smart-agent runs cost credits**.
 Bulk/paid operations (`enrichList`, `runSmartAgent`, and CSV import with enrichment)
-require a **signed quote** from `creditsEstimate` first. The quote pins the price and is
-single-use:
+require a **signed, single-use `quoteId`** that pins the price. The pricing endpoint
+(`POST /api/v2/credits/estimate`) is not part of the public API spec, so this SDK has
+no method to request a quote; pass one you already have:
 
 ```java
-EstimateCostResponse quote = cl.workspace.creditsEstimate(
-        new EstimateCostRequest().tool("enrich_list").listId(list.getListId()).scope("full"));
-System.out.printf("cost=%d sufficient=%b%n", quote.getEstimatedCost(), quote.getSufficient());
-
-if (Boolean.TRUE.equals(quote.getSufficient())) {
-    EnrichListResponse run = cl.enrichment.enrichList(new EnrichListRequest()
-            .listId(list.getListId())
-            .scope(EnrichListRequest.ScopeEnum.FULL)
-            .quoteId(quote.getQuoteId()));
-    System.out.println("bulk workflow: " + run.getWorkflowId());
-}
+EnrichListResponse run = cl.enrichment.enrichList(new EnrichListRequest()
+        .listId(list.getListId())
+        .scope(EnrichListRequest.ScopeEnum.FULL)
+        .quoteId(quoteId));
+System.out.println("bulk workflow: " + run.getWorkflowId());
 ```
 
 Enrichment **scopes**: `PARTIAL` (email + LinkedIn + title + company, 1 credit) ·
@@ -192,7 +187,6 @@ facade as `cl.workspace`, `cl.leadLists`, `cl.enrichment`, `cl.smartAgents`, and
 | ------ | ---- | ----------- |
 | `whoami()` | `GET /api/v2/whoami` | Identity, org, tier, scopes & features. |
 | `creditsBalance()` | `GET /api/v2/credits/balance` | Spendable credit balance. |
-| `creditsEstimate(EstimateCostRequest)` | `POST /api/v2/credits/estimate` | Price an op, get a signed quote. |
 | `listApiKeys()` | `GET /api/v2/api-keys` | List the org's API keys. |
 | `usageReport(Integer days, String groupBy)` | `GET /api/v2/usage` | Credit-usage report. |
 
@@ -250,15 +244,13 @@ EnrichCompanyResponse company = cl.enrichment.enrichCompany(new EnrichCompanyReq
 | `getSmartAgentResults(String smartAgentTaskId)` | `GET /api/v2/smart-agents/{smart_agent_task_id}` | Per-lead output. |
 
 ```java
-EstimateCostResponse quote = cl.workspace.creditsEstimate(new EstimateCostRequest()
-        .tool("run_smart_agent").listId(list.getListId()).agentType("custom_ai").rowCount(50));
 RunSmartAgentResponse run = cl.smartAgents.runSmartAgent(new RunSmartAgentRequest()
         .listId(list.getListId())
         .agentType("custom_ai")
         .columnName("Personalized angle")
         .prompt("In one sentence, suggest a cold-outreach angle for this lead.")
         .maxRows(50)
-        .quoteId(quote.getQuoteId()));
+        .quoteId(quoteId)); // signed quote for this exact request shape
 SmartAgentResultsResponse results = cl.smartAgents.getSmartAgentResults(run.getSmartAgentTaskId());
 ```
 

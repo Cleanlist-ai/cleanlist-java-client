@@ -33,10 +33,13 @@ import ai.cleanlist.client.model.CreateListRequest;
 import ai.cleanlist.client.model.CsvImportRequest;
 import ai.cleanlist.client.model.CsvImportResponse;
 import ai.cleanlist.client.model.DeleteListResponse;
-import ai.cleanlist.client.model.HTTPValidationError;
+import ai.cleanlist.client.model.FindPeopleRequest;
+import ai.cleanlist.client.model.FindPeopleResponse;
+import ai.cleanlist.client.model.FindPeopleStatusResponse;
 import ai.cleanlist.client.model.LeadsPageResponse;
 import ai.cleanlist.client.model.ListDetailResponse;
 import ai.cleanlist.client.model.ListsPageResponse;
+import ai.cleanlist.client.model.PublicApiError;
 import ai.cleanlist.client.model.PublicLeadListUpdate;
 import ai.cleanlist.client.model.RemoveLeadsRequest;
 import ai.cleanlist.client.model.RemoveLeadsResponse;
@@ -96,7 +99,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call addLeadsToListCall(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull Body body, final ApiCallback _callback) throws ApiException {
@@ -173,7 +184,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public AddLeadsResponse addLeadsToList(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull Body body) throws ApiException {
@@ -193,7 +212,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<AddLeadsResponse> addLeadsToListWithHttpInfo(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull Body body) throws ApiException {
@@ -215,7 +242,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call addLeadsToListAsync(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull Body body, final ApiCallback<AddLeadsResponse> _callback) throws ApiException {
@@ -236,7 +271,16 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 201 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Existing same-name list reused (idempotent); &#x60;reused&#x60; is true. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call createListCall(@javax.annotation.Nonnull CreateListRequest createListRequest, final ApiCallback _callback) throws ApiException {
@@ -306,7 +350,16 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 201 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Existing same-name list reused (idempotent); &#x60;reused&#x60; is true. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ListDetailResponse createList(@javax.annotation.Nonnull CreateListRequest createListRequest) throws ApiException {
@@ -325,7 +378,16 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 201 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Existing same-name list reused (idempotent); &#x60;reused&#x60; is true. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<ListDetailResponse> createListWithHttpInfo(@javax.annotation.Nonnull CreateListRequest createListRequest) throws ApiException {
@@ -346,7 +408,16 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 201 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Existing same-name list reused (idempotent); &#x60;reused&#x60; is true. </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call createListAsync(@javax.annotation.Nonnull CreateListRequest createListRequest, final ApiCallback<ListDetailResponse> _callback) throws ApiException {
@@ -368,7 +439,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 201 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call csvImportCall(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull CsvImportRequest csvImportRequest, final ApiCallback _callback) throws ApiException {
@@ -445,7 +524,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 201 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public CsvImportResponse csvImport(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull CsvImportRequest csvImportRequest) throws ApiException {
@@ -465,7 +552,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 201 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<CsvImportResponse> csvImportWithHttpInfo(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull CsvImportRequest csvImportRequest) throws ApiException {
@@ -487,7 +582,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 201 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call csvImportAsync(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull CsvImportRequest csvImportRequest, final ApiCallback<CsvImportResponse> _callback) throws ApiException {
@@ -508,7 +611,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call deleteListCall(@javax.annotation.Nonnull String listId, final ApiCallback _callback) throws ApiException {
@@ -578,7 +689,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public DeleteListResponse deleteList(@javax.annotation.Nonnull String listId) throws ApiException {
@@ -597,7 +716,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<DeleteListResponse> deleteListWithHttpInfo(@javax.annotation.Nonnull String listId) throws ApiException {
@@ -618,13 +745,367 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call deleteListAsync(@javax.annotation.Nonnull String listId, final ApiCallback<DeleteListResponse> _callback) throws ApiException {
 
         okhttp3.Call localVarCall = deleteListValidateBeforeCall(listId, _callback);
         Type localVarReturnType = new TypeToken<DeleteListResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
+     * Build call for findPeople
+     * @param listId  (required)
+     * @param findPeopleRequest  (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call findPeopleCall(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull FindPeopleRequest findPeopleRequest, final ApiCallback _callback) throws ApiException {
+        String basePath = null;
+        // Operation Servers
+        String[] localBasePaths = new String[] {  };
+
+        // Determine Base Path to Use
+        if (localCustomBaseUrl != null){
+            basePath = localCustomBaseUrl;
+        } else if ( localBasePaths.length > 0 ) {
+            basePath = localBasePaths[localHostIndex];
+        } else {
+            basePath = null;
+        }
+
+        Object localVarPostBody = findPeopleRequest;
+
+        // create path and map variables
+        String localVarPath = "/api/v2/lead-lists/{list_id}/find-people"
+            .replace("{" + "list_id" + "}", localVarApiClient.escapeString(listId.toString()));
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        if (localVarContentType != null) {
+            localVarHeaderParams.put("Content-Type", localVarContentType);
+        }
+
+        String[] localVarAuthNames = new String[] { "HTTPBearer" };
+        return localVarApiClient.buildCall(basePath, localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call findPeopleValidateBeforeCall(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull FindPeopleRequest findPeopleRequest, final ApiCallback _callback) throws ApiException {
+        // verify the required parameter 'listId' is set
+        if (listId == null) {
+            throw new ApiException("Missing the required parameter 'listId' when calling findPeople(Async)");
+        }
+
+        // verify the required parameter 'findPeopleRequest' is set
+        if (findPeopleRequest == null) {
+            throw new ApiException("Missing the required parameter 'findPeopleRequest' when calling findPeople(Async)");
+        }
+
+        return findPeopleCall(listId, findPeopleRequest, _callback);
+
+    }
+
+    /**
+     * Find people at companies already in a list and import them (async)
+     * Start an async job that finds people at the given companies (which must already belong to &#x60;&#x60;list_id&#x60;&#x60;) and imports them into that list.  Returns a &#x60;&#x60;workflow_id&#x60;&#x60; immediately; poll &#x60;&#x60;poll_url&#x60;&#x60; (GET /lead-lists/{list_id}/find-people/status/{workflow_id}) until &#x60;&#x60;status&#x60;&#x60; is terminal. Discovery is free; imports bill the standard per-new-lead cost.
+     * @param listId  (required)
+     * @param findPeopleRequest  (required)
+     * @return FindPeopleResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+     </table>
+     */
+    public FindPeopleResponse findPeople(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull FindPeopleRequest findPeopleRequest) throws ApiException {
+        ApiResponse<FindPeopleResponse> localVarResp = findPeopleWithHttpInfo(listId, findPeopleRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Find people at companies already in a list and import them (async)
+     * Start an async job that finds people at the given companies (which must already belong to &#x60;&#x60;list_id&#x60;&#x60;) and imports them into that list.  Returns a &#x60;&#x60;workflow_id&#x60;&#x60; immediately; poll &#x60;&#x60;poll_url&#x60;&#x60; (GET /lead-lists/{list_id}/find-people/status/{workflow_id}) until &#x60;&#x60;status&#x60;&#x60; is terminal. Discovery is free; imports bill the standard per-new-lead cost.
+     * @param listId  (required)
+     * @param findPeopleRequest  (required)
+     * @return ApiResponse&lt;FindPeopleResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<FindPeopleResponse> findPeopleWithHttpInfo(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull FindPeopleRequest findPeopleRequest) throws ApiException {
+        okhttp3.Call localVarCall = findPeopleValidateBeforeCall(listId, findPeopleRequest, null);
+        Type localVarReturnType = new TypeToken<FindPeopleResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Find people at companies already in a list and import them (async) (asynchronously)
+     * Start an async job that finds people at the given companies (which must already belong to &#x60;&#x60;list_id&#x60;&#x60;) and imports them into that list.  Returns a &#x60;&#x60;workflow_id&#x60;&#x60; immediately; poll &#x60;&#x60;poll_url&#x60;&#x60; (GET /lead-lists/{list_id}/find-people/status/{workflow_id}) until &#x60;&#x60;status&#x60;&#x60; is terminal. Discovery is free; imports bill the standard per-new-lead cost.
+     * @param listId  (required)
+     * @param findPeopleRequest  (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call findPeopleAsync(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull FindPeopleRequest findPeopleRequest, final ApiCallback<FindPeopleResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = findPeopleValidateBeforeCall(listId, findPeopleRequest, _callback);
+        Type localVarReturnType = new TypeToken<FindPeopleResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
+     * Build call for findPeopleStatus
+     * @param listId  (required)
+     * @param workflowId  (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call findPeopleStatusCall(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull String workflowId, final ApiCallback _callback) throws ApiException {
+        String basePath = null;
+        // Operation Servers
+        String[] localBasePaths = new String[] {  };
+
+        // Determine Base Path to Use
+        if (localCustomBaseUrl != null){
+            basePath = localCustomBaseUrl;
+        } else if ( localBasePaths.length > 0 ) {
+            basePath = localBasePaths[localHostIndex];
+        } else {
+            basePath = null;
+        }
+
+        Object localVarPostBody = null;
+
+        // create path and map variables
+        String localVarPath = "/api/v2/lead-lists/{list_id}/find-people/status/{workflow_id}"
+            .replace("{" + "list_id" + "}", localVarApiClient.escapeString(listId.toString()))
+            .replace("{" + "workflow_id" + "}", localVarApiClient.escapeString(workflowId.toString()));
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        if (localVarContentType != null) {
+            localVarHeaderParams.put("Content-Type", localVarContentType);
+        }
+
+        String[] localVarAuthNames = new String[] { "HTTPBearer" };
+        return localVarApiClient.buildCall(basePath, localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call findPeopleStatusValidateBeforeCall(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull String workflowId, final ApiCallback _callback) throws ApiException {
+        // verify the required parameter 'listId' is set
+        if (listId == null) {
+            throw new ApiException("Missing the required parameter 'listId' when calling findPeopleStatus(Async)");
+        }
+
+        // verify the required parameter 'workflowId' is set
+        if (workflowId == null) {
+            throw new ApiException("Missing the required parameter 'workflowId' when calling findPeopleStatus(Async)");
+        }
+
+        return findPeopleStatusCall(listId, workflowId, _callback);
+
+    }
+
+    /**
+     * Poll a find-people job
+     * Poll a find-people job started by &#x60;&#x60;POST /lead-lists/{list_id}/find-people&#x60;&#x60;. Free and idempotent — call until &#x60;&#x60;status&#x60;&#x60; is terminal (&#x60;&#x60;completed&#x60;&#x60; / &#x60;&#x60;failed&#x60;&#x60; / &#x60;&#x60;cancelled&#x60;&#x60;). Cross-tenant workflow ids fail closed as 404. &#x60;&#x60;list_id&#x60;&#x60; is for path nesting; the lookup is by &#x60;&#x60;workflow_id&#x60;&#x60; + org.
+     * @param listId  (required)
+     * @param workflowId  (required)
+     * @return FindPeopleStatusResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+     </table>
+     */
+    public FindPeopleStatusResponse findPeopleStatus(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull String workflowId) throws ApiException {
+        ApiResponse<FindPeopleStatusResponse> localVarResp = findPeopleStatusWithHttpInfo(listId, workflowId);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Poll a find-people job
+     * Poll a find-people job started by &#x60;&#x60;POST /lead-lists/{list_id}/find-people&#x60;&#x60;. Free and idempotent — call until &#x60;&#x60;status&#x60;&#x60; is terminal (&#x60;&#x60;completed&#x60;&#x60; / &#x60;&#x60;failed&#x60;&#x60; / &#x60;&#x60;cancelled&#x60;&#x60;). Cross-tenant workflow ids fail closed as 404. &#x60;&#x60;list_id&#x60;&#x60; is for path nesting; the lookup is by &#x60;&#x60;workflow_id&#x60;&#x60; + org.
+     * @param listId  (required)
+     * @param workflowId  (required)
+     * @return ApiResponse&lt;FindPeopleStatusResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<FindPeopleStatusResponse> findPeopleStatusWithHttpInfo(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull String workflowId) throws ApiException {
+        okhttp3.Call localVarCall = findPeopleStatusValidateBeforeCall(listId, workflowId, null);
+        Type localVarReturnType = new TypeToken<FindPeopleStatusResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Poll a find-people job (asynchronously)
+     * Poll a find-people job started by &#x60;&#x60;POST /lead-lists/{list_id}/find-people&#x60;&#x60;. Free and idempotent — call until &#x60;&#x60;status&#x60;&#x60; is terminal (&#x60;&#x60;completed&#x60;&#x60; / &#x60;&#x60;failed&#x60;&#x60; / &#x60;&#x60;cancelled&#x60;&#x60;). Cross-tenant workflow ids fail closed as 404. &#x60;&#x60;list_id&#x60;&#x60; is for path nesting; the lookup is by &#x60;&#x60;workflow_id&#x60;&#x60; + org.
+     * @param listId  (required)
+     * @param workflowId  (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call findPeopleStatusAsync(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull String workflowId, final ApiCallback<FindPeopleStatusResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = findPeopleStatusValidateBeforeCall(listId, workflowId, _callback);
+        Type localVarReturnType = new TypeToken<FindPeopleStatusResponse>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
     }
@@ -639,7 +1120,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call getListCall(@javax.annotation.Nonnull String listId, final ApiCallback _callback) throws ApiException {
@@ -709,7 +1198,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ListDetailResponse getList(@javax.annotation.Nonnull String listId) throws ApiException {
@@ -728,7 +1225,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<ListDetailResponse> getListWithHttpInfo(@javax.annotation.Nonnull String listId) throws ApiException {
@@ -749,7 +1254,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call getListAsync(@javax.annotation.Nonnull String listId, final ApiCallback<ListDetailResponse> _callback) throws ApiException {
@@ -772,7 +1285,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call listLeadsInListCall(@javax.annotation.Nonnull String listId, @javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor, final ApiCallback _callback) throws ApiException {
@@ -852,7 +1373,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public LeadsPageResponse listLeadsInList(@javax.annotation.Nonnull String listId, @javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor) throws ApiException {
@@ -873,7 +1402,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<LeadsPageResponse> listLeadsInListWithHttpInfo(@javax.annotation.Nonnull String listId, @javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor) throws ApiException {
@@ -896,7 +1433,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call listLeadsInListAsync(@javax.annotation.Nonnull String listId, @javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor, final ApiCallback<LeadsPageResponse> _callback) throws ApiException {
@@ -919,7 +1464,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call listListsCall(@javax.annotation.Nullable String folderId, @javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor, final ApiCallback _callback) throws ApiException {
@@ -997,7 +1550,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ListsPageResponse listLists(@javax.annotation.Nullable String folderId, @javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor) throws ApiException {
@@ -1018,7 +1579,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<ListsPageResponse> listListsWithHttpInfo(@javax.annotation.Nullable String folderId, @javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor) throws ApiException {
@@ -1041,7 +1610,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call listListsAsync(@javax.annotation.Nullable String folderId, @javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor, final ApiCallback<ListsPageResponse> _callback) throws ApiException {
@@ -1063,7 +1640,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call removeLeadsFromListCall(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull RemoveLeadsRequest removeLeadsRequest, final ApiCallback _callback) throws ApiException {
@@ -1140,7 +1725,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public RemoveLeadsResponse removeLeadsFromList(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull RemoveLeadsRequest removeLeadsRequest) throws ApiException {
@@ -1160,7 +1753,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<RemoveLeadsResponse> removeLeadsFromListWithHttpInfo(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull RemoveLeadsRequest removeLeadsRequest) throws ApiException {
@@ -1182,7 +1783,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call removeLeadsFromListAsync(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull RemoveLeadsRequest removeLeadsRequest, final ApiCallback<RemoveLeadsResponse> _callback) throws ApiException {
@@ -1204,7 +1813,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call updateListCall(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull PublicLeadListUpdate publicLeadListUpdate, final ApiCallback _callback) throws ApiException {
@@ -1281,7 +1898,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ListDetailResponse updateList(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull PublicLeadListUpdate publicLeadListUpdate) throws ApiException {
@@ -1301,7 +1926,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<ListDetailResponse> updateListWithHttpInfo(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull PublicLeadListUpdate publicLeadListUpdate) throws ApiException {
@@ -1323,7 +1956,15 @@ public class PublicLeadListsApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call updateListAsync(@javax.annotation.Nonnull String listId, @javax.annotation.Nonnull PublicLeadListUpdate publicLeadListUpdate, final ApiCallback<ListDetailResponse> _callback) throws ApiException {

@@ -138,6 +138,11 @@ public class EnrichByTaskResponse {
   @javax.annotation.Nonnull
   private EntityKindEnum entityKind;
 
+  public static final String SERIALIZED_NAME_LIST_ID = "list_id";
+  @SerializedName(SERIALIZED_NAME_LIST_ID)
+  @javax.annotation.Nullable
+  private String listId;
+
   public static final String SERIALIZED_NAME_WORKFLOW_ID = "workflow_id";
   @SerializedName(SERIALIZED_NAME_WORKFLOW_ID)
   @javax.annotation.Nullable
@@ -332,6 +337,25 @@ public class EnrichByTaskResponse {
   }
 
 
+  public EnrichByTaskResponse listId(@javax.annotation.Nullable String listId) {
+    this.listId = listId;
+    return this;
+  }
+
+  /**
+   * Get listId
+   * @return listId
+   */
+  @javax.annotation.Nullable
+  public String getListId() {
+    return listId;
+  }
+
+  public void setListId(@javax.annotation.Nullable String listId) {
+    this.listId = listId;
+  }
+
+
   public EnrichByTaskResponse workflowId(@javax.annotation.Nullable String workflowId) {
     this.workflowId = workflowId;
     return this;
@@ -451,6 +475,7 @@ public class EnrichByTaskResponse {
         Objects.equals(this.usage, enrichByTaskResponse.usage) &&
         Objects.equals(this.message, enrichByTaskResponse.message) &&
         Objects.equals(this.entityKind, enrichByTaskResponse.entityKind) &&
+        Objects.equals(this.listId, enrichByTaskResponse.listId) &&
         Objects.equals(this.workflowId, enrichByTaskResponse.workflowId) &&
         Objects.equals(this.status, enrichByTaskResponse.status) &&
         Objects.equals(this.totalEntities, enrichByTaskResponse.totalEntities) &&
@@ -464,7 +489,7 @@ public class EnrichByTaskResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(taskId, timestampMs, agentInstructions, usage, message, entityKind, workflowId, status, totalEntities, creditsReserved, results);
+    return Objects.hash(taskId, timestampMs, agentInstructions, usage, message, entityKind, listId, workflowId, status, totalEntities, creditsReserved, results);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -484,6 +509,7 @@ public class EnrichByTaskResponse {
     sb.append("    usage: ").append(toIndentedString(usage)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("    entityKind: ").append(toIndentedString(entityKind)).append("\n");
+    sb.append("    listId: ").append(toIndentedString(listId)).append("\n");
     sb.append("    workflowId: ").append(toIndentedString(workflowId)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    totalEntities: ").append(toIndentedString(totalEntities)).append("\n");
@@ -510,7 +536,7 @@ public class EnrichByTaskResponse {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("task_id", "timestamp_ms", "agent_instructions", "usage", "message", "entity_kind", "workflow_id", "status", "total_entities", "credits_reserved", "results"));
+    openapiFields = new HashSet<String>(Arrays.asList("task_id", "timestamp_ms", "agent_instructions", "usage", "message", "entity_kind", "list_id", "workflow_id", "status", "total_entities", "credits_reserved", "results"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("entity_kind", "status", "total_entities", "credits_reserved", "results"));
@@ -561,6 +587,9 @@ public class EnrichByTaskResponse {
       }
       // validate the required field `entity_kind`
       EntityKindEnum.validateJsonElement(jsonObj.get("entity_kind"));
+      if ((jsonObj.get("list_id") != null && !jsonObj.get("list_id").isJsonNull()) && !jsonObj.get("list_id").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `list_id` to be a primitive type in the JSON string but got `%s`", jsonObj.get("list_id").toString()));
+      }
       if ((jsonObj.get("workflow_id") != null && !jsonObj.get("workflow_id").isJsonNull()) && !jsonObj.get("workflow_id").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `workflow_id` to be a primitive type in the JSON string but got `%s`", jsonObj.get("workflow_id").toString()));
       }

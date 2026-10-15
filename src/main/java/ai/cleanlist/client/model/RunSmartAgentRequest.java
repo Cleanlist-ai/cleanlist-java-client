@@ -131,8 +131,13 @@ public class RunSmartAgentRequest {
   @javax.annotation.Nonnull
   private String columnName;
 
+  public static final String SERIALIZED_NAME_TEMPLATE_ID = "template_id";
+  @SerializedName(SERIALIZED_NAME_TEMPLATE_ID)
+  @javax.annotation.Nullable
+  private String templateId;
+
   /**
-   * &#x60;subset&#x60; runs on up to &#x60;max_rows&#x60; leads (the fast, cheap path). &#x60;all&#x60; runs on the entire list, but any &#x60;all&#x60; run above the configured threshold (default 500 leads) is blocked with a 400 &#x60;approval_required&#x60; until you narrow scope or route a human approval.
+   * &#x60;subset&#x60; runs on up to &#x60;max_rows&#x60; leads (the fast, cheap path). &#x60;all&#x60; selects the entire list. Any selection above the configured threshold (default 500 leads) is blocked with a 400 &#x60;approval_required&#x60; until you narrow scope or route a human approval.
    */
   @JsonAdapter(LeadScopeEnum.Adapter.class)
   public enum LeadScopeEnum {
@@ -269,7 +274,7 @@ public class RunSmartAgentRequest {
   }
 
   /**
-   * Display name for the new column that stores each lead&#39;s agent output. Re-using an existing column name appends to it unless &#x60;overwrite&#x3D;true&#x60; is set.
+   * Display name for the new column that stores each lead&#39;s agent output for custom/preset agents. Existing completed outputs are preserved unless &#x60;overwrite&#x3D;true&#x60; is quoted. Cold intro email uses the platform&#39;s built-in email column.
    * @return columnName
    */
   @javax.annotation.Nonnull
@@ -282,13 +287,32 @@ public class RunSmartAgentRequest {
   }
 
 
+  public RunSmartAgentRequest templateId(@javax.annotation.Nullable String templateId) {
+    this.templateId = templateId;
+    return this;
+  }
+
+  /**
+   * Get templateId
+   * @return templateId
+   */
+  @javax.annotation.Nullable
+  public String getTemplateId() {
+    return templateId;
+  }
+
+  public void setTemplateId(@javax.annotation.Nullable String templateId) {
+    this.templateId = templateId;
+  }
+
+
   public RunSmartAgentRequest leadScope(@javax.annotation.Nullable LeadScopeEnum leadScope) {
     this.leadScope = leadScope;
     return this;
   }
 
   /**
-   * &#x60;subset&#x60; runs on up to &#x60;max_rows&#x60; leads (the fast, cheap path). &#x60;all&#x60; runs on the entire list, but any &#x60;all&#x60; run above the configured threshold (default 500 leads) is blocked with a 400 &#x60;approval_required&#x60; until you narrow scope or route a human approval.
+   * &#x60;subset&#x60; runs on up to &#x60;max_rows&#x60; leads (the fast, cheap path). &#x60;all&#x60; selects the entire list. Any selection above the configured threshold (default 500 leads) is blocked with a 400 &#x60;approval_required&#x60; until you narrow scope or route a human approval.
    * @return leadScope
    */
   @javax.annotation.Nullable
@@ -347,7 +371,7 @@ public class RunSmartAgentRequest {
   }
 
   /**
-   * When true, existing values in a column of the same name are overwritten instead of preserved. Passed through to the workflow via column metadata.
+   * When true, existing values in a column of the same name are overwritten instead of preserved. Included in the signed quote and applied while resolving the exact eligible lead IDs.
    * @return overwrite
    */
   @javax.annotation.Nullable
@@ -418,6 +442,7 @@ public class RunSmartAgentRequest {
         Objects.equals(this.agentType, runSmartAgentRequest.agentType) &&
         Objects.equals(this.prompt, runSmartAgentRequest.prompt) &&
         Objects.equals(this.columnName, runSmartAgentRequest.columnName) &&
+        Objects.equals(this.templateId, runSmartAgentRequest.templateId) &&
         Objects.equals(this.leadScope, runSmartAgentRequest.leadScope) &&
         Objects.equals(this.maxRows, runSmartAgentRequest.maxRows) &&
         Objects.equals(this.quoteId, runSmartAgentRequest.quoteId) &&
@@ -431,7 +456,7 @@ public class RunSmartAgentRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(listId, agentType, prompt, columnName, leadScope, maxRows, quoteId, overwrite, additionalProperties);
+    return Objects.hash(listId, agentType, prompt, columnName, templateId, leadScope, maxRows, quoteId, overwrite, additionalProperties);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -449,6 +474,7 @@ public class RunSmartAgentRequest {
     sb.append("    agentType: ").append(toIndentedString(agentType)).append("\n");
     sb.append("    prompt: ").append(toIndentedString(prompt)).append("\n");
     sb.append("    columnName: ").append(toIndentedString(columnName)).append("\n");
+    sb.append("    templateId: ").append(toIndentedString(templateId)).append("\n");
     sb.append("    leadScope: ").append(toIndentedString(leadScope)).append("\n");
     sb.append("    maxRows: ").append(toIndentedString(maxRows)).append("\n");
     sb.append("    quoteId: ").append(toIndentedString(quoteId)).append("\n");
@@ -475,7 +501,7 @@ public class RunSmartAgentRequest {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("list_id", "agent_type", "prompt", "column_name", "lead_scope", "max_rows", "quote_id", "overwrite"));
+    openapiFields = new HashSet<String>(Arrays.asList("list_id", "agent_type", "prompt", "column_name", "template_id", "lead_scope", "max_rows", "quote_id", "overwrite"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("list_id", "column_name", "quote_id"));
@@ -516,6 +542,9 @@ public class RunSmartAgentRequest {
       }
       if (!jsonObj.get("column_name").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `column_name` to be a primitive type in the JSON string but got `%s`", jsonObj.get("column_name").toString()));
+      }
+      if ((jsonObj.get("template_id") != null && !jsonObj.get("template_id").isJsonNull()) && !jsonObj.get("template_id").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `template_id` to be a primitive type in the JSON string but got `%s`", jsonObj.get("template_id").toString()));
       }
       if ((jsonObj.get("lead_scope") != null && !jsonObj.get("lead_scope").isJsonNull()) && !jsonObj.get("lead_scope").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `lead_scope` to be a primitive type in the JSON string but got `%s`", jsonObj.get("lead_scope").toString()));

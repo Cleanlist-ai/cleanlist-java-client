@@ -90,6 +90,14 @@ public class EnrichByTaskResponseTest {
     }
 
     /**
+     * Test the property 'listId'
+     */
+    @Test
+    public void listIdTest() {
+        // TODO: test listId
+    }
+
+    /**
      * Test the property 'workflowId'
      */
     @Test

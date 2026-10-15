@@ -35,7 +35,7 @@ import ai.cleanlist.client.model.EnrichListRequest;
 import ai.cleanlist.client.model.EnrichListResponse;
 import ai.cleanlist.client.model.EnrichPersonRequest;
 import ai.cleanlist.client.model.EnrichPersonResponse;
-import ai.cleanlist.client.model.HTTPValidationError;
+import ai.cleanlist.client.model.PublicApiError;
 import ai.cleanlist.client.model.WorkflowStatusResponse;
 
 import java.lang.reflect.Type;
@@ -92,7 +92,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call enrichByTaskCall(@javax.annotation.Nonnull EnrichByTaskRequest enrichByTaskRequest, final ApiCallback _callback) throws ApiException {
@@ -162,7 +170,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public EnrichByTaskResponse enrichByTask(@javax.annotation.Nonnull EnrichByTaskRequest enrichByTaskRequest) throws ApiException {
@@ -181,7 +197,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<EnrichByTaskResponse> enrichByTaskWithHttpInfo(@javax.annotation.Nonnull EnrichByTaskRequest enrichByTaskRequest) throws ApiException {
@@ -202,7 +226,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call enrichByTaskAsync(@javax.annotation.Nonnull EnrichByTaskRequest enrichByTaskRequest, final ApiCallback<EnrichByTaskResponse> _callback) throws ApiException {
@@ -223,7 +255,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call enrichCompanyCall(@javax.annotation.Nonnull EnrichCompanyRequest enrichCompanyRequest, final ApiCallback _callback) throws ApiException {
@@ -293,7 +333,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public EnrichCompanyResponse enrichCompany(@javax.annotation.Nonnull EnrichCompanyRequest enrichCompanyRequest) throws ApiException {
@@ -312,7 +360,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<EnrichCompanyResponse> enrichCompanyWithHttpInfo(@javax.annotation.Nonnull EnrichCompanyRequest enrichCompanyRequest) throws ApiException {
@@ -333,7 +389,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call enrichCompanyAsync(@javax.annotation.Nonnull EnrichCompanyRequest enrichCompanyRequest, final ApiCallback<EnrichCompanyResponse> _callback) throws ApiException {
@@ -354,7 +418,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call enrichListCall(@javax.annotation.Nonnull EnrichListRequest enrichListRequest, final ApiCallback _callback) throws ApiException {
@@ -424,7 +496,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public EnrichListResponse enrichList(@javax.annotation.Nonnull EnrichListRequest enrichListRequest) throws ApiException {
@@ -443,7 +523,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<EnrichListResponse> enrichListWithHttpInfo(@javax.annotation.Nonnull EnrichListRequest enrichListRequest) throws ApiException {
@@ -464,7 +552,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call enrichListAsync(@javax.annotation.Nonnull EnrichListRequest enrichListRequest, final ApiCallback<EnrichListResponse> _callback) throws ApiException {
@@ -485,7 +581,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call enrichPersonCall(@javax.annotation.Nonnull EnrichPersonRequest enrichPersonRequest, final ApiCallback _callback) throws ApiException {
@@ -555,7 +659,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public EnrichPersonResponse enrichPerson(@javax.annotation.Nonnull EnrichPersonRequest enrichPersonRequest) throws ApiException {
@@ -574,7 +686,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<EnrichPersonResponse> enrichPersonWithHttpInfo(@javax.annotation.Nonnull EnrichPersonRequest enrichPersonRequest) throws ApiException {
@@ -595,7 +715,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call enrichPersonAsync(@javax.annotation.Nonnull EnrichPersonRequest enrichPersonRequest, final ApiCallback<EnrichPersonResponse> _callback) throws ApiException {
@@ -616,7 +744,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call enrichmentStatusCall(@javax.annotation.Nonnull String workflowId, final ApiCallback _callback) throws ApiException {
@@ -686,7 +822,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public WorkflowStatusResponse enrichmentStatus(@javax.annotation.Nonnull String workflowId) throws ApiException {
@@ -705,7 +849,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<WorkflowStatusResponse> enrichmentStatusWithHttpInfo(@javax.annotation.Nonnull String workflowId) throws ApiException {
@@ -726,7 +878,15 @@ public class PublicEnrichmentApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call enrichmentStatusAsync(@javax.annotation.Nonnull String workflowId, final ApiCallback<WorkflowStatusResponse> _callback) throws ApiException {

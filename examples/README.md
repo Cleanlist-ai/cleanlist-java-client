@@ -24,9 +24,10 @@ mvn -q exec:java -Dexec.mainClass="examples.Quickstart"
 | ---- | ------------- |
 | [`Quickstart.java`](Quickstart.java) | whoami, credit balance, create a list. Free. |
 | [`EnrichPerson.java`](EnrichPerson.java) | Enrich one contact and poll to completion. Spends credits. |
-| [`BulkEnrichWithQuote.java`](BulkEnrichWithQuote.java) | The estimate → quote → bulk-enrich flow. Spends credits. |
+| [`BulkEnrichWithQuote.java`](BulkEnrichWithQuote.java) | Redeem an existing `quoteId` to bulk-enrich a list. Spends credits. |
 | [`Export.java`](Export.java) | CSV (signed URL) + JSON export. Free. |
 | [`ErrorHandling.java`](ErrorHandling.java) | Catching `ApiException`. Free. |
 
-> ⚠️ Examples that enrich or run smart agents **spend credits** (they estimate first and
-> print the cost). Read each file's header before running.
+> ⚠️ Examples that enrich or run smart agents **spend credits**. Bulk enrich needs a
+> quote id you already have: the pricing endpoint is not in the public spec, so the
+> SDK cannot request one. Read each file's header before running.

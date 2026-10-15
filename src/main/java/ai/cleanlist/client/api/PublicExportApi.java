@@ -30,7 +30,7 @@ import java.io.IOException;
 import ai.cleanlist.client.model.ExportCsvRequest;
 import ai.cleanlist.client.model.ExportCsvResponse;
 import ai.cleanlist.client.model.ExportJsonResponse;
-import ai.cleanlist.client.model.HTTPValidationError;
+import ai.cleanlist.client.model.PublicApiError;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -86,7 +86,15 @@ public class PublicExportApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call exportCsvCall(@javax.annotation.Nonnull ExportCsvRequest exportCsvRequest, final ApiCallback _callback) throws ApiException {
@@ -156,7 +164,15 @@ public class PublicExportApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ExportCsvResponse exportCsv(@javax.annotation.Nonnull ExportCsvRequest exportCsvRequest) throws ApiException {
@@ -175,7 +191,15 @@ public class PublicExportApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<ExportCsvResponse> exportCsvWithHttpInfo(@javax.annotation.Nonnull ExportCsvRequest exportCsvRequest) throws ApiException {
@@ -196,7 +220,15 @@ public class PublicExportApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call exportCsvAsync(@javax.annotation.Nonnull ExportCsvRequest exportCsvRequest, final ApiCallback<ExportCsvResponse> _callback) throws ApiException {
@@ -220,7 +252,15 @@ public class PublicExportApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call exportJsonCall(@javax.annotation.Nonnull String listId, @javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor, @javax.annotation.Nullable List<String> columns, final ApiCallback _callback) throws ApiException {
@@ -308,7 +348,15 @@ public class PublicExportApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ExportJsonResponse exportJson(@javax.annotation.Nonnull String listId, @javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor, @javax.annotation.Nullable List<String> columns) throws ApiException {
@@ -330,7 +378,15 @@ public class PublicExportApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<ExportJsonResponse> exportJsonWithHttpInfo(@javax.annotation.Nonnull String listId, @javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor, @javax.annotation.Nullable List<String> columns) throws ApiException {
@@ -354,7 +410,15 @@ public class PublicExportApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Successful Response </td><td>  -  </td></tr>
-        <tr><td> 422 </td><td> Validation Error </td><td>  -  </td></tr>
+        <tr><td> 422 </td><td> Request failed validation. </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad request. </td><td>  -  </td></tr>
+        <tr><td> 401 </td><td> Authentication required or invalid. </td><td>  -  </td></tr>
+        <tr><td> 403 </td><td> Permission denied or feature not enabled. </td><td>  -  </td></tr>
+        <tr><td> 404 </td><td> Resource not found. </td><td>  -  </td></tr>
+        <tr><td> 409 </td><td> Resource conflict. </td><td>  -  </td></tr>
+        <tr><td> 429 </td><td> Rate limited. </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal error. </td><td>  -  </td></tr>
+        <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call exportJsonAsync(@javax.annotation.Nonnull String listId, @javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor, @javax.annotation.Nullable List<String> columns, final ApiCallback<ExportJsonResponse> _callback) throws ApiException {

@@ -5,7 +5,6 @@ All URIs are relative to *https://api.cleanlist.ai*
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
 | [**creditsBalance**](PublicWorkspaceApi.md#creditsBalance) | **GET** /api/v2/credits/balance | Get credit balance |
-| [**creditsEstimate**](PublicWorkspaceApi.md#creditsEstimate) | **POST** /api/v2/credits/estimate | Estimate cost &amp; get a signed quote |
 | [**listApiKeys**](PublicWorkspaceApi.md#listApiKeys) | **GET** /api/v2/api-keys | List API keys |
 | [**usageReport**](PublicWorkspaceApi.md#usageReport) | **GET** /api/v2/usage | Get usage report |
 | [**whoami**](PublicWorkspaceApi.md#whoami) | **GET** /api/v2/whoami | Get current identity &amp; entitlements |
@@ -73,74 +72,15 @@ This endpoint does not need any parameter.
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
-
-<a id="creditsEstimate"></a>
-# **creditsEstimate**
-> EstimateCostResponse creditsEstimate(estimateCostRequest)
-
-Estimate cost &amp; get a signed quote
-
-Pre-flight a paid operation and mint a signed, single-use &#x60;quote_id&#x60;. The quote binds the canonical request (tool, list_id|filters|cohort, scope, row_count, org) via HMAC and must be presented at execution time by every paid bulk tool (&#x60;enrich_list&#x60;, &#x60;run_smart_agent&#x60;, &#x60;sync_to_crm&#x60;, &#x60;sync_to_sequencer&#x60;, cohort enrichments). Row count is derived authoritatively from the list or cohort — never trusted from the caller — so a small quote can&#39;t be replayed against a large job. Requires the &#x60;credits:read&#x60; scope; estimating itself is free, and the response reports whether the org has &#x60;sufficient&#x60; credits to proceed.  **📖 Docs:** https://docs.cleanlist.ai/api-reference/credits
-
-### Example
-```java
-// Import classes:
-import ai.cleanlist.client.ApiClient;
-import ai.cleanlist.client.ApiException;
-import ai.cleanlist.client.Configuration;
-import ai.cleanlist.client.auth.*;
-import ai.cleanlist.client.models.*;
-import ai.cleanlist.client.api.PublicWorkspaceApi;
-
-public class Example {
-  public static void main(String[] args) {
-    ApiClient defaultClient = Configuration.getDefaultApiClient();
-    defaultClient.setBasePath("https://api.cleanlist.ai");
-    
-    // Configure HTTP bearer authorization: HTTPBearer
-    HttpBearerAuth HTTPBearer = (HttpBearerAuth) defaultClient.getAuthentication("HTTPBearer");
-    HTTPBearer.setBearerToken("BEARER TOKEN");
-
-    PublicWorkspaceApi apiInstance = new PublicWorkspaceApi(defaultClient);
-    EstimateCostRequest estimateCostRequest = new EstimateCostRequest(); // EstimateCostRequest | 
-    try {
-      EstimateCostResponse result = apiInstance.creditsEstimate(estimateCostRequest);
-      System.out.println(result);
-    } catch (ApiException e) {
-      System.err.println("Exception when calling PublicWorkspaceApi#creditsEstimate");
-      System.err.println("Status code: " + e.getCode());
-      System.err.println("Reason: " + e.getResponseBody());
-      System.err.println("Response headers: " + e.getResponseHeaders());
-      e.printStackTrace();
-    }
-  }
-}
-```
-
-### Parameters
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **estimateCostRequest** | [**EstimateCostRequest**](EstimateCostRequest.md)|  | |
-
-### Return type
-
-[**EstimateCostResponse**](EstimateCostResponse.md)
-
-### Authorization
-
-[HTTPBearer](../README.md#HTTPBearer)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
+| **422** | Request failed validation. |  -  |
 
 <a id="listApiKeys"></a>
 # **listApiKeys**
@@ -204,6 +144,15 @@ This endpoint does not need any parameter.
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
+| **422** | Request failed validation. |  -  |
 
 <a id="usageReport"></a>
 # **usageReport**
@@ -273,7 +222,15 @@ public class Example {
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
-| **422** | Validation Error |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 
 <a id="whoami"></a>
 # **whoami**
@@ -337,4 +294,13 @@ This endpoint does not need any parameter.
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
+| **422** | Request failed validation. |  -  |
 
