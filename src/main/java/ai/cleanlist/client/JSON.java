@@ -125,6 +125,8 @@ public class JSON {
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.EnrichListResponse.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.EnrichPersonRequest.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.EnrichPersonResponse.CustomTypeAdapterFactory());
+        gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.EstimateCostRequest.CustomTypeAdapterFactory());
+        gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.EstimateCostResponse.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.ExportCsvRequest.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.ExportCsvResponse.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.ExportJsonResponse.CustomTypeAdapterFactory());

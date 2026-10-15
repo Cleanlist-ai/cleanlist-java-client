@@ -37,7 +37,8 @@ cp -R "$BUILD/src" "$ROOT/src"
 [ -d "$BUILD/api" ] && cp -R "$BUILD/api" "$ROOT/api" || true
 [ -d "$BUILD/docs" ] && cp -R "$BUILD/docs" "$ROOT/docs" || true
 cp -R "$BUILD/gradle" "$ROOT/gradle"
-cp "$BUILD/pom.xml" "$BUILD/build.gradle" "$BUILD/settings.gradle" \
+# pom.xml is hand-maintained (Central publishing + gpg signing): never overwrite it.
+cp "$BUILD/build.gradle" "$BUILD/settings.gradle" \
    "$BUILD/gradle.properties" "$BUILD/gradlew" "$BUILD/gradlew.bat" "$ROOT/"
 cp "$BUILD/.openapi-generator-ignore" "$ROOT/.openapi-generator-ignore" 2>/dev/null || true
 chmod +x "$ROOT/gradlew"

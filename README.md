@@ -31,14 +31,16 @@ System.out.println("created list: " + list.getListId());
 - [Quickstart](#quickstart)
 - [Configuration](#configuration)
 - [Core concepts](#core-concepts)
-  - [Credits & quotes](#credits--quotes)
+  - [Credits & the estimate → quote flow](#credits--the-estimate--quote-flow)
   - [Enrichment is asynchronous — poll for results](#enrichment-is-asynchronous--poll-for-results)
 - [Endpoint reference](#endpoint-reference)
   - [Workspace](#workspace-clworkspace)
   - [Lead Lists](#lead-lists-clleadlists)
+  - [People Finder](#people-finder-clpeoplefinder)
   - [Enrichment](#enrichment-clenrichment)
   - [Smart Agents](#smart-agents-clsmartagents)
   - [Export](#export-clexport)
+- [Examples](#examples)
 - [Error handling](#error-handling)
 - [Pagination](#pagination)
 - [Using the generated API classes directly](#using-the-generated-api-classes-directly)
@@ -78,7 +80,7 @@ Every request is authenticated with a **Cleanlist API key**, sent as an
 // Explicit
 Cleanlist cl = new Cleanlist("clapi_live_...");
 
-// Or read the CLEANLIST_API_KEY environment variable
+// Or read CLEANLIST_API_KEY (and an optional CLEANLIST_HOST base URL) from the environment
 Cleanlist cl2 = Cleanlist.fromEnv();
 ```
 
@@ -135,20 +137,25 @@ cl.getApiClient().setReadTimeout(30_000);
 
 ## Core concepts
 
-### Credits & quotes
+### Credits & the estimate → quote flow
 
 Search and list management are free; **enrichment and smart-agent runs cost credits**.
 Bulk/paid operations (`enrichList`, `runSmartAgent`, and CSV import with enrichment)
-require a **signed, single-use `quoteId`** that pins the price. The pricing endpoint
-(`POST /api/v2/credits/estimate`) is not part of the public API spec, so this SDK has
-no method to request a quote; pass one you already have:
+require a **signed quote** from `creditsEstimate` first. The quote pins the price and is
+single-use:
 
 ```java
-EnrichListResponse run = cl.enrichment.enrichList(new EnrichListRequest()
-        .listId(list.getListId())
-        .scope(EnrichListRequest.ScopeEnum.FULL)
-        .quoteId(quoteId));
-System.out.println("bulk workflow: " + run.getWorkflowId());
+EstimateCostResponse quote = cl.workspace.creditsEstimate(
+        new EstimateCostRequest().tool("enrich_list").listId(list.getListId()).scope("full"));
+System.out.printf("cost=%d sufficient=%b%n", quote.getEstimatedCost(), quote.getSufficient());
+
+if (Boolean.TRUE.equals(quote.getSufficient())) {
+    EnrichListResponse run = cl.enrichment.enrichList(new EnrichListRequest()
+            .listId(list.getListId())
+            .scope(EnrichListRequest.ScopeEnum.FULL)
+            .quoteId(quote.getQuoteId()));
+    System.out.println("bulk workflow: " + run.getWorkflowId());
+}
 ```
 
 Enrichment **scopes**: `PARTIAL` (email + LinkedIn + title + company, 1 credit) ·
@@ -177,9 +184,9 @@ System.out.printf("charged=%d refunded=%d%n", status.getCreditsCharged(), status
 
 ## Endpoint reference
 
-The v2 surface is 24 operations across five resource groups, exposed on the `Cleanlist`
-facade as `cl.workspace`, `cl.leadLists`, `cl.enrichment`, `cl.smartAgents`, and
-`cl.export`. Field-by-field model docs live in [`docs/`](docs/).
+The v2 surface is 26 operations across six resource groups, exposed on the `Cleanlist`
+facade as `cl.workspace`, `cl.leadLists`, `cl.peopleFinder`, `cl.enrichment`,
+`cl.smartAgents`, and `cl.export`. Field-by-field model docs live in [`docs/`](docs/).
 
 ### Workspace (`cl.workspace`)
 
@@ -187,6 +194,7 @@ facade as `cl.workspace`, `cl.leadLists`, `cl.enrichment`, `cl.smartAgents`, and
 | ------ | ---- | ----------- |
 | `whoami()` | `GET /api/v2/whoami` | Identity, org, tier, scopes & features. |
 | `creditsBalance()` | `GET /api/v2/credits/balance` | Spendable credit balance. |
+| `creditsEstimate(EstimateCostRequest)` | `POST /api/v2/credits/estimate` | Price an op, get a signed quote. |
 | `listApiKeys()` | `GET /api/v2/api-keys` | List the org's API keys. |
 | `usageReport(Integer days, String groupBy)` | `GET /api/v2/usage` | Credit-usage report. |
 
@@ -203,6 +211,8 @@ facade as `cl.workspace`, `cl.leadLists`, `cl.enrichment`, `cl.smartAgents`, and
 | `addLeadsToList(String listId, Body)` | `POST …/{list_id}/leads` | Add leads by id or cohort. |
 | `removeLeadsFromList(String listId, RemoveLeadsRequest)` | `DELETE …/{list_id}/leads` | Remove up to 100. |
 | `csvImport(String listId, CsvImportRequest)` | `POST …/{list_id}/csv-import` | Import from base64 CSV. |
+| `findPeople(String listId, FindPeopleRequest)` | `POST …/{list_id}/find-people` | Find + import people at the list's companies (async). |
+| `findPeopleStatus(String listId, String workflowId)` | `GET …/{list_id}/find-people/status/{workflow_id}` | Poll a find-people job. |
 
 ```java
 import java.util.Arrays;
@@ -217,6 +227,35 @@ cl.leadLists.addLeadsToList(list.getListId(),
 
 cl.leadLists.removeLeadsFromList(list.getListId(),
         new RemoveLeadsRequest().leadIds(Arrays.asList("lead_a")));
+```
+
+### People Finder (`cl.peopleFinder`)
+
+Search people by filters. Searching is free; credits are spent only when you enrich or save.
+
+| Method | HTTP | Description |
+| ------ | ---- | ----------- |
+| `searchPeople(PeopleSearchRequest)` | `POST /api/v2/people/find` | Search people by structured criteria (paginated). |
+| `searchFiltersPeople(String field, String query)` | `GET /api/v2/people/find/filters` | Valid values / autocomplete for a filter field. |
+| `compileSearch(CompileRequest)` | `POST /api/v2/people/find/compile` | Dry run: show the compiled filter without searching. |
+| `companiesFindStart(PeopleByCompaniesRequest)` | `POST /api/v2/people/find-at-companies` | Start an async "find people at these companies" search. |
+| `companiesFindStatus(String taskId)` | `GET /api/v2/people/find-at-companies/status/{task_id}` | Poll that search. |
+
+```java
+import java.util.List;
+
+PeopleFiltersResponse seniority = cl.peopleFinder.searchFiltersPeople("seniority", null);
+PeopleFiltersResponse titles = cl.peopleFinder.searchFiltersPeople("titles", "vp sales");
+
+PeopleSearchCriteria criteria = new PeopleSearchCriteria()
+        .jobTitlesInclude(List.of("VP of Sales"))
+        .seniority(List.of("Vice President"))
+        .contactCountries(List.of("USA"));
+CompileResponse preview = cl.peopleFinder.compileSearch(new CompileRequest().criteria(criteria));
+PeopleSearchResponse page = cl.peopleFinder.searchPeople(new PeopleSearchRequest().criteria(criteria).limit(25));
+for (PeopleSearchResultRow row : page.getResults()) {
+    System.out.println(row.getFullName() + " — " + row.getTitle() + " @ " + row.getCompany());
+}
 ```
 
 ### Enrichment (`cl.enrichment`)
@@ -244,13 +283,15 @@ EnrichCompanyResponse company = cl.enrichment.enrichCompany(new EnrichCompanyReq
 | `getSmartAgentResults(String smartAgentTaskId)` | `GET /api/v2/smart-agents/{smart_agent_task_id}` | Per-lead output. |
 
 ```java
+EstimateCostResponse quote = cl.workspace.creditsEstimate(new EstimateCostRequest()
+        .tool("run_smart_agent").listId(list.getListId()).agentType("custom_ai").rowCount(50));
 RunSmartAgentResponse run = cl.smartAgents.runSmartAgent(new RunSmartAgentRequest()
         .listId(list.getListId())
         .agentType("custom_ai")
         .columnName("Personalized angle")
         .prompt("In one sentence, suggest a cold-outreach angle for this lead.")
         .maxRows(50)
-        .quoteId(quoteId)); // signed quote for this exact request shape
+        .quoteId(quote.getQuoteId()));
 SmartAgentResultsResponse results = cl.smartAgents.getSmartAgentResults(run.getSmartAgentTaskId());
 ```
 
@@ -268,6 +309,23 @@ System.out.println("download: " + signed.getDownloadUrl()); // valid until signe
 ExportJsonResponse data = cl.export.exportJson(list.getListId(), 500, null, null);
 data.getLeads().forEach(System.out::println);
 ```
+
+## Examples
+
+Runnable programs live in [`examples/`](examples/) (setup notes in
+[`examples/README.md`](examples/README.md)). Each is a standalone `main` class in package
+`examples` that reads `CLEANLIST_API_KEY` and an optional `CLEANLIST_HOST`.
+
+| Example | What it shows | Credits |
+| ------- | ------------- | ------- |
+| [`Quickstart.java`](examples/Quickstart.java) | whoami, credit balance, create and list lead lists. | Free |
+| [`LeadLists.java`](examples/LeadLists.java) | Lead-list lifecycle: create, read, update, paginate, delete. | Free |
+| [`FindPeople.java`](examples/FindPeople.java) | People Finder: filter values, compile preview, search + next page. | Free |
+| [`EnrichPerson.java`](examples/EnrichPerson.java) | Enrich one contact and poll to completion. | Spends |
+| [`BulkEnrichWithQuote.java`](examples/BulkEnrichWithQuote.java) | The estimate → quote → bulk-enrich credit flow. | Spends |
+| [`SmartAgent.java`](examples/SmartAgent.java) | Run a custom AI smart-agent column and read the results. | Spends |
+| [`Export.java`](examples/Export.java) | CSV (signed URL) + JSON export. | Free |
+| [`ErrorHandling.java`](examples/ErrorHandling.java) | Catching `ApiException`. | Free |
 
 ## Error handling
 

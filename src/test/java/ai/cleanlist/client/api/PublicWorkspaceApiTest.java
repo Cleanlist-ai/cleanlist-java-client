@@ -16,6 +16,8 @@ package ai.cleanlist.client.api;
 import ai.cleanlist.client.ApiException;
 import ai.cleanlist.client.model.ApiKeysResponse;
 import ai.cleanlist.client.model.CreditsBalanceResponse;
+import ai.cleanlist.client.model.EstimateCostRequest;
+import ai.cleanlist.client.model.EstimateCostResponse;
 import ai.cleanlist.client.model.PublicApiError;
 import ai.cleanlist.client.model.UsageReportResponse;
 import ai.cleanlist.client.model.WhoamiResponse;
@@ -45,6 +47,20 @@ public class PublicWorkspaceApiTest {
     @Test
     public void creditsBalanceTest() throws ApiException {
         CreditsBalanceResponse response = api.creditsBalance();
+        // TODO: test validations
+    }
+
+    /**
+     * Estimate cost &amp; get a signed quote
+     *
+     * Pre-flight a paid operation and mint a signed, single-use &#x60;quote_id&#x60;. The quote binds the canonical request (tool, list_id|filters|cohort, scope, row_count, org) via HMAC and must be presented at execution time by every paid bulk tool (&#x60;enrich_list&#x60;, &#x60;run_smart_agent&#x60;, &#x60;sync_to_crm&#x60;, &#x60;sync_to_sequencer&#x60;, cohort enrichments). Row count is derived authoritatively from the list or cohort — never trusted from the caller — so a small quote can&#39;t be replayed against a large job. Requires the &#x60;credits:read&#x60; scope; estimating itself is free, and the response reports whether the org has &#x60;sufficient&#x60; credits to proceed.  **📖 Docs:** https://docs.cleanlist.ai/api-reference/credits
+     *
+     * @throws ApiException if the Api call fails
+     */
+    @Test
+    public void creditsEstimateTest() throws ApiException {
+        EstimateCostRequest estimateCostRequest = null;
+        EstimateCostResponse response = api.creditsEstimate(estimateCostRequest);
         // TODO: test validations
     }
 

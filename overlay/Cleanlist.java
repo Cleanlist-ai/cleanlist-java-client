@@ -19,12 +19,13 @@ package ai.cleanlist.client;
 import ai.cleanlist.client.api.PublicEnrichmentApi;
 import ai.cleanlist.client.api.PublicExportApi;
 import ai.cleanlist.client.api.PublicLeadListsApi;
+import ai.cleanlist.client.api.PublicPeopleFinderApi;
 import ai.cleanlist.client.api.PublicSmartAgentsApi;
 import ai.cleanlist.client.api.PublicWorkspaceApi;
 
 /**
  * Authenticated entry point exposing every Cleanlist API resource group:
- * {@link #workspace}, {@link #leadLists}, {@link #enrichment},
+ * {@link #workspace}, {@link #leadLists}, {@link #peopleFinder}, {@link #enrichment},
  * {@link #smartAgents}, and {@link #export}.
  */
 public class Cleanlist {
@@ -41,6 +42,8 @@ public class Cleanlist {
     public final PublicWorkspaceApi workspace;
     /** Create/manage lists and their leads. */
     public final PublicLeadListsApi leadLists;
+    /** Search people by filters, find people at companies. */
+    public final PublicPeopleFinderApi peopleFinder;
     /** Person/company/bulk enrichment + status polling. */
     public final PublicEnrichmentApi enrichment;
     /** Run smart agents and fetch results. */
@@ -77,14 +80,18 @@ public class Cleanlist {
 
         this.workspace = new PublicWorkspaceApi(apiClient);
         this.leadLists = new PublicLeadListsApi(apiClient);
+        this.peopleFinder = new PublicPeopleFinderApi(apiClient);
         this.enrichment = new PublicEnrichmentApi(apiClient);
         this.smartAgents = new PublicSmartAgentsApi(apiClient);
         this.export = new PublicExportApi(apiClient);
     }
 
-    /** Build a client reading the key from the {@code CLEANLIST_API_KEY} environment variable. */
+    /**
+     * Build a client from the environment: the key from {@code CLEANLIST_API_KEY} and an optional
+     * base URL from {@code CLEANLIST_HOST} (defaults to production).
+     */
     public static Cleanlist fromEnv() {
-        return new Cleanlist(null);
+        return new Cleanlist(null, System.getenv("CLEANLIST_HOST"));
     }
 
     /** The underlying generated client (timeouts, interceptors, custom base path, …). */

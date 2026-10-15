@@ -18,16 +18,26 @@ the SDK on its classpath and run it, e.g. with Maven:
 mvn -q exec:java -Dexec.mainClass="examples.Quickstart"
 ```
 
+Or compile and run them straight from this repo against the built jar:
+
+```bash
+mvn -q -DskipTests -Dgpg.skip package dependency:build-classpath -Dmdep.outputFile=target/cp.txt
+javac -d target/examples -cp "target/cleanlist-java-2.0.0.jar:$(cat target/cp.txt)" examples/*.java
+java -cp "target/examples:target/cleanlist-java-2.0.0.jar:$(cat target/cp.txt)" examples.Quickstart
+```
+
 ## Examples
 
 | File | What it shows |
 | ---- | ------------- |
 | [`Quickstart.java`](Quickstart.java) | whoami, credit balance, create a list. Free. |
+| [`LeadLists.java`](LeadLists.java) | List CRUD + paginate all leads. Free. |
+| [`FindPeople.java`](FindPeople.java) | People Finder: filter values, compile preview, search + next page. Free. |
 | [`EnrichPerson.java`](EnrichPerson.java) | Enrich one contact and poll to completion. Spends credits. |
-| [`BulkEnrichWithQuote.java`](BulkEnrichWithQuote.java) | Redeem an existing `quoteId` to bulk-enrich a list. Spends credits. |
+| [`BulkEnrichWithQuote.java`](BulkEnrichWithQuote.java) | The estimate → quote → bulk-enrich flow. Spends credits. |
+| [`SmartAgent.java`](SmartAgent.java) | Run a custom AI smart-agent column and read the results. Spends credits. |
 | [`Export.java`](Export.java) | CSV (signed URL) + JSON export. Free. |
 | [`ErrorHandling.java`](ErrorHandling.java) | Catching `ApiException`. Free. |
 
-> ⚠️ Examples that enrich or run smart agents **spend credits**. Bulk enrich needs a
-> quote id you already have: the pricing endpoint is not in the public spec, so the
-> SDK cannot request one. Read each file's header before running.
+> ⚠️ Examples that enrich or run smart agents **spend credits** (they estimate first and
+> print the cost). Read each file's header before running.

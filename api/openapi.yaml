@@ -185,6 +185,96 @@ paths:
       - Public Workspace
       x-accepts:
       - application/json
+  /api/v2/credits/estimate:
+    post:
+      description: |-
+        Pre-flight a paid operation and mint a signed, single-use `quote_id`.
+        The quote binds the canonical request (tool, list_id|filters|cohort, scope,
+        row_count, org) via HMAC and must be presented at execution time by every
+        paid bulk tool (`enrich_list`, `run_smart_agent`, `sync_to_crm`,
+        `sync_to_sequencer`, cohort enrichments). Row count is derived
+        authoritatively from the list or cohort — never trusted from the caller —
+        so a small quote can't be replayed against a large job. Requires the
+        `credits:read` scope; estimating itself is free, and the response reports
+        whether the org has `sufficient` credits to proceed.
+
+        **📖 Docs:** https://docs.cleanlist.ai/api-reference/credits
+      operationId: credits_estimate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EstimateCostRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EstimateCostResponse"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Request failed validation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Bad request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Authentication required or invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Permission denied or feature not enabled.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Resource conflict.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Rate limited.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Internal error.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicApiError"
+          description: Upstream provider error.
+      security:
+      - HTTPBearer: []
+      summary: Estimate cost & get a signed quote
+      tags:
+      - Public Workspace
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /api/v2/api-keys:
     get:
       description: |-
@@ -4933,6 +5023,171 @@ components:
       - status
       - workflow_id
       title: EnrichPersonResponse
+    EstimateCostRequest:
+      additionalProperties: {}
+      example:
+        include_phone: true
+        list_id: list_7a1b2c3d
+        scope: full
+        tool: enrich_list
+      properties:
+        tool:
+          description: "Tool to price. Must be a key in the server's cost table (e.g.\
+            \ `enrich_list`, `enrich_person`, `run_smart_agent`, `sync_to_crm`, `add_person_enrichments`).\
+            \ Unknown tools return a 400."
+          title: Tool
+          type: string
+        list_id:
+          nullable: true
+          type: string
+        filters:
+          additionalProperties: false
+          nullable: true
+          type: object
+        row_count:
+          nullable: true
+          type: integer
+        scope:
+          nullable: true
+          type: string
+        agent_type:
+          nullable: true
+          type: string
+        column_name:
+          maxLength: 100
+          minLength: 1
+          nullable: true
+          type: string
+        prompt:
+          nullable: true
+          type: string
+        template_id:
+          nullable: true
+          type: string
+        lead_scope:
+          default: subset
+          enum:
+          - subset
+          - all
+          title: Lead Scope
+          type: string
+        max_rows:
+          default: 100
+          maximum: 10000.0
+          minimum: 1.0
+          title: Max Rows
+          type: integer
+        overwrite:
+          default: false
+          title: Overwrite
+          type: boolean
+        include_phone:
+          default: false
+          description: Legacy boolean that requests phone enrichment when `enrichment_type`/`scope`
+            are not set. Kept for back-compat; prefer `scope`/`enrichment_type`.
+          title: Include Phone
+          type: boolean
+        provider:
+          nullable: true
+          type: string
+        sub_action:
+          nullable: true
+          type: string
+        campaign_id:
+          minLength: 1
+          nullable: true
+          type: string
+        field_mapping:
+          additionalProperties:
+            type: string
+          nullable: true
+        enrichment_type:
+          nullable: true
+          type: string
+        task_id:
+          nullable: true
+          type: string
+        data_points:
+          items:
+            type: string
+          nullable: true
+          type: array
+        entity_ids:
+          items:
+            type: string
+          nullable: true
+          type: array
+        extra:
+          additionalProperties: false
+          nullable: true
+          type: object
+      required:
+      - tool
+      title: EstimateCostRequest
+    EstimateCostResponse:
+      additionalProperties: {}
+      example:
+        available_credits: 4820
+        estimated_cost: 275
+        expires_at: 1751405100
+        filter_hash: 3f8a1c9d2e4b6a70
+        quote_id: qte_v1_1751404800_9a3f2c1b8e7d6a5f4c3b2a1908f7e6d5c4b3a2910f8e7d6c5b4a3928170
+        row_count: 25
+        sufficient: true
+        tool: enrich_list
+      properties:
+        quote_id:
+          description: "HMAC-signed quote handle (`qte_<kid>_<issued_at>_<sig>`) that\
+            \ the paired paid tool must present at execution time. Single-use and\
+            \ bound to the canonical request (tool, list/filters, scope, row_count,\
+            \ org)."
+          title: Quote Id
+          type: string
+        expires_at:
+          description: "Unix epoch SECONDS at which the quote expires (issue time\
+            \ + `CLEANLIST_QUOTE_TTL_SECONDS`, 5 min default). Re-estimate after this\
+            \ to obtain a fresh quote."
+          title: Expires At
+          type: integer
+        estimated_cost:
+          description: Credits this operation will cost — the authoritative signed
+            spend cap. Execution rejects (`spend_cap_exceeded`) if the recomputed
+            cost would exceed it.
+          title: Estimated Cost
+          type: integer
+        tool:
+          description: Echo of the priced tool.
+          title: Tool
+          type: string
+        row_count:
+          description: "Number of rows/entities the estimate priced — derived from\
+            \ the list or cohort when applicable, not the caller's raw input."
+          title: Row Count
+          type: integer
+        filter_hash:
+          description: Stable digest of the canonical filter/list/cohort shape bound
+            into the quote signature; `none` when there is no filter object.
+          title: Filter Hash
+          type: string
+        available_credits:
+          description: The organization's current credit balance at estimate time.
+          title: Available Credits
+          type: integer
+        sufficient:
+          description: True when `available_credits >= estimated_cost`. False signals
+            the org must top up at billing before the operation can run.
+          title: Sufficient
+          type: boolean
+      required:
+      - available_credits
+      - estimated_cost
+      - expires_at
+      - filter_hash
+      - quote_id
+      - row_count
+      - sufficient
+      - tool
+      title: EstimateCostResponse
     ExportCsvRequest:
       additionalProperties: {}
       example:
