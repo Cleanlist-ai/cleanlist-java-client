@@ -14,6 +14,10 @@
 |**message** | **String** |  |  [optional] |
 |**entityKind** | [**EntityKindEnum**](#EntityKindEnum) |  |  [optional] |
 |**searchHandoff** | [**SearchHandoff**](SearchHandoff.md) |  |  [optional] |
+|**cohort** | [**CohortSummary**](CohortSummary.md) |  |  [optional] |
+|**presentation** | [**SearchPresentation**](SearchPresentation.md) |  |  [optional] |
+|**criteriaApplied** | **Object** |  |  [optional] |
+|**companyCriteriaApplied** | **Object** |  |  [optional] |
 |**route** | **Object** |  |  [optional] |
 |**warnings** | **List&lt;String&gt;** |  |  [optional] |
 |**exclusionsApplied** | **Map&lt;String, Integer&gt;** |  |  [optional] |

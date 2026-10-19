@@ -15,6 +15,8 @@
 |**phone** | **String** |  |  [optional] |
 |**title** | **String** |  |  [optional] |
 |**company** | **String** |  |  [optional] |
+|**companyId** | **String** |  |  [optional] |
+|**domain** | **String** |  |  [optional] |
 |**location** | **String** |  |  [optional] |
 |**linkedinUrl** | **String** |  |  [optional] |
 |**provider** | **String** |  |  [optional] |

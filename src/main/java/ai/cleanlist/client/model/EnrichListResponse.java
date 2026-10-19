@@ -53,6 +53,11 @@ import ai.cleanlist.client.JSON;
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.17.0")
 public class EnrichListResponse {
+  public static final String SERIALIZED_NAME_CRM_NOTE = "crm_note";
+  @SerializedName(SERIALIZED_NAME_CRM_NOTE)
+  @javax.annotation.Nullable
+  private String crmNote;
+
   public static final String SERIALIZED_NAME_TASK_ID = "task_id";
   @SerializedName(SERIALIZED_NAME_TASK_ID)
   @javax.annotation.Nullable
@@ -160,6 +165,25 @@ public class EnrichListResponse {
 
   public EnrichListResponse() {
   }
+
+  public EnrichListResponse crmNote(@javax.annotation.Nullable String crmNote) {
+    this.crmNote = crmNote;
+    return this;
+  }
+
+  /**
+   * Get crmNote
+   * @return crmNote
+   */
+  @javax.annotation.Nullable
+  public String getCrmNote() {
+    return crmNote;
+  }
+
+  public void setCrmNote(@javax.annotation.Nullable String crmNote) {
+    this.crmNote = crmNote;
+  }
+
 
   public EnrichListResponse taskId(@javax.annotation.Nullable String taskId) {
     this.taskId = taskId;
@@ -380,7 +404,8 @@ public class EnrichListResponse {
       return false;
     }
     EnrichListResponse enrichListResponse = (EnrichListResponse) o;
-    return Objects.equals(this.taskId, enrichListResponse.taskId) &&
+    return Objects.equals(this.crmNote, enrichListResponse.crmNote) &&
+        Objects.equals(this.taskId, enrichListResponse.taskId) &&
         Objects.equals(this.timestampMs, enrichListResponse.timestampMs) &&
         Objects.equals(this.agentInstructions, enrichListResponse.agentInstructions) &&
         Objects.equals(this.usage, enrichListResponse.usage) &&
@@ -399,7 +424,7 @@ public class EnrichListResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(taskId, timestampMs, agentInstructions, usage, message, workflowId, status, totalLeads, estimatedCost, creditsReserved, pollUrl);
+    return Objects.hash(crmNote, taskId, timestampMs, agentInstructions, usage, message, workflowId, status, totalLeads, estimatedCost, creditsReserved, pollUrl);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -413,6 +438,7 @@ public class EnrichListResponse {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class EnrichListResponse {\n");
+    sb.append("    crmNote: ").append(toIndentedString(crmNote)).append("\n");
     sb.append("    taskId: ").append(toIndentedString(taskId)).append("\n");
     sb.append("    timestampMs: ").append(toIndentedString(timestampMs)).append("\n");
     sb.append("    agentInstructions: ").append(toIndentedString(agentInstructions)).append("\n");
@@ -445,7 +471,7 @@ public class EnrichListResponse {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("task_id", "timestamp_ms", "agent_instructions", "usage", "message", "workflow_id", "status", "total_leads", "estimated_cost", "credits_reserved", "poll_url"));
+    openapiFields = new HashSet<String>(Arrays.asList("crm_note", "task_id", "timestamp_ms", "agent_instructions", "usage", "message", "workflow_id", "status", "total_leads", "estimated_cost", "credits_reserved", "poll_url"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("workflow_id", "status", "total_leads", "estimated_cost", "credits_reserved", "poll_url"));
@@ -479,6 +505,9 @@ public class EnrichListResponse {
         }
       }
         JsonObject jsonObj = jsonElement.getAsJsonObject();
+      if ((jsonObj.get("crm_note") != null && !jsonObj.get("crm_note").isJsonNull()) && !jsonObj.get("crm_note").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `crm_note` to be a primitive type in the JSON string but got `%s`", jsonObj.get("crm_note").toString()));
+      }
       if ((jsonObj.get("task_id") != null && !jsonObj.get("task_id").isJsonNull()) && !jsonObj.get("task_id").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `task_id` to be a primitive type in the JSON string but got `%s`", jsonObj.get("task_id").toString()));
       }

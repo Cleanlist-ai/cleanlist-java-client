@@ -102,6 +102,7 @@ public class JSON {
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.ApiKeyInfo.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.ApiKeysResponse.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.Body.CustomTypeAdapterFactory());
+        gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.CohortSummary.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.CompaniesFindStartResponse.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.CompaniesFindStatusResponse.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.CompanyRecord.CustomTypeAdapterFactory());
@@ -142,6 +143,7 @@ public class JSON {
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.ListSmartAgentsResponse.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.ListSummary.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.ListsPageResponse.CustomTypeAdapterFactory());
+        gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.PendingImportRow.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.PeopleByCompaniesRequest.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.PeopleFiltersResponse.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.PeopleMatchEvidence.CustomTypeAdapterFactory());
@@ -149,6 +151,8 @@ public class JSON {
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.PeopleSearchRequest.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.PeopleSearchResponse.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.PeopleSearchResultRow.CustomTypeAdapterFactory());
+        gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.PersonPresentationRow.CustomTypeAdapterFactory());
+        gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.PresentationLink.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.PublicApiError.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.PublicApiErrorPayload.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.PublicLeadListUpdate.CustomTypeAdapterFactory());
@@ -157,6 +161,7 @@ public class JSON {
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.RunSmartAgentRequest.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.RunSmartAgentResponse.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.SearchHandoff.CustomTypeAdapterFactory());
+        gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.SearchPresentation.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.SingleEnrichmentResultRead.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.SmartAgentResultRow.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.SmartAgentResultsResponse.CustomTypeAdapterFactory());

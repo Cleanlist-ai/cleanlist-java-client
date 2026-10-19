@@ -1283,19 +1283,18 @@ paths:
         Pipeline:
             1. Authz: `lists:write` always; `enrich:write` additionally when
                `dispatch_enrichment=True` (the workflow spends credits).
-            2. Feature flag gate — disabled-by-default kill switch returns 503.
-            3. Idempotency cache lookup (org-wide, 24h TTL).
-            4. Base64 decode + parse via `parse_csv_to_rawpeople`.
-            5. If dispatching: verify quote (if provided), open reservation,
+            2. Idempotency cache lookup (org-wide, 24h TTL).
+            3. Base64 decode + parse via `parse_csv_to_rawpeople`.
+            4. If dispatching: verify quote (if provided), open reservation,
                redeem quote.
-            6. Bulk-insert RawPeople into the list. UUIDs are stamped
+            5. Bulk-insert RawPeople into the list. UUIDs are stamped
                Python-side so we can hand them to the workflow.
-            7. If dispatching: kick off `start_bulk_enrichment` with the
+            6. If dispatching: kick off `start_bulk_enrichment` with the
                parsed prospects + raw_person_ids. The workflow's per-Lead
                `insert_lead_to_list` activity handles prospect_count
                updates per the existing pattern; import-only path bumps
                prospect_count here directly.
-            8. Cache the response under `idempotency_key` (if provided).
+            7. Cache the response under `idempotency_key` (if provided).
 
         Cross-list dedup: this endpoint dedupes ONLY within the upload. A
         row whose identity already exists as a Lead elsewhere in the
@@ -1852,7 +1851,9 @@ paths:
     post:
       description: |-
         Start an async job that finds people at the given companies (which must
-        already belong to ``list_id``) and imports them into that list.
+        already belong to ``list_id``) and imports them into that list. Take the
+        ``company_ids`` from the ``company_id`` field of the list's lead rows
+        (GET /lead-lists/{list_id}/leads).
 
         Returns a ``workflow_id`` immediately; poll ``poll_url``
         (GET /lead-lists/{list_id}/find-people/status/{workflow_id}) until ``status``
@@ -3202,6 +3203,66 @@ components:
       required:
       - keys
       title: ApiKeysResponse
+    CohortSummary:
+      additionalProperties: false
+      example:
+        returned_count: 0
+        population_scope: unknown
+        expires_at: expires_at
+        provider_has_more: true
+        retention_truncated: true
+        identity_namespace: unknown
+        retained_count: 0
+        provider_total: 0
+        evidence_checked_count: 0
+      properties:
+        identity_namespace:
+          default: unknown
+          enum:
+          - provider_person
+          - provider_company
+          - saved_lead
+          - saved_company
+          - unknown
+          title: Identity Namespace
+          type: string
+        population_scope:
+          default: unknown
+          enum:
+          - provider_page
+          - saved_page
+          - unknown
+          title: Population Scope
+          type: string
+        provider_total:
+          minimum: 0.0
+          nullable: true
+          type: integer
+        returned_count:
+          minimum: 0.0
+          nullable: true
+          type: integer
+        retained_count:
+          description: Unique IDs accessible through this task snapshot.
+          minimum: 0.0
+          title: Retained Count
+          type: integer
+        evidence_checked_count:
+          minimum: 0.0
+          nullable: true
+          type: integer
+        provider_has_more:
+          nullable: true
+          type: boolean
+        retention_truncated:
+          nullable: true
+          type: boolean
+        expires_at:
+          nullable: true
+          type: string
+      required:
+      - retained_count
+      title: CohortSummary
     CompaniesFindStartResponse:
       additionalProperties: false
       example:
@@ -4479,11 +4540,11 @@ components:
         company_industry: company_industry
         domain: domain
         company_industries_truncated: true
-        company_headcount: 7
+        company_headcount: 1
         company: company
         company_linkedin_url: company_linkedin_url
         title: title
-        company_founded_year: 2
+        company_founded_year: 7
         company_industries:
         - company_industries
         - company_industries
@@ -4661,6 +4722,9 @@ components:
         total_entities: 2
         workflow_id: wf_enrich_7c2a
       properties:
+        crm_note:
+          nullable: true
+          type: string
         task_id:
           nullable: true
           type: string
@@ -4851,6 +4915,9 @@ components:
         total_leads: 120
         workflow_id: wf_enrich_7c2a
       properties:
+        crm_note:
+          nullable: true
+          type: string
         task_id:
           nullable: true
           type: string
@@ -5136,6 +5203,9 @@ components:
         sufficient: true
         tool: enrich_list
       properties:
+        crm_note:
+          nullable: true
+          type: string
         quote_id:
           description: "HMAC-signed quote handle (`qte_<kid>_<issued_at>_<sig>`) that\
             \ the paired paid tool must present at execution time. Single-use and\
@@ -5357,8 +5427,9 @@ components:
         location_state: location_state
       properties:
         company_ids:
-          description: Companies to find people at. Must be companies already in lead_list_id
-            (directly added or lead-derived); ids outside that set are dropped.
+          description: "Cleanlist company ids to find people at. Must be companies\
+            \ already in the list: read them from the `company_id` of the list's lead\
+            \ rows (GET /lead-lists/{list_id}/leads). Ids outside the list are dropped."
           items:
             type: string
           maxItems: 100
@@ -5579,6 +5650,12 @@ components:
         company:
           nullable: true
           type: string
+        company_id:
+          nullable: true
+          type: string
+        domain:
+          nullable: true
+          type: string
         location:
           nullable: true
           type: string
@@ -5623,6 +5700,19 @@ components:
           nullable: true
           type: string
         message:
+          nullable: true
+          type: string
+        presentation:
+          $ref: "#/components/schemas/SearchPresentation"
+        pending_imports:
+          items:
+            $ref: "#/components/schemas/PendingImportRow"
+          nullable: true
+          type: array
+        pending_import_total:
+          nullable: true
+          type: integer
+        pending_import_cursor:
           nullable: true
           type: string
         list_id:
@@ -5860,6 +5950,49 @@ components:
       - lists
       - total
       title: ListsPageResponse
+    PendingImportRow:
+      additionalProperties: false
+      properties:
+        raw_person_id:
+          description: "Imported RawPerson UUID, never a saved lead_id."
+          title: Raw Person Id
+          type: string
+        status:
+          $ref: "#/components/schemas/RawPersonStatus"
+        source_row_index:
+          nullable: true
+          type: integer
+        first_name:
+          nullable: true
+          type: string
+        last_name:
+          nullable: true
+          type: string
+        full_name:
+          nullable: true
+          type: string
+        email:
+          nullable: true
+          type: string
+        phone:
+          nullable: true
+          type: string
+        title:
+          nullable: true
+          type: string
+        company:
+          nullable: true
+          type: string
+        company_domain:
+          nullable: true
+          type: string
+        linkedin_url:
+          nullable: true
+          type: string
+      required:
+      - raw_person_id
+      - status
+      title: PendingImportRow
     PeopleByCompaniesRequest:
       additionalProperties: {}
       example:
@@ -6897,16 +7030,139 @@ components:
         warnings:
         - warnings
         - warnings
-        credits_charged: 3
+        credits_charged: 5
         agent_instructions: agent_instructions
+        cohort:
+          returned_count: 0
+          population_scope: unknown
+          expires_at: expires_at
+          provider_has_more: true
+          retention_truncated: true
+          identity_namespace: unknown
+          retained_count: 0
+          provider_total: 0
+          evidence_checked_count: 0
         task_id: task_id
         timestamp_ms: 0
+        criteria_applied: "{}"
+        company_criteria_applied: "{}"
         message: message
+        presentation:
+          entity_kind: person
+          shown: 0
+          columns:
+          - columns
+          - columns
+          headcount_discrepancy_rows:
+          - 4
+          - 4
+          evidence_checked: 0
+          industry_truncated_rows:
+          - 7
+          - 7
+          provider_total: 0
+          rows:
+          - headcount: headcount
+            industry: industry
+            entity_id: entity_id
+            title: title
+            headcount_discrepancy: false
+            phone: phone
+            extra:
+              key: extra
+            name:
+              text: text
+              url: url
+            evidence_status: matched
+            company:
+              text: text
+              url: url
+            location: location
+            position: 1
+            email: email
+            industry_truncated: false
+          - headcount: headcount
+            industry: industry
+            entity_id: entity_id
+            title: title
+            headcount_discrepancy: false
+            phone: phone
+            extra:
+              key: extra
+            name:
+              text: text
+              url: url
+            evidence_status: matched
+            company:
+              text: text
+              url: url
+            location: location
+            position: 1
+            email: email
+            industry_truncated: false
+          - headcount: headcount
+            industry: industry
+            entity_id: entity_id
+            title: title
+            headcount_discrepancy: false
+            phone: phone
+            extra:
+              key: extra
+            name:
+              text: text
+              url: url
+            evidence_status: matched
+            company:
+              text: text
+              url: url
+            location: location
+            position: 1
+            email: email
+            industry_truncated: false
+          - headcount: headcount
+            industry: industry
+            entity_id: entity_id
+            title: title
+            headcount_discrepancy: false
+            phone: phone
+            extra:
+              key: extra
+            name:
+              text: text
+              url: url
+            evidence_status: matched
+            company:
+              text: text
+              url: url
+            location: location
+            position: 1
+            email: email
+            industry_truncated: false
+          - headcount: headcount
+            industry: industry
+            entity_id: entity_id
+            title: title
+            headcount_discrepancy: false
+            phone: phone
+            extra:
+              key: extra
+            name:
+              text: text
+              url: url
+            evidence_status: matched
+            company:
+              text: text
+              url: url
+            location: location
+            position: 1
+            email: email
+            industry_truncated: false
+          returned: 0
         entity_kind: person
-        total: 9
+        total: 4
         route: "{}"
         exclusions_applied:
-          key: 6
+          key: 1
         truncation_warning: truncation_warning
         results:
         - match_evidence:
@@ -6921,11 +7177,11 @@ components:
           - company_industry: company_industry
             domain: domain
             company_industries_truncated: true
-            company_headcount: 7
+            company_headcount: 1
             company: company
             company_linkedin_url: company_linkedin_url
             title: title
-            company_founded_year: 2
+            company_founded_year: 7
             company_industries:
             - company_industries
             - company_industries
@@ -6934,11 +7190,11 @@ components:
           - company_industry: company_industry
             domain: domain
             company_industries_truncated: true
-            company_headcount: 7
+            company_headcount: 1
             company: company
             company_linkedin_url: company_linkedin_url
             title: title
-            company_founded_year: 2
+            company_founded_year: 7
             company_industries:
             - company_industries
             - company_industries
@@ -6946,11 +7202,11 @@ components:
             company_headcount_range: company_headcount_range
           company_industries_truncated: true
           last_name: last_name
-          company_headcount: 5
+          company_headcount: 6
           profile_image_url: profile_image_url
           company_linkedin_url: company_linkedin_url
           title: title
-          company_founded_year: 5
+          company_founded_year: 1
           company_headcount_range: company_headcount_range
           company_industry: company_industry
           full_name: full_name
@@ -6977,11 +7233,11 @@ components:
           - company_industry: company_industry
             domain: domain
             company_industries_truncated: true
-            company_headcount: 7
+            company_headcount: 1
             company: company
             company_linkedin_url: company_linkedin_url
             title: title
-            company_founded_year: 2
+            company_founded_year: 7
             company_industries:
             - company_industries
             - company_industries
@@ -6990,11 +7246,11 @@ components:
           - company_industry: company_industry
             domain: domain
             company_industries_truncated: true
-            company_headcount: 7
+            company_headcount: 1
             company: company
             company_linkedin_url: company_linkedin_url
             title: title
-            company_founded_year: 2
+            company_founded_year: 7
             company_industries:
             - company_industries
             - company_industries
@@ -7002,11 +7258,11 @@ components:
             company_headcount_range: company_headcount_range
           company_industries_truncated: true
           last_name: last_name
-          company_headcount: 5
+          company_headcount: 6
           profile_image_url: profile_image_url
           company_linkedin_url: company_linkedin_url
           title: title
-          company_founded_year: 5
+          company_founded_year: 1
           company_headcount_range: company_headcount_range
           company_industry: company_industry
           full_name: full_name
@@ -7045,6 +7301,18 @@ components:
           type: string
         search_handoff:
           $ref: "#/components/schemas/SearchHandoff"
+        cohort:
+          $ref: "#/components/schemas/CohortSummary"
+        presentation:
+          $ref: "#/components/schemas/SearchPresentation"
+        criteria_applied:
+          additionalProperties: false
+          nullable: true
+          type: object
+        company_criteria_applied:
+          additionalProperties: false
+          nullable: true
+          type: object
         route:
           additionalProperties: false
           nullable: true
@@ -7093,11 +7361,11 @@ components:
         - company_industry: company_industry
           domain: domain
           company_industries_truncated: true
-          company_headcount: 7
+          company_headcount: 1
           company: company
           company_linkedin_url: company_linkedin_url
           title: title
-          company_founded_year: 2
+          company_founded_year: 7
           company_industries:
           - company_industries
           - company_industries
@@ -7106,11 +7374,11 @@ components:
         - company_industry: company_industry
           domain: domain
           company_industries_truncated: true
-          company_headcount: 7
+          company_headcount: 1
           company: company
           company_linkedin_url: company_linkedin_url
           title: title
-          company_founded_year: 2
+          company_founded_year: 7
           company_industries:
           - company_industries
           - company_industries
@@ -7118,11 +7386,11 @@ components:
           company_headcount_range: company_headcount_range
         company_industries_truncated: true
         last_name: last_name
-        company_headcount: 5
+        company_headcount: 6
         profile_image_url: profile_image_url
         company_linkedin_url: company_linkedin_url
         title: title
-        company_founded_year: 5
+        company_founded_year: 1
         company_headcount_range: company_headcount_range
         company_industry: company_industry
         full_name: full_name
@@ -7205,6 +7473,105 @@ components:
         match_evidence:
           $ref: "#/components/schemas/PeopleMatchEvidence"
       title: PeopleSearchResultRow
+    PersonPresentationRow:
+      additionalProperties: false
+      example:
+        headcount: headcount
+        industry: industry
+        entity_id: entity_id
+        title: title
+        headcount_discrepancy: false
+        phone: phone
+        extra:
+          key: extra
+        name:
+          text: text
+          url: url
+        evidence_status: matched
+        company:
+          text: text
+          url: url
+        location: location
+        position: 1
+        email: email
+        industry_truncated: false
+      properties:
+        position:
+          description: 1-based position in the returned rows.
+          minimum: 1.0
+          title: Position
+          type: integer
+        entity_id:
+          nullable: true
+          type: string
+        name:
+          $ref: "#/components/schemas/PresentationLink"
+        title:
+          title: Title
+          type: string
+        company:
+          $ref: "#/components/schemas/PresentationLink"
+        location:
+          title: Location
+          type: string
+        headcount:
+          title: Headcount
+          type: string
+        headcount_discrepancy:
+          default: false
+          description: The latest count falls outside the returned size band; both
+            are observations.
+          title: Headcount Discrepancy
+          type: boolean
+        industry:
+          title: Industry
+          type: string
+        industry_truncated:
+          default: false
+          description: Provider industry labels were shortened or omitted upstream.
+          title: Industry Truncated
+          type: boolean
+        evidence_status:
+          enum:
+          - matched
+          - unverified
+          nullable: true
+          type: string
+        email:
+          nullable: true
+          type: string
+        phone:
+          nullable: true
+          type: string
+        extra:
+          additionalProperties:
+            type: string
+          description: "Cells for the requested extra columns, keyed by column name."
+          title: Extra
+      required:
+      - company
+      - headcount
+      - industry
+      - location
+      - name
+      - position
+      - title
+      title: PersonPresentationRow
+    PresentationLink:
+      additionalProperties: false
+      example:
+        text: text
+        url: url
+      properties:
+        text:
+          title: Text
+          type: string
+        url:
+          nullable: true
+          type: string
+      required:
+      - text
+      title: PresentationLink
     PublicLeadListUpdate:
       additionalProperties: false
       description: |-
@@ -7235,6 +7602,15 @@ components:
           nullable: true
           type: string
       title: PublicLeadListUpdate
+    RawPersonStatus:
+      description: Status of a raw person in the enrichment pipeline.
+      enum:
+      - pending
+      - processing
+      - failed
+      - lookup_failed
+      title: RawPersonStatus
+      type: string
     RemoveLeadsRequest:
       additionalProperties: false
       example:
@@ -7454,6 +7830,168 @@ components:
           nullable: true
           type: string
       title: SearchHandoff
+    SearchPresentation:
+      additionalProperties: false
+      example:
+        entity_kind: person
+        shown: 0
+        columns:
+        - columns
+        - columns
+        headcount_discrepancy_rows:
+        - 4
+        - 4
+        evidence_checked: 0
+        industry_truncated_rows:
+        - 7
+        - 7
+        provider_total: 0
+        rows:
+        - headcount: headcount
+          industry: industry
+          entity_id: entity_id
+          title: title
+          headcount_discrepancy: false
+          phone: phone
+          extra:
+            key: extra
+          name:
+            text: text
+            url: url
+          evidence_status: matched
+          company:
+            text: text
+            url: url
+          location: location
+          position: 1
+          email: email
+          industry_truncated: false
+        - headcount: headcount
+          industry: industry
+          entity_id: entity_id
+          title: title
+          headcount_discrepancy: false
+          phone: phone
+          extra:
+            key: extra
+          name:
+            text: text
+            url: url
+          evidence_status: matched
+          company:
+            text: text
+            url: url
+          location: location
+          position: 1
+          email: email
+          industry_truncated: false
+        - headcount: headcount
+          industry: industry
+          entity_id: entity_id
+          title: title
+          headcount_discrepancy: false
+          phone: phone
+          extra:
+            key: extra
+          name:
+            text: text
+            url: url
+          evidence_status: matched
+          company:
+            text: text
+            url: url
+          location: location
+          position: 1
+          email: email
+          industry_truncated: false
+        - headcount: headcount
+          industry: industry
+          entity_id: entity_id
+          title: title
+          headcount_discrepancy: false
+          phone: phone
+          extra:
+            key: extra
+          name:
+            text: text
+            url: url
+          evidence_status: matched
+          company:
+            text: text
+            url: url
+          location: location
+          position: 1
+          email: email
+          industry_truncated: false
+        - headcount: headcount
+          industry: industry
+          entity_id: entity_id
+          title: title
+          headcount_discrepancy: false
+          phone: phone
+          extra:
+            key: extra
+          name:
+            text: text
+            url: url
+          evidence_status: matched
+          company:
+            text: text
+            url: url
+          location: location
+          position: 1
+          email: email
+          industry_truncated: false
+        returned: 0
+      properties:
+        entity_kind:
+          default: person
+          enum:
+          - person
+          title: Entity Kind
+          type: string
+        columns:
+          description: "Columns to lay out, in order. Name, Title, Company, Location,\
+            \ Headcount, Industry, Email and Phone read the row's own cells; any other\
+            \ column reads the row's extra cells. Renderers show exactly these."
+          items:
+            type: string
+          type: array
+        rows:
+          items:
+            $ref: "#/components/schemas/PersonPresentationRow"
+          maxItems: 100
+          type: array
+        shown:
+          description: Rows in this block.
+          minimum: 0.0
+          title: Shown
+          type: integer
+        returned:
+          description: Rows in the producing response.
+          minimum: 0.0
+          title: Returned
+          type: integer
+        provider_total:
+          minimum: 0.0
+          nullable: true
+          type: integer
+        evidence_checked:
+          minimum: 0.0
+          nullable: true
+          type: integer
+        headcount_discrepancy_rows:
+          items:
+            type: integer
+          type: array
+        industry_truncated_rows:
+          items:
+            type: integer
+          type: array
+      required:
+      - returned
+      - shown
+      title: SearchPresentation
     SingleEnrichmentResultRead:
       additionalProperties: false
       description: |-
@@ -7652,8 +8190,9 @@ components:
           title: Column Name
           type: string
         agent_type:
-          description: "Agent / smart-column type the run executed as (e.g. `custom_ai`,\
-            \ `cold_intro_email`)."
+          description: "The `agent_type` the run was started with (e.g. `custom_ai`,\
+            \ `cold_intro_email`, `title_normalizer`), or the smart-column type for\
+            \ runs started outside POST /smart-agents/run."
           title: Agent Type
           type: string
         status:

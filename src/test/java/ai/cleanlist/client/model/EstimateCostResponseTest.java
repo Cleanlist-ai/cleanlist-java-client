@@ -20,6 +20,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +36,14 @@ public class EstimateCostResponseTest {
     @Test
     public void testEstimateCostResponse() {
         // TODO: test EstimateCostResponse
+    }
+
+    /**
+     * Test the property 'crmNote'
+     */
+    @Test
+    public void crmNoteTest() {
+        // TODO: test crmNote
     }
 
     /**
