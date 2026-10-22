@@ -22,6 +22,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -52,6 +53,11 @@ import ai.cleanlist.client.JSON;
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.17.0")
 public class EstimateCostResponse {
+  public static final String SERIALIZED_NAME_CRM_NOTE = "crm_note";
+  @SerializedName(SERIALIZED_NAME_CRM_NOTE)
+  @javax.annotation.Nullable
+  private String crmNote;
+
   public static final String SERIALIZED_NAME_QUOTE_ID = "quote_id";
   @SerializedName(SERIALIZED_NAME_QUOTE_ID)
   @javax.annotation.Nonnull
@@ -94,6 +100,25 @@ public class EstimateCostResponse {
 
   public EstimateCostResponse() {
   }
+
+  public EstimateCostResponse crmNote(@javax.annotation.Nullable String crmNote) {
+    this.crmNote = crmNote;
+    return this;
+  }
+
+  /**
+   * Get crmNote
+   * @return crmNote
+   */
+  @javax.annotation.Nullable
+  public String getCrmNote() {
+    return crmNote;
+  }
+
+  public void setCrmNote(@javax.annotation.Nullable String crmNote) {
+    this.crmNote = crmNote;
+  }
+
 
   public EstimateCostResponse quoteId(@javax.annotation.Nonnull String quoteId) {
     this.quoteId = quoteId;
@@ -301,7 +326,8 @@ public class EstimateCostResponse {
       return false;
     }
     EstimateCostResponse estimateCostResponse = (EstimateCostResponse) o;
-    return Objects.equals(this.quoteId, estimateCostResponse.quoteId) &&
+    return Objects.equals(this.crmNote, estimateCostResponse.crmNote) &&
+        Objects.equals(this.quoteId, estimateCostResponse.quoteId) &&
         Objects.equals(this.expiresAt, estimateCostResponse.expiresAt) &&
         Objects.equals(this.estimatedCost, estimateCostResponse.estimatedCost) &&
         Objects.equals(this.tool, estimateCostResponse.tool) &&
@@ -312,15 +338,27 @@ public class EstimateCostResponse {
         Objects.equals(this.additionalProperties, estimateCostResponse.additionalProperties);
   }
 
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
+  }
+
   @Override
   public int hashCode() {
-    return Objects.hash(quoteId, expiresAt, estimatedCost, tool, rowCount, filterHash, availableCredits, sufficient, additionalProperties);
+    return Objects.hash(crmNote, quoteId, expiresAt, estimatedCost, tool, rowCount, filterHash, availableCredits, sufficient, additionalProperties);
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class EstimateCostResponse {\n");
+    sb.append("    crmNote: ").append(toIndentedString(crmNote)).append("\n");
     sb.append("    quoteId: ").append(toIndentedString(quoteId)).append("\n");
     sb.append("    expiresAt: ").append(toIndentedString(expiresAt)).append("\n");
     sb.append("    estimatedCost: ").append(toIndentedString(estimatedCost)).append("\n");
@@ -351,7 +389,7 @@ public class EstimateCostResponse {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("quote_id", "expires_at", "estimated_cost", "tool", "row_count", "filter_hash", "available_credits", "sufficient"));
+    openapiFields = new HashSet<String>(Arrays.asList("crm_note", "quote_id", "expires_at", "estimated_cost", "tool", "row_count", "filter_hash", "available_credits", "sufficient"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("quote_id", "expires_at", "estimated_cost", "tool", "row_count", "filter_hash", "available_credits", "sufficient"));
@@ -377,6 +415,9 @@ public class EstimateCostResponse {
         }
       }
         JsonObject jsonObj = jsonElement.getAsJsonObject();
+      if ((jsonObj.get("crm_note") != null && !jsonObj.get("crm_note").isJsonNull()) && !jsonObj.get("crm_note").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `crm_note` to be a primitive type in the JSON string but got `%s`", jsonObj.get("crm_note").toString()));
+      }
       if (!jsonObj.get("quote_id").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `quote_id` to be a primitive type in the JSON string but got `%s`", jsonObj.get("quote_id").toString()));
       }

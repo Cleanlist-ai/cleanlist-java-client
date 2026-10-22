@@ -39,6 +39,14 @@ public class EnrichListResponseTest {
     }
 
     /**
+     * Test the property 'crmNote'
+     */
+    @Test
+    public void crmNoteTest() {
+        // TODO: test crmNote
+    }
+
+    /**
      * Test the property 'taskId'
      */
     @Test

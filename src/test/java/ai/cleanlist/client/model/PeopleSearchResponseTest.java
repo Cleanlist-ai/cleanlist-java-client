@@ -13,8 +13,10 @@
 
 package ai.cleanlist.client.model;
 
+import ai.cleanlist.client.model.CohortSummary;
 import ai.cleanlist.client.model.PeopleSearchResultRow;
 import ai.cleanlist.client.model.SearchHandoff;
+import ai.cleanlist.client.model.SearchPresentation;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -98,6 +100,38 @@ public class PeopleSearchResponseTest {
     @Test
     public void searchHandoffTest() {
         // TODO: test searchHandoff
+    }
+
+    /**
+     * Test the property 'cohort'
+     */
+    @Test
+    public void cohortTest() {
+        // TODO: test cohort
+    }
+
+    /**
+     * Test the property 'presentation'
+     */
+    @Test
+    public void presentationTest() {
+        // TODO: test presentation
+    }
+
+    /**
+     * Test the property 'criteriaApplied'
+     */
+    @Test
+    public void criteriaAppliedTest() {
+        // TODO: test criteriaApplied
+    }
+
+    /**
+     * Test the property 'companyCriteriaApplied'
+     */
+    @Test
+    public void companyCriteriaAppliedTest() {
+        // TODO: test companyCriteriaApplied
     }
 
     /**

@@ -14,6 +14,8 @@
 package ai.cleanlist.client.model;
 
 import ai.cleanlist.client.model.LeadRow;
+import ai.cleanlist.client.model.PendingImportRow;
+import ai.cleanlist.client.model.SearchPresentation;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -79,6 +81,38 @@ public class LeadsPageResponseTest {
     @Test
     public void messageTest() {
         // TODO: test message
+    }
+
+    /**
+     * Test the property 'presentation'
+     */
+    @Test
+    public void presentationTest() {
+        // TODO: test presentation
+    }
+
+    /**
+     * Test the property 'pendingImports'
+     */
+    @Test
+    public void pendingImportsTest() {
+        // TODO: test pendingImports
+    }
+
+    /**
+     * Test the property 'pendingImportTotal'
+     */
+    @Test
+    public void pendingImportTotalTest() {
+        // TODO: test pendingImportTotal
+    }
+
+    /**
+     * Test the property 'pendingImportCursor'
+     */
+    @Test
+    public void pendingImportCursorTest() {
+        // TODO: test pendingImportCursor
     }
 
     /**

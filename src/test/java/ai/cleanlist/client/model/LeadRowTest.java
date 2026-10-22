@@ -103,6 +103,22 @@ public class LeadRowTest {
     }
 
     /**
+     * Test the property 'companyId'
+     */
+    @Test
+    public void companyIdTest() {
+        // TODO: test companyId
+    }
+
+    /**
+     * Test the property 'domain'
+     */
+    @Test
+    public void domainTest() {
+        // TODO: test domain
+    }
+
+    /**
      * Test the property 'location'
      */
     @Test

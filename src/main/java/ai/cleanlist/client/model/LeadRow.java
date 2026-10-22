@@ -93,6 +93,16 @@ public class LeadRow {
   @javax.annotation.Nullable
   private String company;
 
+  public static final String SERIALIZED_NAME_COMPANY_ID = "company_id";
+  @SerializedName(SERIALIZED_NAME_COMPANY_ID)
+  @javax.annotation.Nullable
+  private String companyId;
+
+  public static final String SERIALIZED_NAME_DOMAIN = "domain";
+  @SerializedName(SERIALIZED_NAME_DOMAIN)
+  @javax.annotation.Nullable
+  private String domain;
+
   public static final String SERIALIZED_NAME_LOCATION = "location";
   @SerializedName(SERIALIZED_NAME_LOCATION)
   @javax.annotation.Nullable
@@ -263,6 +273,44 @@ public class LeadRow {
   }
 
 
+  public LeadRow companyId(@javax.annotation.Nullable String companyId) {
+    this.companyId = companyId;
+    return this;
+  }
+
+  /**
+   * Get companyId
+   * @return companyId
+   */
+  @javax.annotation.Nullable
+  public String getCompanyId() {
+    return companyId;
+  }
+
+  public void setCompanyId(@javax.annotation.Nullable String companyId) {
+    this.companyId = companyId;
+  }
+
+
+  public LeadRow domain(@javax.annotation.Nullable String domain) {
+    this.domain = domain;
+    return this;
+  }
+
+  /**
+   * Get domain
+   * @return domain
+   */
+  @javax.annotation.Nullable
+  public String getDomain() {
+    return domain;
+  }
+
+  public void setDomain(@javax.annotation.Nullable String domain) {
+    this.domain = domain;
+  }
+
+
   public LeadRow location(@javax.annotation.Nullable String location) {
     this.location = location;
     return this;
@@ -338,6 +386,8 @@ public class LeadRow {
         Objects.equals(this.phone, leadRow.phone) &&
         Objects.equals(this.title, leadRow.title) &&
         Objects.equals(this.company, leadRow.company) &&
+        Objects.equals(this.companyId, leadRow.companyId) &&
+        Objects.equals(this.domain, leadRow.domain) &&
         Objects.equals(this.location, leadRow.location) &&
         Objects.equals(this.linkedinUrl, leadRow.linkedinUrl) &&
         Objects.equals(this.provider, leadRow.provider);
@@ -349,7 +399,7 @@ public class LeadRow {
 
   @Override
   public int hashCode() {
-    return Objects.hash(leadId, firstName, lastName, fullName, email, phone, title, company, location, linkedinUrl, provider);
+    return Objects.hash(leadId, firstName, lastName, fullName, email, phone, title, company, companyId, domain, location, linkedinUrl, provider);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -371,6 +421,8 @@ public class LeadRow {
     sb.append("    phone: ").append(toIndentedString(phone)).append("\n");
     sb.append("    title: ").append(toIndentedString(title)).append("\n");
     sb.append("    company: ").append(toIndentedString(company)).append("\n");
+    sb.append("    companyId: ").append(toIndentedString(companyId)).append("\n");
+    sb.append("    domain: ").append(toIndentedString(domain)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    linkedinUrl: ").append(toIndentedString(linkedinUrl)).append("\n");
     sb.append("    provider: ").append(toIndentedString(provider)).append("\n");
@@ -395,7 +447,7 @@ public class LeadRow {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("lead_id", "first_name", "last_name", "full_name", "email", "phone", "title", "company", "location", "linkedin_url", "provider"));
+    openapiFields = new HashSet<String>(Arrays.asList("lead_id", "first_name", "last_name", "full_name", "email", "phone", "title", "company", "company_id", "domain", "location", "linkedin_url", "provider"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("lead_id"));
@@ -452,6 +504,12 @@ public class LeadRow {
       }
       if ((jsonObj.get("company") != null && !jsonObj.get("company").isJsonNull()) && !jsonObj.get("company").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `company` to be a primitive type in the JSON string but got `%s`", jsonObj.get("company").toString()));
+      }
+      if ((jsonObj.get("company_id") != null && !jsonObj.get("company_id").isJsonNull()) && !jsonObj.get("company_id").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `company_id` to be a primitive type in the JSON string but got `%s`", jsonObj.get("company_id").toString()));
+      }
+      if ((jsonObj.get("domain") != null && !jsonObj.get("domain").isJsonNull()) && !jsonObj.get("domain").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `domain` to be a primitive type in the JSON string but got `%s`", jsonObj.get("domain").toString()));
       }
       if ((jsonObj.get("location") != null && !jsonObj.get("location").isJsonNull()) && !jsonObj.get("location").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `location` to be a primitive type in the JSON string but got `%s`", jsonObj.get("location").toString()));

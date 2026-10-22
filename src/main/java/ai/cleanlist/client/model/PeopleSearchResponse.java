@@ -15,8 +15,10 @@ package ai.cleanlist.client.model;
 
 import java.util.Objects;
 import java.util.Locale;
+import ai.cleanlist.client.model.CohortSummary;
 import ai.cleanlist.client.model.PeopleSearchResultRow;
 import ai.cleanlist.client.model.SearchHandoff;
+import ai.cleanlist.client.model.SearchPresentation;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -143,6 +145,26 @@ public class PeopleSearchResponse {
   @SerializedName(SERIALIZED_NAME_SEARCH_HANDOFF)
   @javax.annotation.Nullable
   private SearchHandoff searchHandoff;
+
+  public static final String SERIALIZED_NAME_COHORT = "cohort";
+  @SerializedName(SERIALIZED_NAME_COHORT)
+  @javax.annotation.Nullable
+  private CohortSummary cohort;
+
+  public static final String SERIALIZED_NAME_PRESENTATION = "presentation";
+  @SerializedName(SERIALIZED_NAME_PRESENTATION)
+  @javax.annotation.Nullable
+  private SearchPresentation presentation;
+
+  public static final String SERIALIZED_NAME_CRITERIA_APPLIED = "criteria_applied";
+  @SerializedName(SERIALIZED_NAME_CRITERIA_APPLIED)
+  @javax.annotation.Nullable
+  private Object criteriaApplied;
+
+  public static final String SERIALIZED_NAME_COMPANY_CRITERIA_APPLIED = "company_criteria_applied";
+  @SerializedName(SERIALIZED_NAME_COMPANY_CRITERIA_APPLIED)
+  @javax.annotation.Nullable
+  private Object companyCriteriaApplied;
 
   public static final String SERIALIZED_NAME_ROUTE = "route";
   @SerializedName(SERIALIZED_NAME_ROUTE)
@@ -317,6 +339,82 @@ public class PeopleSearchResponse {
 
   public void setSearchHandoff(@javax.annotation.Nullable SearchHandoff searchHandoff) {
     this.searchHandoff = searchHandoff;
+  }
+
+
+  public PeopleSearchResponse cohort(@javax.annotation.Nullable CohortSummary cohort) {
+    this.cohort = cohort;
+    return this;
+  }
+
+  /**
+   * Get cohort
+   * @return cohort
+   */
+  @javax.annotation.Nullable
+  public CohortSummary getCohort() {
+    return cohort;
+  }
+
+  public void setCohort(@javax.annotation.Nullable CohortSummary cohort) {
+    this.cohort = cohort;
+  }
+
+
+  public PeopleSearchResponse presentation(@javax.annotation.Nullable SearchPresentation presentation) {
+    this.presentation = presentation;
+    return this;
+  }
+
+  /**
+   * Get presentation
+   * @return presentation
+   */
+  @javax.annotation.Nullable
+  public SearchPresentation getPresentation() {
+    return presentation;
+  }
+
+  public void setPresentation(@javax.annotation.Nullable SearchPresentation presentation) {
+    this.presentation = presentation;
+  }
+
+
+  public PeopleSearchResponse criteriaApplied(@javax.annotation.Nullable Object criteriaApplied) {
+    this.criteriaApplied = criteriaApplied;
+    return this;
+  }
+
+  /**
+   * Get criteriaApplied
+   * @return criteriaApplied
+   */
+  @javax.annotation.Nullable
+  public Object getCriteriaApplied() {
+    return criteriaApplied;
+  }
+
+  public void setCriteriaApplied(@javax.annotation.Nullable Object criteriaApplied) {
+    this.criteriaApplied = criteriaApplied;
+  }
+
+
+  public PeopleSearchResponse companyCriteriaApplied(@javax.annotation.Nullable Object companyCriteriaApplied) {
+    this.companyCriteriaApplied = companyCriteriaApplied;
+    return this;
+  }
+
+  /**
+   * Get companyCriteriaApplied
+   * @return companyCriteriaApplied
+   */
+  @javax.annotation.Nullable
+  public Object getCompanyCriteriaApplied() {
+    return companyCriteriaApplied;
+  }
+
+  public void setCompanyCriteriaApplied(@javax.annotation.Nullable Object companyCriteriaApplied) {
+    this.companyCriteriaApplied = companyCriteriaApplied;
   }
 
 
@@ -557,6 +655,10 @@ public class PeopleSearchResponse {
         Objects.equals(this.message, peopleSearchResponse.message) &&
         Objects.equals(this.entityKind, peopleSearchResponse.entityKind) &&
         Objects.equals(this.searchHandoff, peopleSearchResponse.searchHandoff) &&
+        Objects.equals(this.cohort, peopleSearchResponse.cohort) &&
+        Objects.equals(this.presentation, peopleSearchResponse.presentation) &&
+        Objects.equals(this.criteriaApplied, peopleSearchResponse.criteriaApplied) &&
+        Objects.equals(this.companyCriteriaApplied, peopleSearchResponse.companyCriteriaApplied) &&
         Objects.equals(this.route, peopleSearchResponse.route) &&
         Objects.equals(this.warnings, peopleSearchResponse.warnings) &&
         Objects.equals(this.exclusionsApplied, peopleSearchResponse.exclusionsApplied) &&
@@ -574,7 +676,7 @@ public class PeopleSearchResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(taskId, timestampMs, agentInstructions, usage, message, entityKind, searchHandoff, route, warnings, exclusionsApplied, results, total, cursor, creditsCharged, truncationWarning, additionalProperties);
+    return Objects.hash(taskId, timestampMs, agentInstructions, usage, message, entityKind, searchHandoff, cohort, presentation, criteriaApplied, companyCriteriaApplied, route, warnings, exclusionsApplied, results, total, cursor, creditsCharged, truncationWarning, additionalProperties);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -595,6 +697,10 @@ public class PeopleSearchResponse {
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("    entityKind: ").append(toIndentedString(entityKind)).append("\n");
     sb.append("    searchHandoff: ").append(toIndentedString(searchHandoff)).append("\n");
+    sb.append("    cohort: ").append(toIndentedString(cohort)).append("\n");
+    sb.append("    presentation: ").append(toIndentedString(presentation)).append("\n");
+    sb.append("    criteriaApplied: ").append(toIndentedString(criteriaApplied)).append("\n");
+    sb.append("    companyCriteriaApplied: ").append(toIndentedString(companyCriteriaApplied)).append("\n");
     sb.append("    route: ").append(toIndentedString(route)).append("\n");
     sb.append("    warnings: ").append(toIndentedString(warnings)).append("\n");
     sb.append("    exclusionsApplied: ").append(toIndentedString(exclusionsApplied)).append("\n");
@@ -625,7 +731,7 @@ public class PeopleSearchResponse {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("task_id", "timestamp_ms", "agent_instructions", "usage", "message", "entity_kind", "search_handoff", "route", "warnings", "exclusions_applied", "results", "total", "cursor", "credits_charged", "truncation_warning"));
+    openapiFields = new HashSet<String>(Arrays.asList("task_id", "timestamp_ms", "agent_instructions", "usage", "message", "entity_kind", "search_handoff", "cohort", "presentation", "criteria_applied", "company_criteria_applied", "route", "warnings", "exclusions_applied", "results", "total", "cursor", "credits_charged", "truncation_warning"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("results", "total", "credits_charged"));
@@ -673,6 +779,14 @@ public class PeopleSearchResponse {
       // validate the optional field `search_handoff`
       if (jsonObj.get("search_handoff") != null && !jsonObj.get("search_handoff").isJsonNull()) {
         SearchHandoff.validateJsonElement(jsonObj.get("search_handoff"));
+      }
+      // validate the optional field `cohort`
+      if (jsonObj.get("cohort") != null && !jsonObj.get("cohort").isJsonNull()) {
+        CohortSummary.validateJsonElement(jsonObj.get("cohort"));
+      }
+      // validate the optional field `presentation`
+      if (jsonObj.get("presentation") != null && !jsonObj.get("presentation").isJsonNull()) {
+        SearchPresentation.validateJsonElement(jsonObj.get("presentation"));
       }
       // ensure the optional json data is an array if present
       if (jsonObj.get("warnings") != null && !jsonObj.get("warnings").isJsonNull() && !jsonObj.get("warnings").isJsonArray()) {

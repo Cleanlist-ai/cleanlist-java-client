@@ -7,6 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
+|**crmNote** | **String** |  |  [optional] |
 |**taskId** | **String** |  |  [optional] |
 |**timestampMs** | **Integer** |  |  [optional] |
 |**agentInstructions** | **String** |  |  [optional] |

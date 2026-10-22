@@ -16,6 +16,8 @@ package ai.cleanlist.client.model;
 import java.util.Objects;
 import java.util.Locale;
 import ai.cleanlist.client.model.LeadRow;
+import ai.cleanlist.client.model.PendingImportRow;
+import ai.cleanlist.client.model.SearchPresentation;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -80,6 +82,26 @@ public class LeadsPageResponse {
   @SerializedName(SERIALIZED_NAME_MESSAGE)
   @javax.annotation.Nullable
   private String message;
+
+  public static final String SERIALIZED_NAME_PRESENTATION = "presentation";
+  @SerializedName(SERIALIZED_NAME_PRESENTATION)
+  @javax.annotation.Nullable
+  private SearchPresentation presentation;
+
+  public static final String SERIALIZED_NAME_PENDING_IMPORTS = "pending_imports";
+  @SerializedName(SERIALIZED_NAME_PENDING_IMPORTS)
+  @javax.annotation.Nullable
+  private List<PendingImportRow> pendingImports;
+
+  public static final String SERIALIZED_NAME_PENDING_IMPORT_TOTAL = "pending_import_total";
+  @SerializedName(SERIALIZED_NAME_PENDING_IMPORT_TOTAL)
+  @javax.annotation.Nullable
+  private Integer pendingImportTotal;
+
+  public static final String SERIALIZED_NAME_PENDING_IMPORT_CURSOR = "pending_import_cursor";
+  @SerializedName(SERIALIZED_NAME_PENDING_IMPORT_CURSOR)
+  @javax.annotation.Nullable
+  private String pendingImportCursor;
 
   public static final String SERIALIZED_NAME_LIST_ID = "list_id";
   @SerializedName(SERIALIZED_NAME_LIST_ID)
@@ -199,6 +221,90 @@ public class LeadsPageResponse {
   }
 
 
+  public LeadsPageResponse presentation(@javax.annotation.Nullable SearchPresentation presentation) {
+    this.presentation = presentation;
+    return this;
+  }
+
+  /**
+   * Get presentation
+   * @return presentation
+   */
+  @javax.annotation.Nullable
+  public SearchPresentation getPresentation() {
+    return presentation;
+  }
+
+  public void setPresentation(@javax.annotation.Nullable SearchPresentation presentation) {
+    this.presentation = presentation;
+  }
+
+
+  public LeadsPageResponse pendingImports(@javax.annotation.Nullable List<PendingImportRow> pendingImports) {
+    this.pendingImports = pendingImports;
+    return this;
+  }
+
+  public LeadsPageResponse addPendingImportsItem(PendingImportRow pendingImportsItem) {
+    if (this.pendingImports == null) {
+      this.pendingImports = new ArrayList<>();
+    }
+    this.pendingImports.add(pendingImportsItem);
+    return this;
+  }
+
+  /**
+   * Get pendingImports
+   * @return pendingImports
+   */
+  @javax.annotation.Nullable
+  public List<PendingImportRow> getPendingImports() {
+    return pendingImports;
+  }
+
+  public void setPendingImports(@javax.annotation.Nullable List<PendingImportRow> pendingImports) {
+    this.pendingImports = pendingImports;
+  }
+
+
+  public LeadsPageResponse pendingImportTotal(@javax.annotation.Nullable Integer pendingImportTotal) {
+    this.pendingImportTotal = pendingImportTotal;
+    return this;
+  }
+
+  /**
+   * Get pendingImportTotal
+   * @return pendingImportTotal
+   */
+  @javax.annotation.Nullable
+  public Integer getPendingImportTotal() {
+    return pendingImportTotal;
+  }
+
+  public void setPendingImportTotal(@javax.annotation.Nullable Integer pendingImportTotal) {
+    this.pendingImportTotal = pendingImportTotal;
+  }
+
+
+  public LeadsPageResponse pendingImportCursor(@javax.annotation.Nullable String pendingImportCursor) {
+    this.pendingImportCursor = pendingImportCursor;
+    return this;
+  }
+
+  /**
+   * Get pendingImportCursor
+   * @return pendingImportCursor
+   */
+  @javax.annotation.Nullable
+  public String getPendingImportCursor() {
+    return pendingImportCursor;
+  }
+
+  public void setPendingImportCursor(@javax.annotation.Nullable String pendingImportCursor) {
+    this.pendingImportCursor = pendingImportCursor;
+  }
+
+
   public LeadsPageResponse listId(@javax.annotation.Nonnull String listId) {
     this.listId = listId;
     return this;
@@ -298,6 +404,10 @@ public class LeadsPageResponse {
         Objects.equals(this.agentInstructions, leadsPageResponse.agentInstructions) &&
         Objects.equals(this.usage, leadsPageResponse.usage) &&
         Objects.equals(this.message, leadsPageResponse.message) &&
+        Objects.equals(this.presentation, leadsPageResponse.presentation) &&
+        Objects.equals(this.pendingImports, leadsPageResponse.pendingImports) &&
+        Objects.equals(this.pendingImportTotal, leadsPageResponse.pendingImportTotal) &&
+        Objects.equals(this.pendingImportCursor, leadsPageResponse.pendingImportCursor) &&
         Objects.equals(this.listId, leadsPageResponse.listId) &&
         Objects.equals(this.leads, leadsPageResponse.leads) &&
         Objects.equals(this.total, leadsPageResponse.total) &&
@@ -310,7 +420,7 @@ public class LeadsPageResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(taskId, timestampMs, agentInstructions, usage, message, listId, leads, total, cursor);
+    return Objects.hash(taskId, timestampMs, agentInstructions, usage, message, presentation, pendingImports, pendingImportTotal, pendingImportCursor, listId, leads, total, cursor);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -329,6 +439,10 @@ public class LeadsPageResponse {
     sb.append("    agentInstructions: ").append(toIndentedString(agentInstructions)).append("\n");
     sb.append("    usage: ").append(toIndentedString(usage)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("    presentation: ").append(toIndentedString(presentation)).append("\n");
+    sb.append("    pendingImports: ").append(toIndentedString(pendingImports)).append("\n");
+    sb.append("    pendingImportTotal: ").append(toIndentedString(pendingImportTotal)).append("\n");
+    sb.append("    pendingImportCursor: ").append(toIndentedString(pendingImportCursor)).append("\n");
     sb.append("    listId: ").append(toIndentedString(listId)).append("\n");
     sb.append("    leads: ").append(toIndentedString(leads)).append("\n");
     sb.append("    total: ").append(toIndentedString(total)).append("\n");
@@ -354,7 +468,7 @@ public class LeadsPageResponse {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("task_id", "timestamp_ms", "agent_instructions", "usage", "message", "list_id", "leads", "total", "cursor"));
+    openapiFields = new HashSet<String>(Arrays.asList("task_id", "timestamp_ms", "agent_instructions", "usage", "message", "presentation", "pending_imports", "pending_import_total", "pending_import_cursor", "list_id", "leads", "total", "cursor"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("list_id", "leads", "total"));
@@ -399,6 +513,27 @@ public class LeadsPageResponse {
       }
       if ((jsonObj.get("message") != null && !jsonObj.get("message").isJsonNull()) && !jsonObj.get("message").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `message` to be a primitive type in the JSON string but got `%s`", jsonObj.get("message").toString()));
+      }
+      // validate the optional field `presentation`
+      if (jsonObj.get("presentation") != null && !jsonObj.get("presentation").isJsonNull()) {
+        SearchPresentation.validateJsonElement(jsonObj.get("presentation"));
+      }
+      if (jsonObj.get("pending_imports") != null && !jsonObj.get("pending_imports").isJsonNull()) {
+        JsonArray jsonArraypendingImports = jsonObj.getAsJsonArray("pending_imports");
+        if (jsonArraypendingImports != null) {
+          // ensure the json data is an array
+          if (!jsonObj.get("pending_imports").isJsonArray()) {
+            throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `pending_imports` to be an array in the JSON string but got `%s`", jsonObj.get("pending_imports").toString()));
+          }
+
+          // validate the optional field `pending_imports` (array)
+          for (int i = 0; i < jsonArraypendingImports.size(); i++) {
+            PendingImportRow.validateJsonElement(jsonArraypendingImports.get(i));
+          };
+        }
+      }
+      if ((jsonObj.get("pending_import_cursor") != null && !jsonObj.get("pending_import_cursor").isJsonNull()) && !jsonObj.get("pending_import_cursor").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `pending_import_cursor` to be a primitive type in the JSON string but got `%s`", jsonObj.get("pending_import_cursor").toString()));
       }
       if (!jsonObj.get("list_id").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `list_id` to be a primitive type in the JSON string but got `%s`", jsonObj.get("list_id").toString()));

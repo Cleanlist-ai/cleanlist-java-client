@@ -164,7 +164,7 @@ public class SmartAgentRun {
   }
 
   /**
-   * Agent / smart-column type the run executed as (e.g. &#x60;custom_ai&#x60;, &#x60;cold_intro_email&#x60;).
+   * The &#x60;agent_type&#x60; the run was started with (e.g. &#x60;custom_ai&#x60;, &#x60;cold_intro_email&#x60;, &#x60;title_normalizer&#x60;), or the smart-column type for runs started outside POST /smart-agents/run.
    * @return agentType
    */
   @javax.annotation.Nonnull
