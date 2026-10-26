@@ -362,22 +362,6 @@ public class CompanySearchCriteriaTest {
     }
 
     /**
-     * Test the property 'valuationMin'
-     */
-    @Test
-    public void valuationMinTest() {
-        // TODO: test valuationMin
-    }
-
-    /**
-     * Test the property 'valuationMax'
-     */
-    @Test
-    public void valuationMaxTest() {
-        // TODO: test valuationMax
-    }
-
-    /**
      * Test the property 'bootstrappedOnly'
      */
     @Test

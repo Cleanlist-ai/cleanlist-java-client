@@ -13,6 +13,7 @@
 
 package ai.cleanlist.client.model;
 
+import ai.cleanlist.client.model.BulkContactResult;
 import ai.cleanlist.client.model.SingleEnrichmentResultRead;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
@@ -21,7 +22,9 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -137,6 +140,14 @@ public class WorkflowStatusResponseTest {
     }
 
     /**
+     * Test the property 'optedOut'
+     */
+    @Test
+    public void optedOutTest() {
+        // TODO: test optedOut
+    }
+
+    /**
      * Test the property 'enrichmentType'
      */
     @Test
@@ -182,6 +193,22 @@ public class WorkflowStatusResponseTest {
     @Test
     public void resultTest() {
         // TODO: test result
+    }
+
+    /**
+     * Test the property 'results'
+     */
+    @Test
+    public void resultsTest() {
+        // TODO: test results
+    }
+
+    /**
+     * Test the property 'resultsNextOffset'
+     */
+    @Test
+    public void resultsNextOffsetTest() {
+        // TODO: test resultsNextOffset
     }
 
     /**

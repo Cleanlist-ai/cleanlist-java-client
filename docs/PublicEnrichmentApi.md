@@ -93,7 +93,7 @@ public class Example {
 
 Enrich a company
 
-Look up firmographics for a single company and return the full record synchronously.  Unlike person enrichment, this path is synchronous — it performs a CompanyDB single-record lookup inline (no Temporal workflow, no &#x60;workflow_id&#x60;) and returns the enriched &#x60;CompanyRecord&#x60; in the response, billing a flat 1 credit that settles before the response returns. Pass any of &#x60;domain&#x60; (most reliable), &#x60;company_id&#x60;, &#x60;company_name&#x60;, or &#x60;company_ticker&#x60;; a ticker is resolved to a domain via Finnhub (24h Redis cache) and falls back to a &#x60;company_name&#x60; fuzzy match when the symbol is unknown. &#x60;quote_id&#x60; is optional and, when present, verified and redeemed.  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment-types **📖 Docs:** https://docs.cleanlist.ai/guides/bulk-enrichment
+Look up firmographics for a single company and return the full record synchronously.  Unlike person enrichment, this path is synchronous — it performs a CompanyDB single-record lookup inline (no Temporal workflow, no &#x60;workflow_id&#x60;) and returns the enriched &#x60;CompanyRecord&#x60; in the response, billing a flat 1 credit that settles before the response returns. Pass any of &#x60;domain&#x60; (most reliable), &#x60;company_id&#x60;, &#x60;company_name&#x60;, or &#x60;company_ticker&#x60;; a ticker is resolved to a domain via Finnhub (24h Redis cache) and falls back to an exact &#x60;company_name&#x60; match when the symbol is unknown. &#x60;quote_id&#x60; is optional and, when present, verified and redeemed.  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment-types **📖 Docs:** https://docs.cleanlist.ai/guides/bulk-enrichment
 
 ### Example
 ```java
@@ -317,11 +317,11 @@ public class Example {
 
 <a id="enrichmentStatus"></a>
 # **enrichmentStatus**
-> WorkflowStatusResponse enrichmentStatus(workflowId)
+> WorkflowStatusResponse enrichmentStatus(workflowId, includeResults, resultsOffset, resultsLimit)
 
 Poll an enrichment workflow
 
-Poll the status, progress, and settled billing of an enrichment workflow started by &#x60;enrich_person&#x60;, &#x60;enrich_list&#x60;, or &#x60;enrich_by_task&#x60;.  This read is free and idempotent — call it repeatedly until &#x60;status&#x60; reaches a terminal state (&#x60;completed&#x60; / &#x60;failed&#x60; / &#x60;cancelled&#x60;). It accepts EITHER a &#x60;workflow_id&#x60; (e.g. &#x60;enrich-...&#x60; / &#x60;bulk-enrich-...&#x60;) OR an MCPTask cohort &#x60;task_id&#x60; (&#x60;cl-task_...&#x60;), resolving the latter to the workflow bound at dispatch so the agent can keep using the one handle it already has. Terminal single-lead runs include the inline enriched &#x60;result&#x60;; bulk runs report aggregate counters instead. When a prepaid-via-MCP run ends in failure, &#x60;refund_status&#x60; surfaces &#x60;pending_review&#x60; (credits are not auto-refunded).  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
+Poll the status, progress, and settled billing of an enrichment workflow started by &#x60;enrich_person&#x60;, &#x60;enrich_list&#x60;, or &#x60;enrich_by_task&#x60;.  This read is free and idempotent — call it repeatedly until &#x60;status&#x60; reaches a terminal state (&#x60;completed&#x60; / &#x60;failed&#x60; / &#x60;cancelled&#x60;). It accepts EITHER a &#x60;workflow_id&#x60; (e.g. &#x60;enrich-...&#x60; / &#x60;bulk-enrich-...&#x60;) OR an MCPTask cohort &#x60;task_id&#x60; (&#x60;cl-task_...&#x60;), resolving the latter to the workflow bound at dispatch so the agent can keep using the one handle it already has. Terminal single-lead runs include the inline enriched &#x60;result&#x60;; bulk runs report aggregate counters, plus per-contact &#x60;results&#x60; (status, failure reason and the saved lead with email, LinkedIn URL and provider) when polled with &#x60;include_results&#x3D;true&#x60;, paged by &#x60;results_offset&#x60; / &#x60;results_limit&#x60;. Per-contact records are kept for 24 hours; after that read the destination list via &#x60;GET /lead-lists/{id}/leads&#x60;. When a prepaid-via-MCP run ends in failure, &#x60;refund_status&#x60; surfaces &#x60;pending_review&#x60; (credits are not auto-refunded).  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
 
 ### Example
 ```java
@@ -344,8 +344,11 @@ public class Example {
 
     PublicEnrichmentApi apiInstance = new PublicEnrichmentApi(defaultClient);
     String workflowId = "workflowId_example"; // String | 
+    Boolean includeResults = false; // Boolean | Bulk runs: also return per-contact `results` (one page).
+    Integer resultsOffset = 0; // Integer | First contact index.
+    Integer resultsLimit = 100; // Integer | Page size.
     try {
-      WorkflowStatusResponse result = apiInstance.enrichmentStatus(workflowId);
+      WorkflowStatusResponse result = apiInstance.enrichmentStatus(workflowId, includeResults, resultsOffset, resultsLimit);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling PublicEnrichmentApi#enrichmentStatus");
@@ -363,6 +366,9 @@ public class Example {
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **workflowId** | **String**|  | |
+| **includeResults** | **Boolean**| Bulk runs: also return per-contact &#x60;results&#x60; (one page). | [optional] [default to false] |
+| **resultsOffset** | **Integer**| First contact index. | [optional] [default to 0] |
+| **resultsLimit** | **Integer**| Page size. | [optional] [default to 100] |
 
 ### Return type
 

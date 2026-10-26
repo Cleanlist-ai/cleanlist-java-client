@@ -310,16 +310,6 @@ public class CompanySearchCriteria {
   @javax.annotation.Nullable
   private String lastFundingRoundAmountMax = "";
 
-  public static final String SERIALIZED_NAME_VALUATION_MIN = "valuationMin";
-  @SerializedName(SERIALIZED_NAME_VALUATION_MIN)
-  @javax.annotation.Nullable
-  private String valuationMin = "";
-
-  public static final String SERIALIZED_NAME_VALUATION_MAX = "valuationMax";
-  @SerializedName(SERIALIZED_NAME_VALUATION_MAX)
-  @javax.annotation.Nullable
-  private String valuationMax = "";
-
   public static final String SERIALIZED_NAME_BOOTSTRAPPED_ONLY = "bootstrappedOnly";
   @SerializedName(SERIALIZED_NAME_BOOTSTRAPPED_ONLY)
   @javax.annotation.Nullable
@@ -1366,44 +1356,6 @@ public class CompanySearchCriteria {
   }
 
 
-  public CompanySearchCriteria valuationMin(@javax.annotation.Nullable String valuationMin) {
-    this.valuationMin = valuationMin;
-    return this;
-  }
-
-  /**
-   * Minimum Crunchbase valuation in USD.
-   * @return valuationMin
-   */
-  @javax.annotation.Nullable
-  public String getValuationMin() {
-    return valuationMin;
-  }
-
-  public void setValuationMin(@javax.annotation.Nullable String valuationMin) {
-    this.valuationMin = valuationMin;
-  }
-
-
-  public CompanySearchCriteria valuationMax(@javax.annotation.Nullable String valuationMax) {
-    this.valuationMax = valuationMax;
-    return this;
-  }
-
-  /**
-   * Maximum Crunchbase valuation in USD.
-   * @return valuationMax
-   */
-  @javax.annotation.Nullable
-  public String getValuationMax() {
-    return valuationMax;
-  }
-
-  public void setValuationMax(@javax.annotation.Nullable String valuationMax) {
-    this.valuationMax = valuationMax;
-  }
-
-
   public CompanySearchCriteria bootstrappedOnly(@javax.annotation.Nullable Boolean bootstrappedOnly) {
     this.bootstrappedOnly = bootstrappedOnly;
     return this;
@@ -1849,8 +1801,6 @@ public class CompanySearchCriteria {
         Objects.equals(this.ipoDateAfter, companySearchCriteria.ipoDateAfter) &&
         Objects.equals(this.lastFundingRoundAmountMin, companySearchCriteria.lastFundingRoundAmountMin) &&
         Objects.equals(this.lastFundingRoundAmountMax, companySearchCriteria.lastFundingRoundAmountMax) &&
-        Objects.equals(this.valuationMin, companySearchCriteria.valuationMin) &&
-        Objects.equals(this.valuationMax, companySearchCriteria.valuationMax) &&
         Objects.equals(this.bootstrappedOnly, companySearchCriteria.bootstrappedOnly) &&
         Objects.equals(this.acquiredOnly, companySearchCriteria.acquiredOnly) &&
         Objects.equals(this.fundingRoundTypesExclude, companySearchCriteria.fundingRoundTypesExclude) &&
@@ -1872,7 +1822,7 @@ public class CompanySearchCriteria {
 
   @Override
   public int hashCode() {
-    return Objects.hash(companyName, companyNameMatchType, domain, industriesInclude, headcountRanges, revenueMin, revenueMax, yearFoundedMin, yearFoundedMax, companyType, fundingRoundTypes, fundingAmountMin, growthMin, growthMax, industriesExclude, headcountRangesExclude, companyTypeExclude, hqCountriesIso3, hqCountriesIso3Exclude, largestHeadcountCountriesIso3, hqStates, hqStatesExclude, hqCities, hqCitiesExclude, linkedinCategoriesInclude, crunchbaseCategoriesInclude, crunchbaseCategoriesExclude, stockListings, headcountLatestMin, headcountLatestMax, growth1mMin, growth3mMin, growth12mMin, followersMin, followersGrowth6mMin, followersGrowth12mMin, lastFundingDateAfter, ipoDateAfter, lastFundingRoundAmountMin, lastFundingRoundAmountMax, valuationMin, valuationMax, bootstrappedOnly, acquiredOnly, fundingRoundTypesExclude, investorsInclude, investorsExclude, stockSymbols, domainsList, companyNamesList, twitterHandle, descriptionKeyword, updatedAfter, compositeMode, workforceRules, excludeCompanyDomains, excludeInCleanlist, excludeInCleanlistListIds, crmFilterSections);
+    return Objects.hash(companyName, companyNameMatchType, domain, industriesInclude, headcountRanges, revenueMin, revenueMax, yearFoundedMin, yearFoundedMax, companyType, fundingRoundTypes, fundingAmountMin, growthMin, growthMax, industriesExclude, headcountRangesExclude, companyTypeExclude, hqCountriesIso3, hqCountriesIso3Exclude, largestHeadcountCountriesIso3, hqStates, hqStatesExclude, hqCities, hqCitiesExclude, linkedinCategoriesInclude, crunchbaseCategoriesInclude, crunchbaseCategoriesExclude, stockListings, headcountLatestMin, headcountLatestMax, growth1mMin, growth3mMin, growth12mMin, followersMin, followersGrowth6mMin, followersGrowth12mMin, lastFundingDateAfter, ipoDateAfter, lastFundingRoundAmountMin, lastFundingRoundAmountMax, bootstrappedOnly, acquiredOnly, fundingRoundTypesExclude, investorsInclude, investorsExclude, stockSymbols, domainsList, companyNamesList, twitterHandle, descriptionKeyword, updatedAfter, compositeMode, workforceRules, excludeCompanyDomains, excludeInCleanlist, excludeInCleanlistListIds, crmFilterSections);
   }
 
   @Override
@@ -1919,8 +1869,6 @@ public class CompanySearchCriteria {
     sb.append("    ipoDateAfter: ").append(toIndentedString(ipoDateAfter)).append("\n");
     sb.append("    lastFundingRoundAmountMin: ").append(toIndentedString(lastFundingRoundAmountMin)).append("\n");
     sb.append("    lastFundingRoundAmountMax: ").append(toIndentedString(lastFundingRoundAmountMax)).append("\n");
-    sb.append("    valuationMin: ").append(toIndentedString(valuationMin)).append("\n");
-    sb.append("    valuationMax: ").append(toIndentedString(valuationMax)).append("\n");
     sb.append("    bootstrappedOnly: ").append(toIndentedString(bootstrappedOnly)).append("\n");
     sb.append("    acquiredOnly: ").append(toIndentedString(acquiredOnly)).append("\n");
     sb.append("    fundingRoundTypesExclude: ").append(toIndentedString(fundingRoundTypesExclude)).append("\n");
@@ -1959,7 +1907,7 @@ public class CompanySearchCriteria {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("companyName", "companyNameMatchType", "domain", "industriesInclude", "headcountRanges", "revenueMin", "revenueMax", "yearFoundedMin", "yearFoundedMax", "companyType", "fundingRoundTypes", "fundingAmountMin", "growthMin", "growthMax", "industriesExclude", "headcountRangesExclude", "companyTypeExclude", "hqCountriesIso3", "hqCountriesIso3Exclude", "largestHeadcountCountriesIso3", "hqStates", "hqStatesExclude", "hqCities", "hqCitiesExclude", "linkedinCategoriesInclude", "crunchbaseCategoriesInclude", "crunchbaseCategoriesExclude", "stockListings", "headcountLatestMin", "headcountLatestMax", "growth1mMin", "growth3mMin", "growth12mMin", "followersMin", "followersGrowth6mMin", "followersGrowth12mMin", "lastFundingDateAfter", "ipoDateAfter", "lastFundingRoundAmountMin", "lastFundingRoundAmountMax", "valuationMin", "valuationMax", "bootstrappedOnly", "acquiredOnly", "fundingRoundTypesExclude", "investorsInclude", "investorsExclude", "stockSymbols", "domainsList", "companyNamesList", "twitterHandle", "descriptionKeyword", "updatedAfter", "compositeMode", "workforceRules", "excludeCompanyDomains", "excludeInCleanlist", "excludeInCleanlistListIds", "crmFilterSections"));
+    openapiFields = new HashSet<String>(Arrays.asList("companyName", "companyNameMatchType", "domain", "industriesInclude", "headcountRanges", "revenueMin", "revenueMax", "yearFoundedMin", "yearFoundedMax", "companyType", "fundingRoundTypes", "fundingAmountMin", "growthMin", "growthMax", "industriesExclude", "headcountRangesExclude", "companyTypeExclude", "hqCountriesIso3", "hqCountriesIso3Exclude", "largestHeadcountCountriesIso3", "hqStates", "hqStatesExclude", "hqCities", "hqCitiesExclude", "linkedinCategoriesInclude", "crunchbaseCategoriesInclude", "crunchbaseCategoriesExclude", "stockListings", "headcountLatestMin", "headcountLatestMax", "growth1mMin", "growth3mMin", "growth12mMin", "followersMin", "followersGrowth6mMin", "followersGrowth12mMin", "lastFundingDateAfter", "ipoDateAfter", "lastFundingRoundAmountMin", "lastFundingRoundAmountMax", "bootstrappedOnly", "acquiredOnly", "fundingRoundTypesExclude", "investorsInclude", "investorsExclude", "stockSymbols", "domainsList", "companyNamesList", "twitterHandle", "descriptionKeyword", "updatedAfter", "compositeMode", "workforceRules", "excludeCompanyDomains", "excludeInCleanlist", "excludeInCleanlistListIds", "crmFilterSections"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(0);
@@ -2127,12 +2075,6 @@ public class CompanySearchCriteria {
       }
       if ((jsonObj.get("lastFundingRoundAmountMax") != null && !jsonObj.get("lastFundingRoundAmountMax").isJsonNull()) && !jsonObj.get("lastFundingRoundAmountMax").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `lastFundingRoundAmountMax` to be a primitive type in the JSON string but got `%s`", jsonObj.get("lastFundingRoundAmountMax").toString()));
-      }
-      if ((jsonObj.get("valuationMin") != null && !jsonObj.get("valuationMin").isJsonNull()) && !jsonObj.get("valuationMin").isJsonPrimitive()) {
-        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `valuationMin` to be a primitive type in the JSON string but got `%s`", jsonObj.get("valuationMin").toString()));
-      }
-      if ((jsonObj.get("valuationMax") != null && !jsonObj.get("valuationMax").isJsonNull()) && !jsonObj.get("valuationMax").isJsonPrimitive()) {
-        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `valuationMax` to be a primitive type in the JSON string but got `%s`", jsonObj.get("valuationMax").toString()));
       }
       // ensure the optional json data is an array if present
       if (jsonObj.get("fundingRoundTypesExclude") != null && !jsonObj.get("fundingRoundTypesExclude").isJsonNull() && !jsonObj.get("fundingRoundTypesExclude").isJsonArray()) {

@@ -174,7 +174,7 @@ Set<String> terminal = Set.of("completed", "failed", "cancelled");
 WorkflowStatusResponse status;
 do {
     Thread.sleep(3000);
-    status = cl.enrichment.enrichmentStatus(job.getWorkflowId());
+    status = cl.enrichment.enrichmentStatus(job.getWorkflowId(), null, null, null);
     System.out.printf("  %s %d/%d%n", status.getStatus(), status.getProcessed(), status.getTotal());
 } while (!terminal.contains(status.getStatus()));
 System.out.printf("charged=%d refunded=%d%n", status.getCreditsCharged(), status.getCreditsRefunded());
@@ -266,7 +266,7 @@ for (PeopleSearchResultRow row : page.getResults()) {
 | `enrichCompany(EnrichCompanyRequest)` | `POST /api/v2/enrichment/company` | Enrich a company. |
 | `enrichByTask(EnrichByTaskRequest)` | `POST /api/v2/enrichment/by-task` | Enrich entities from a prior task. |
 | `enrichList(EnrichListRequest)` | `POST /api/v2/enrichment/bulk` | Bulk-enrich a list (needs `quoteId`). |
-| `enrichmentStatus(String workflowId)` | `GET /api/v2/enrichment/status/{workflow_id}` | Poll a workflow. |
+| `enrichmentStatus(String workflowId, Boolean includeResults, Integer resultsOffset, Integer resultsLimit)` | `GET /api/v2/enrichment/status/{workflow_id}` | Poll a workflow (pass `includeResults=true` for per-contact bulk `results`; `null` for defaults). |
 
 ```java
 EnrichPersonResponse job = cl.enrichment.enrichPerson(new EnrichPersonRequest()

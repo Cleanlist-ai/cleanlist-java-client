@@ -15,6 +15,7 @@ package ai.cleanlist.client.model;
 
 import java.util.Objects;
 import java.util.Locale;
+import ai.cleanlist.client.model.BulkContactResult;
 import ai.cleanlist.client.model.SingleEnrichmentResultRead;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
@@ -23,7 +24,9 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 import com.google.gson.Gson;
@@ -115,6 +118,11 @@ public class WorkflowStatusResponse {
   @javax.annotation.Nullable
   private Integer failed;
 
+  public static final String SERIALIZED_NAME_OPTED_OUT = "opted_out";
+  @SerializedName(SERIALIZED_NAME_OPTED_OUT)
+  @javax.annotation.Nullable
+  private Integer optedOut;
+
   public static final String SERIALIZED_NAME_ENRICHMENT_TYPE = "enrichment_type";
   @SerializedName(SERIALIZED_NAME_ENRICHMENT_TYPE)
   @javax.annotation.Nullable
@@ -196,6 +204,16 @@ public class WorkflowStatusResponse {
   @SerializedName(SERIALIZED_NAME_RESULT)
   @javax.annotation.Nullable
   private SingleEnrichmentResultRead result;
+
+  public static final String SERIALIZED_NAME_RESULTS = "results";
+  @SerializedName(SERIALIZED_NAME_RESULTS)
+  @javax.annotation.Nullable
+  private List<BulkContactResult> results;
+
+  public static final String SERIALIZED_NAME_RESULTS_NEXT_OFFSET = "results_next_offset";
+  @SerializedName(SERIALIZED_NAME_RESULTS_NEXT_OFFSET)
+  @javax.annotation.Nullable
+  private Integer resultsNextOffset;
 
   public static final String SERIALIZED_NAME_CREDITS_CHARGED = "credits_charged";
   @SerializedName(SERIALIZED_NAME_CREDITS_CHARGED)
@@ -330,7 +348,7 @@ public class WorkflowStatusResponse {
   }
 
   /**
-   * Outer workflow status: e.g. &#39;pending&#39;, &#39;running&#39;, &#39;completed&#39;, &#39;failed&#39;, &#39;cancelled&#39;.
+   * Outer workflow status: e.g. &#39;pending&#39;, &#39;running&#39;, &#39;completed&#39;, &#39;failed&#39;, &#39;cancelled&#39;. A single-person run whose result failed (no match, opted out) is &#39;failed&#39;; result.failure_kind says why.
    * @return status
    */
   @javax.annotation.Nonnull
@@ -435,6 +453,25 @@ public class WorkflowStatusResponse {
 
   public void setFailed(@javax.annotation.Nullable Integer failed) {
     this.failed = failed;
+  }
+
+
+  public WorkflowStatusResponse optedOut(@javax.annotation.Nullable Integer optedOut) {
+    this.optedOut = optedOut;
+    return this;
+  }
+
+  /**
+   * Get optedOut
+   * @return optedOut
+   */
+  @javax.annotation.Nullable
+  public Integer getOptedOut() {
+    return optedOut;
+  }
+
+  public void setOptedOut(@javax.annotation.Nullable Integer optedOut) {
+    this.optedOut = optedOut;
   }
 
 
@@ -552,6 +589,52 @@ public class WorkflowStatusResponse {
   }
 
 
+  public WorkflowStatusResponse results(@javax.annotation.Nullable List<BulkContactResult> results) {
+    this.results = results;
+    return this;
+  }
+
+  public WorkflowStatusResponse addResultsItem(BulkContactResult resultsItem) {
+    if (this.results == null) {
+      this.results = new ArrayList<>();
+    }
+    this.results.add(resultsItem);
+    return this;
+  }
+
+  /**
+   * Get results
+   * @return results
+   */
+  @javax.annotation.Nullable
+  public List<BulkContactResult> getResults() {
+    return results;
+  }
+
+  public void setResults(@javax.annotation.Nullable List<BulkContactResult> results) {
+    this.results = results;
+  }
+
+
+  public WorkflowStatusResponse resultsNextOffset(@javax.annotation.Nullable Integer resultsNextOffset) {
+    this.resultsNextOffset = resultsNextOffset;
+    return this;
+  }
+
+  /**
+   * Get resultsNextOffset
+   * @return resultsNextOffset
+   */
+  @javax.annotation.Nullable
+  public Integer getResultsNextOffset() {
+    return resultsNextOffset;
+  }
+
+  public void setResultsNextOffset(@javax.annotation.Nullable Integer resultsNextOffset) {
+    this.resultsNextOffset = resultsNextOffset;
+  }
+
+
   public WorkflowStatusResponse creditsCharged(@javax.annotation.Nullable BigDecimal creditsCharged) {
     this.creditsCharged = creditsCharged;
     return this;
@@ -656,12 +739,15 @@ public class WorkflowStatusResponse {
         Objects.equals(this.processed, workflowStatusResponse.processed) &&
         Objects.equals(this.completed, workflowStatusResponse.completed) &&
         Objects.equals(this.failed, workflowStatusResponse.failed) &&
+        Objects.equals(this.optedOut, workflowStatusResponse.optedOut) &&
         Objects.equals(this.enrichmentType, workflowStatusResponse.enrichmentType) &&
         Objects.equals(this.leadListId, workflowStatusResponse.leadListId) &&
         Objects.equals(this.summary, workflowStatusResponse.summary) &&
         Objects.equals(this.refundStatus, workflowStatusResponse.refundStatus) &&
         Objects.equals(this.refundMessage, workflowStatusResponse.refundMessage) &&
         Objects.equals(this.result, workflowStatusResponse.result) &&
+        Objects.equals(this.results, workflowStatusResponse.results) &&
+        Objects.equals(this.resultsNextOffset, workflowStatusResponse.resultsNextOffset) &&
         Objects.equals(this.creditsCharged, workflowStatusResponse.creditsCharged) &&
         Objects.equals(this.creditsRefunded, workflowStatusResponse.creditsRefunded)&&
         Objects.equals(this.additionalProperties, workflowStatusResponse.additionalProperties);
@@ -673,7 +759,7 @@ public class WorkflowStatusResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(taskId, timestampMs, agentInstructions, usage, message, workflowId, status, progress, total, processed, completed, failed, enrichmentType, leadListId, summary, refundStatus, refundMessage, result, creditsCharged, creditsRefunded, additionalProperties);
+    return Objects.hash(taskId, timestampMs, agentInstructions, usage, message, workflowId, status, progress, total, processed, completed, failed, optedOut, enrichmentType, leadListId, summary, refundStatus, refundMessage, result, results, resultsNextOffset, creditsCharged, creditsRefunded, additionalProperties);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -699,12 +785,15 @@ public class WorkflowStatusResponse {
     sb.append("    processed: ").append(toIndentedString(processed)).append("\n");
     sb.append("    completed: ").append(toIndentedString(completed)).append("\n");
     sb.append("    failed: ").append(toIndentedString(failed)).append("\n");
+    sb.append("    optedOut: ").append(toIndentedString(optedOut)).append("\n");
     sb.append("    enrichmentType: ").append(toIndentedString(enrichmentType)).append("\n");
     sb.append("    leadListId: ").append(toIndentedString(leadListId)).append("\n");
     sb.append("    summary: ").append(toIndentedString(summary)).append("\n");
     sb.append("    refundStatus: ").append(toIndentedString(refundStatus)).append("\n");
     sb.append("    refundMessage: ").append(toIndentedString(refundMessage)).append("\n");
     sb.append("    result: ").append(toIndentedString(result)).append("\n");
+    sb.append("    results: ").append(toIndentedString(results)).append("\n");
+    sb.append("    resultsNextOffset: ").append(toIndentedString(resultsNextOffset)).append("\n");
     sb.append("    creditsCharged: ").append(toIndentedString(creditsCharged)).append("\n");
     sb.append("    creditsRefunded: ").append(toIndentedString(creditsRefunded)).append("\n");
     sb.append("    additionalProperties: ").append(toIndentedString(additionalProperties)).append("\n");
@@ -729,7 +818,7 @@ public class WorkflowStatusResponse {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("task_id", "timestamp_ms", "agent_instructions", "usage", "message", "workflow_id", "status", "progress", "total", "processed", "completed", "failed", "enrichment_type", "lead_list_id", "summary", "refund_status", "refund_message", "result", "credits_charged", "credits_refunded"));
+    openapiFields = new HashSet<String>(Arrays.asList("task_id", "timestamp_ms", "agent_instructions", "usage", "message", "workflow_id", "status", "progress", "total", "processed", "completed", "failed", "opted_out", "enrichment_type", "lead_list_id", "summary", "refund_status", "refund_message", "result", "results", "results_next_offset", "credits_charged", "credits_refunded"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("workflow_id", "status"));
@@ -792,6 +881,20 @@ public class WorkflowStatusResponse {
       // validate the optional field `result`
       if (jsonObj.get("result") != null && !jsonObj.get("result").isJsonNull()) {
         SingleEnrichmentResultRead.validateJsonElement(jsonObj.get("result"));
+      }
+      if (jsonObj.get("results") != null && !jsonObj.get("results").isJsonNull()) {
+        JsonArray jsonArrayresults = jsonObj.getAsJsonArray("results");
+        if (jsonArrayresults != null) {
+          // ensure the json data is an array
+          if (!jsonObj.get("results").isJsonArray()) {
+            throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `results` to be an array in the JSON string but got `%s`", jsonObj.get("results").toString()));
+          }
+
+          // validate the optional field `results` (array)
+          for (int i = 0; i < jsonArrayresults.size(); i++) {
+            BulkContactResult.validateJsonElement(jsonArrayresults.get(i));
+          };
+        }
       }
   }
 

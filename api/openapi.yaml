@@ -2145,7 +2145,7 @@ paths:
         billing a flat 1 credit that settles before the response returns. Pass
         any of `domain` (most reliable), `company_id`, `company_name`, or
         `company_ticker`; a ticker is resolved to a domain via Finnhub (24h Redis
-        cache) and falls back to a `company_name` fuzzy match when the symbol is
+        cache) and falls back to an exact `company_name` match when the symbol is
         unknown. `quote_id` is optional and, when present, verified and redeemed.
 
         **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
@@ -2429,8 +2429,12 @@ paths:
         an MCPTask cohort `task_id` (`cl-task_...`), resolving the latter to the
         workflow bound at dispatch so the agent can keep using the one handle it
         already has. Terminal single-lead runs include the inline enriched `result`;
-        bulk runs report aggregate counters instead. When a prepaid-via-MCP run
-        ends in failure, `refund_status` surfaces `pending_review` (credits are
+        bulk runs report aggregate counters, plus per-contact `results` (status,
+        failure reason and the saved lead with email, LinkedIn URL and provider)
+        when polled with `include_results=true`, paged by `results_offset` /
+        `results_limit`. Per-contact records are kept for 24 hours; after that
+        read the destination list via `GET /lead-lists/{id}/leads`. When a
+        prepaid-via-MCP run ends in failure, `refund_status` surfaces `pending_review` (credits are
         not auto-refunded).
 
         **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
@@ -2444,6 +2448,42 @@ paths:
           title: Workflow Id
           type: string
         style: simple
+      - description: "Bulk runs: also return per-contact `results` (one page)."
+        explode: true
+        in: query
+        name: include_results
+        required: false
+        schema:
+          default: false
+          description: "Bulk runs: also return per-contact `results` (one page)."
+          title: Include Results
+          type: boolean
+        style: form
+      - description: First contact index.
+        explode: true
+        in: query
+        name: results_offset
+        required: false
+        schema:
+          default: 0
+          description: First contact index.
+          minimum: 0
+          title: Results Offset
+          type: integer
+        style: form
+      - description: Page size.
+        explode: true
+        in: query
+        name: results_limit
+        required: false
+        schema:
+          default: 100
+          description: Page size.
+          maximum: 500
+          minimum: 1
+          title: Results Limit
+          type: integer
+        style: form
       responses:
         "200":
           content:
@@ -3123,12 +3163,12 @@ components:
     ApiKeyInfo:
       additionalProperties: {}
       example:
-        created_at: 2026-05-12 09:31:44
+        created_at: 2026-05-12 09:31:44+00:00
         is_active: true
         key_id: ak_5f8c2b91
         key_last4: a4f9
         key_prefix: clapi_
-        last_used_at: 2026-06-30 18:02:10
+        last_used_at: 2026-06-30 18:02:10+00:00
         name: Production server key
         scopes:
         - credits:read
@@ -3166,6 +3206,9 @@ components:
         last_used_at:
           nullable: true
           type: string
+        expires_at:
+          nullable: true
+          type: string
         is_active:
           description: Whether the key is currently active. Revoked keys report false.
           title: Is Active
@@ -3181,12 +3224,12 @@ components:
       additionalProperties: false
       example:
         keys:
-        - created_at: 2026-05-12 09:31:44
+        - created_at: 2026-05-12 09:31:44+00:00
           is_active: true
           key_id: ak_5f8c2b91
           key_last4: a4f9
           key_prefix: clapi_
-          last_used_at: 2026-06-30 18:02:10
+          last_used_at: 2026-06-30 18:02:10+00:00
           name: Production server key
           scopes:
           - credits:read
@@ -3203,6 +3246,32 @@ components:
       required:
       - keys
       title: ApiKeysResponse
+    BulkContactResult:
+      additionalProperties: {}
+      description: |-
+        One contact of a bulk run, returned when polling with
+        `include_results=true`. `lead` is the same row `GET
+        /lead-lists/{id}/leads` returns, so contact fields follow the same
+        reveal rules.
+      properties:
+        index:
+          description: Position of this contact in the run.
+          title: Index
+          type: integer
+        status:
+          description: pending / processing / completed / failed while known; 'unavailable'
+            once the per-contact record has expired (24h).
+          title: Status
+          type: string
+        failure_class:
+          nullable: true
+          type: string
+        lead:
+          $ref: "#/components/schemas/LeadRow"
+      required:
+      - index
+      - status
+      title: BulkContactResult
     CohortSummary:
       additionalProperties: false
       example:
@@ -3388,10 +3457,6 @@ components:
         linkedin_url: https://www.linkedin.com/company/acme
         name: Acme
         revenue_range: $25M-$50M
-        tech_stack:
-        - React
-        - Python
-        - AWS
         total_funding_usd: 48000000
       properties:
         company_id:
@@ -3516,7 +3581,6 @@ components:
         stockSymbols:
         - stockSymbols
         - stockSymbols
-        valuationMax: ""
         acquiredOnly: false
         crunchbaseCategoriesInclude:
         - crunchbaseCategoriesInclude
@@ -3571,7 +3635,6 @@ components:
         headcountRangesExclude:
         - headcountRangesExclude
         - headcountRangesExclude
-        valuationMin: ""
         bootstrappedOnly: false
         hqStatesExclude:
         - hqStatesExclude
@@ -3782,16 +3845,6 @@ components:
           default: ""
           description: Maximum size of the last funding round in USD.
           title: Lastfundingroundamountmax
-          type: string
-        valuationMin:
-          default: ""
-          description: Minimum Crunchbase valuation in USD.
-          title: Valuationmin
-          type: string
-        valuationMax:
-          default: ""
-          description: Maximum Crunchbase valuation in USD.
-          title: Valuationmax
           type: string
         bootstrappedOnly:
           default: false
@@ -4130,7 +4183,6 @@ components:
           stockSymbols:
           - stockSymbols
           - stockSymbols
-          valuationMax: ""
           acquiredOnly: false
           crunchbaseCategoriesInclude:
           - crunchbaseCategoriesInclude
@@ -4185,7 +4237,6 @@ components:
           headcountRangesExclude:
           - headcountRangesExclude
           - headcountRangesExclude
-          valuationMin: ""
           bootstrappedOnly: false
           hqStatesExclude:
           - hqStatesExclude
@@ -4825,10 +4876,6 @@ components:
           linkedin_url: https://www.linkedin.com/company/acme
           name: Acme
           revenue_range: $25M-$50M
-          tech_stack:
-          - React
-          - Python
-          - AWS
           total_funding_usd: 48000000
         credits_charged: 1
         task_id: task_9f2c1a
@@ -6927,7 +6974,6 @@ components:
           stockSymbols:
           - stockSymbols
           - stockSymbols
-          valuationMax: ""
           acquiredOnly: false
           crunchbaseCategoriesInclude:
           - crunchbaseCategoriesInclude
@@ -6982,7 +7028,6 @@ components:
           headcountRangesExclude:
           - headcountRangesExclude
           - headcountRangesExclude
-          valuationMin: ""
           bootstrappedOnly: false
           hqStatesExclude:
           - hqStatesExclude
@@ -7993,7 +8038,7 @@ components:
       - shown
       title: SearchPresentation
     SingleEnrichmentResultRead:
-      additionalProperties: false
+      additionalProperties: {}
       description: |-
         Inline enriched-lead payload for single-workflow polls.
 
@@ -8065,6 +8110,12 @@ components:
           nullable: true
           type: string
         provider:
+          nullable: true
+          type: string
+        failure_kind:
+          nullable: true
+          type: string
+        error:
           nullable: true
           type: string
       required:
@@ -8490,7 +8541,8 @@ components:
           type: string
         status:
           description: "Outer workflow status: e.g. 'pending', 'running', 'completed',\
-            \ 'failed', 'cancelled'."
+            \ 'failed', 'cancelled'. A single-person run whose result failed (no match,\
+            \ opted out) is 'failed'; result.failure_kind says why."
           title: Status
           type: string
         progress:
@@ -8506,6 +8558,9 @@ components:
           nullable: true
           type: integer
         failed:
+          nullable: true
+          type: integer
+        opted_out:
           nullable: true
           type: integer
         enrichment_type:
@@ -8529,6 +8584,14 @@ components:
           type: string
         result:
           $ref: "#/components/schemas/SingleEnrichmentResultRead"
+        results:
+          items:
+            $ref: "#/components/schemas/BulkContactResult"
+          nullable: true
+          type: array
+        results_next_offset:
+          nullable: true
+          type: integer
         credits_charged:
           nullable: true
           type: number
