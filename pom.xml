@@ -231,8 +231,9 @@
               </configuration>
             </plugin>
             <!-- Publishes signed artifacts to Maven Central via the Sonatype
-                 Central Portal. autoPublish=false uploads a reviewable draft
-                 deployment; click "Publish" in the Portal to release. -->
+                 Central Portal. The release workflow runs this on every
+                 release, so it publishes straight away (no Portal click) and
+                 waits until the artifact is live, so a failure fails the job. -->
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
@@ -240,8 +241,8 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>central</publishingServerId>
-                    <autoPublish>false</autoPublish>
-                    <waitUntil>validated</waitUntil>
+                    <autoPublish>true</autoPublish>
+                    <waitUntil>published</waitUntil>
                 </configuration>
             </plugin>
         </plugins>
