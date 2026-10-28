@@ -51,24 +51,18 @@ If your GPG key has a passphrase, also add a profile setting `<gpg.passphrase>�
 mvn -Psign-artifacts -DskipTests -Dmaven.javadoc.failOnError=false clean deploy
 ```
 
-This signs and uploads a **draft** deployment. Open the
-[Portal → Deployments](https://central.sonatype.com/publishing/deployments), review it, and
-click **Publish**. (Set `autoPublish=true` in the pom's central plugin to skip the manual
-click once you're confident.)
+This signs, uploads and publishes in one go (`autoPublish=true` in the pom).
 
 ## Cutting a new version
 
-1. Bump `<version>` in `pom.xml` (and `packageVersion` when regenerating — see
-   `scripts/generate.sh`).
-2. `mvn -Psign-artifacts -DskipTests -Dmaven.javadoc.failOnError=false clean deploy`
-3. Publish the draft in the Portal.
-4. Tag it: `git tag v<version> && git push --tags`.
+Releases are automatic. Every push to `main` runs `.github/workflows/release.yml`,
+which picks the next version from Conventional Commits since the last `v*` tag
+(`feat!:`/`BREAKING CHANGE:` → major, `feat:` → minor, `fix:`/`perf:` → patch,
+anything else → no release), bumps it everywhere, commits `chore(release): vX.Y.Z`,
+tags it, creates a GitHub Release and publishes it to Maven Central.
 
-> Maven Central is **immutable** — a version can never be overwritten or deleted once
-> published. Double-check the draft before releasing.
+It needs these repo secrets: `CENTRAL_TOKEN_USERNAME`, `CENTRAL_TOKEN_PASSWORD`,
+`GPG_PRIVATE_KEY` (armored) and `GPG_PASSPHRASE` (empty if the key has none).
 
-## CI (optional)
-
-`.github/workflows/release.yml` publishes automatically on a `v*` tag. Add these repo
-secrets: `CENTRAL_TOKEN_USERNAME`, `CENTRAL_TOKEN_PASSWORD`, `GPG_PRIVATE_KEY` (armored),
-and `GPG_PASSPHRASE` (empty if the key has none).
+> Maven Central is **immutable**: a version can never be overwritten or deleted once
+> published.
