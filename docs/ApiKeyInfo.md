@@ -14,6 +14,7 @@
 |**scopes** | **List&lt;String&gt;** | Permission scopes carried by this key. Scopes are granted per-USER today, so every key the caller owns shares the caller&#39;s scopes. |  |
 |**createdAt** | **String** |  |  [optional] |
 |**lastUsedAt** | **String** |  |  [optional] |
+|**expiresAt** | **String** |  |  [optional] |
 |**isActive** | **Boolean** | Whether the key is currently active. Revoked keys report false. |  |
 
 

@@ -48,8 +48,6 @@ The company-side filter blob, one field per ``CompanySearchFilters`` key.
 |**ipoDateAfter** | **String** | IPO date floor as YYYY-MM-DD. |  [optional] |
 |**lastFundingRoundAmountMin** | **String** | Minimum size of the last funding round in USD. |  [optional] |
 |**lastFundingRoundAmountMax** | **String** | Maximum size of the last funding round in USD. |  [optional] |
-|**valuationMin** | **String** | Minimum Crunchbase valuation in USD. |  [optional] |
-|**valuationMax** | **String** | Maximum Crunchbase valuation in USD. |  [optional] |
 |**bootstrappedOnly** | **Boolean** | Only companies with no disclosed investment. |  [optional] |
 |**acquiredOnly** | **Boolean** | Only acquired companies. |  [optional] |
 |**fundingRoundTypesExclude** | **List&lt;String&gt;** | Last funding round labels to exclude. |  [optional] |

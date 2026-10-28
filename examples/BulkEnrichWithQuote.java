@@ -51,7 +51,7 @@ public class BulkEnrichWithQuote {
         WorkflowStatusResponse status;
         do {
             Thread.sleep(5000);
-            status = cl.enrichment.enrichmentStatus(run.getWorkflowId());
+            status = cl.enrichment.enrichmentStatus(run.getWorkflowId(), null, null, null);
             System.out.printf("  %s: %s/%s (ok=%s failed=%s)%n", status.getStatus(),
                     status.getProcessed(), status.getTotal(), status.getCompleted(), status.getFailed());
         } while (!TERMINAL.contains(status.getStatus()));

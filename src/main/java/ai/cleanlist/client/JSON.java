@@ -102,6 +102,7 @@ public class JSON {
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.ApiKeyInfo.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.ApiKeysResponse.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.Body.CustomTypeAdapterFactory());
+        gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.BulkContactResult.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.CohortSummary.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.CompaniesFindStartResponse.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new ai.cleanlist.client.model.CompaniesFindStatusResponse.CustomTypeAdapterFactory());

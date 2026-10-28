@@ -324,7 +324,7 @@ public class PublicEnrichmentApi {
 
     /**
      * Enrich a company
-     * Look up firmographics for a single company and return the full record synchronously.  Unlike person enrichment, this path is synchronous — it performs a CompanyDB single-record lookup inline (no Temporal workflow, no &#x60;workflow_id&#x60;) and returns the enriched &#x60;CompanyRecord&#x60; in the response, billing a flat 1 credit that settles before the response returns. Pass any of &#x60;domain&#x60; (most reliable), &#x60;company_id&#x60;, &#x60;company_name&#x60;, or &#x60;company_ticker&#x60;; a ticker is resolved to a domain via Finnhub (24h Redis cache) and falls back to a &#x60;company_name&#x60; fuzzy match when the symbol is unknown. &#x60;quote_id&#x60; is optional and, when present, verified and redeemed.  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment-types **📖 Docs:** https://docs.cleanlist.ai/guides/bulk-enrichment
+     * Look up firmographics for a single company and return the full record synchronously.  Unlike person enrichment, this path is synchronous — it performs a CompanyDB single-record lookup inline (no Temporal workflow, no &#x60;workflow_id&#x60;) and returns the enriched &#x60;CompanyRecord&#x60; in the response, billing a flat 1 credit that settles before the response returns. Pass any of &#x60;domain&#x60; (most reliable), &#x60;company_id&#x60;, &#x60;company_name&#x60;, or &#x60;company_ticker&#x60;; a ticker is resolved to a domain via Finnhub (24h Redis cache) and falls back to an exact &#x60;company_name&#x60; match when the symbol is unknown. &#x60;quote_id&#x60; is optional and, when present, verified and redeemed.  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment-types **📖 Docs:** https://docs.cleanlist.ai/guides/bulk-enrichment
      * @param enrichCompanyRequest  (required)
      * @return EnrichCompanyResponse
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
@@ -351,7 +351,7 @@ public class PublicEnrichmentApi {
 
     /**
      * Enrich a company
-     * Look up firmographics for a single company and return the full record synchronously.  Unlike person enrichment, this path is synchronous — it performs a CompanyDB single-record lookup inline (no Temporal workflow, no &#x60;workflow_id&#x60;) and returns the enriched &#x60;CompanyRecord&#x60; in the response, billing a flat 1 credit that settles before the response returns. Pass any of &#x60;domain&#x60; (most reliable), &#x60;company_id&#x60;, &#x60;company_name&#x60;, or &#x60;company_ticker&#x60;; a ticker is resolved to a domain via Finnhub (24h Redis cache) and falls back to a &#x60;company_name&#x60; fuzzy match when the symbol is unknown. &#x60;quote_id&#x60; is optional and, when present, verified and redeemed.  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment-types **📖 Docs:** https://docs.cleanlist.ai/guides/bulk-enrichment
+     * Look up firmographics for a single company and return the full record synchronously.  Unlike person enrichment, this path is synchronous — it performs a CompanyDB single-record lookup inline (no Temporal workflow, no &#x60;workflow_id&#x60;) and returns the enriched &#x60;CompanyRecord&#x60; in the response, billing a flat 1 credit that settles before the response returns. Pass any of &#x60;domain&#x60; (most reliable), &#x60;company_id&#x60;, &#x60;company_name&#x60;, or &#x60;company_ticker&#x60;; a ticker is resolved to a domain via Finnhub (24h Redis cache) and falls back to an exact &#x60;company_name&#x60; match when the symbol is unknown. &#x60;quote_id&#x60; is optional and, when present, verified and redeemed.  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment-types **📖 Docs:** https://docs.cleanlist.ai/guides/bulk-enrichment
      * @param enrichCompanyRequest  (required)
      * @return ApiResponse&lt;EnrichCompanyResponse&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
@@ -379,7 +379,7 @@ public class PublicEnrichmentApi {
 
     /**
      * Enrich a company (asynchronously)
-     * Look up firmographics for a single company and return the full record synchronously.  Unlike person enrichment, this path is synchronous — it performs a CompanyDB single-record lookup inline (no Temporal workflow, no &#x60;workflow_id&#x60;) and returns the enriched &#x60;CompanyRecord&#x60; in the response, billing a flat 1 credit that settles before the response returns. Pass any of &#x60;domain&#x60; (most reliable), &#x60;company_id&#x60;, &#x60;company_name&#x60;, or &#x60;company_ticker&#x60;; a ticker is resolved to a domain via Finnhub (24h Redis cache) and falls back to a &#x60;company_name&#x60; fuzzy match when the symbol is unknown. &#x60;quote_id&#x60; is optional and, when present, verified and redeemed.  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment-types **📖 Docs:** https://docs.cleanlist.ai/guides/bulk-enrichment
+     * Look up firmographics for a single company and return the full record synchronously.  Unlike person enrichment, this path is synchronous — it performs a CompanyDB single-record lookup inline (no Temporal workflow, no &#x60;workflow_id&#x60;) and returns the enriched &#x60;CompanyRecord&#x60; in the response, billing a flat 1 credit that settles before the response returns. Pass any of &#x60;domain&#x60; (most reliable), &#x60;company_id&#x60;, &#x60;company_name&#x60;, or &#x60;company_ticker&#x60;; a ticker is resolved to a domain via Finnhub (24h Redis cache) and falls back to an exact &#x60;company_name&#x60; match when the symbol is unknown. &#x60;quote_id&#x60; is optional and, when present, verified and redeemed.  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment-types **📖 Docs:** https://docs.cleanlist.ai/guides/bulk-enrichment
      * @param enrichCompanyRequest  (required)
      * @param _callback The callback to be executed when the API call finishes
      * @return The request call
@@ -736,6 +736,9 @@ public class PublicEnrichmentApi {
     /**
      * Build call for enrichmentStatus
      * @param workflowId  (required)
+     * @param includeResults Bulk runs: also return per-contact &#x60;results&#x60; (one page). (optional, default to false)
+     * @param resultsOffset First contact index. (optional, default to 0)
+     * @param resultsLimit Page size. (optional, default to 100)
      * @param _callback Callback for upload/download progress
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -755,7 +758,7 @@ public class PublicEnrichmentApi {
         <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call enrichmentStatusCall(@javax.annotation.Nonnull String workflowId, final ApiCallback _callback) throws ApiException {
+    public okhttp3.Call enrichmentStatusCall(@javax.annotation.Nonnull String workflowId, @javax.annotation.Nullable Boolean includeResults, @javax.annotation.Nullable Integer resultsOffset, @javax.annotation.Nullable Integer resultsLimit, final ApiCallback _callback) throws ApiException {
         String basePath = null;
         // Operation Servers
         String[] localBasePaths = new String[] {  };
@@ -781,6 +784,18 @@ public class PublicEnrichmentApi {
         Map<String, String> localVarCookieParams = new HashMap<String, String>();
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
+        if (includeResults != null) {
+            localVarQueryParams.addAll(localVarApiClient.parameterToPair("include_results", includeResults));
+        }
+
+        if (resultsOffset != null) {
+            localVarQueryParams.addAll(localVarApiClient.parameterToPair("results_offset", resultsOffset));
+        }
+
+        if (resultsLimit != null) {
+            localVarQueryParams.addAll(localVarApiClient.parameterToPair("results_limit", resultsLimit));
+        }
+
         final String[] localVarAccepts = {
             "application/json"
         };
@@ -801,20 +816,23 @@ public class PublicEnrichmentApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call enrichmentStatusValidateBeforeCall(@javax.annotation.Nonnull String workflowId, final ApiCallback _callback) throws ApiException {
+    private okhttp3.Call enrichmentStatusValidateBeforeCall(@javax.annotation.Nonnull String workflowId, @javax.annotation.Nullable Boolean includeResults, @javax.annotation.Nullable Integer resultsOffset, @javax.annotation.Nullable Integer resultsLimit, final ApiCallback _callback) throws ApiException {
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
             throw new ApiException("Missing the required parameter 'workflowId' when calling enrichmentStatus(Async)");
         }
 
-        return enrichmentStatusCall(workflowId, _callback);
+        return enrichmentStatusCall(workflowId, includeResults, resultsOffset, resultsLimit, _callback);
 
     }
 
     /**
      * Poll an enrichment workflow
-     * Poll the status, progress, and settled billing of an enrichment workflow started by &#x60;enrich_person&#x60;, &#x60;enrich_list&#x60;, or &#x60;enrich_by_task&#x60;.  This read is free and idempotent — call it repeatedly until &#x60;status&#x60; reaches a terminal state (&#x60;completed&#x60; / &#x60;failed&#x60; / &#x60;cancelled&#x60;). It accepts EITHER a &#x60;workflow_id&#x60; (e.g. &#x60;enrich-...&#x60; / &#x60;bulk-enrich-...&#x60;) OR an MCPTask cohort &#x60;task_id&#x60; (&#x60;cl-task_...&#x60;), resolving the latter to the workflow bound at dispatch so the agent can keep using the one handle it already has. Terminal single-lead runs include the inline enriched &#x60;result&#x60;; bulk runs report aggregate counters instead. When a prepaid-via-MCP run ends in failure, &#x60;refund_status&#x60; surfaces &#x60;pending_review&#x60; (credits are not auto-refunded).  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
+     * Poll the status, progress, and settled billing of an enrichment workflow started by &#x60;enrich_person&#x60;, &#x60;enrich_list&#x60;, or &#x60;enrich_by_task&#x60;.  This read is free and idempotent — call it repeatedly until &#x60;status&#x60; reaches a terminal state (&#x60;completed&#x60; / &#x60;failed&#x60; / &#x60;cancelled&#x60;). It accepts EITHER a &#x60;workflow_id&#x60; (e.g. &#x60;enrich-...&#x60; / &#x60;bulk-enrich-...&#x60;) OR an MCPTask cohort &#x60;task_id&#x60; (&#x60;cl-task_...&#x60;), resolving the latter to the workflow bound at dispatch so the agent can keep using the one handle it already has. Terminal single-lead runs include the inline enriched &#x60;result&#x60;; bulk runs report aggregate counters, plus per-contact &#x60;results&#x60; (status, failure reason and the saved lead with email, LinkedIn URL and provider) when polled with &#x60;include_results&#x3D;true&#x60;, paged by &#x60;results_offset&#x60; / &#x60;results_limit&#x60;. Per-contact records are kept for 24 hours; after that read the destination list via &#x60;GET /lead-lists/{id}/leads&#x60;. When a prepaid-via-MCP run ends in failure, &#x60;refund_status&#x60; surfaces &#x60;pending_review&#x60; (credits are not auto-refunded).  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
      * @param workflowId  (required)
+     * @param includeResults Bulk runs: also return per-contact &#x60;results&#x60; (one page). (optional, default to false)
+     * @param resultsOffset First contact index. (optional, default to 0)
+     * @param resultsLimit Page size. (optional, default to 100)
      * @return WorkflowStatusResponse
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
@@ -833,15 +851,18 @@ public class PublicEnrichmentApi {
         <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
-    public WorkflowStatusResponse enrichmentStatus(@javax.annotation.Nonnull String workflowId) throws ApiException {
-        ApiResponse<WorkflowStatusResponse> localVarResp = enrichmentStatusWithHttpInfo(workflowId);
+    public WorkflowStatusResponse enrichmentStatus(@javax.annotation.Nonnull String workflowId, @javax.annotation.Nullable Boolean includeResults, @javax.annotation.Nullable Integer resultsOffset, @javax.annotation.Nullable Integer resultsLimit) throws ApiException {
+        ApiResponse<WorkflowStatusResponse> localVarResp = enrichmentStatusWithHttpInfo(workflowId, includeResults, resultsOffset, resultsLimit);
         return localVarResp.getData();
     }
 
     /**
      * Poll an enrichment workflow
-     * Poll the status, progress, and settled billing of an enrichment workflow started by &#x60;enrich_person&#x60;, &#x60;enrich_list&#x60;, or &#x60;enrich_by_task&#x60;.  This read is free and idempotent — call it repeatedly until &#x60;status&#x60; reaches a terminal state (&#x60;completed&#x60; / &#x60;failed&#x60; / &#x60;cancelled&#x60;). It accepts EITHER a &#x60;workflow_id&#x60; (e.g. &#x60;enrich-...&#x60; / &#x60;bulk-enrich-...&#x60;) OR an MCPTask cohort &#x60;task_id&#x60; (&#x60;cl-task_...&#x60;), resolving the latter to the workflow bound at dispatch so the agent can keep using the one handle it already has. Terminal single-lead runs include the inline enriched &#x60;result&#x60;; bulk runs report aggregate counters instead. When a prepaid-via-MCP run ends in failure, &#x60;refund_status&#x60; surfaces &#x60;pending_review&#x60; (credits are not auto-refunded).  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
+     * Poll the status, progress, and settled billing of an enrichment workflow started by &#x60;enrich_person&#x60;, &#x60;enrich_list&#x60;, or &#x60;enrich_by_task&#x60;.  This read is free and idempotent — call it repeatedly until &#x60;status&#x60; reaches a terminal state (&#x60;completed&#x60; / &#x60;failed&#x60; / &#x60;cancelled&#x60;). It accepts EITHER a &#x60;workflow_id&#x60; (e.g. &#x60;enrich-...&#x60; / &#x60;bulk-enrich-...&#x60;) OR an MCPTask cohort &#x60;task_id&#x60; (&#x60;cl-task_...&#x60;), resolving the latter to the workflow bound at dispatch so the agent can keep using the one handle it already has. Terminal single-lead runs include the inline enriched &#x60;result&#x60;; bulk runs report aggregate counters, plus per-contact &#x60;results&#x60; (status, failure reason and the saved lead with email, LinkedIn URL and provider) when polled with &#x60;include_results&#x3D;true&#x60;, paged by &#x60;results_offset&#x60; / &#x60;results_limit&#x60;. Per-contact records are kept for 24 hours; after that read the destination list via &#x60;GET /lead-lists/{id}/leads&#x60;. When a prepaid-via-MCP run ends in failure, &#x60;refund_status&#x60; surfaces &#x60;pending_review&#x60; (credits are not auto-refunded).  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
      * @param workflowId  (required)
+     * @param includeResults Bulk runs: also return per-contact &#x60;results&#x60; (one page). (optional, default to false)
+     * @param resultsOffset First contact index. (optional, default to 0)
+     * @param resultsLimit Page size. (optional, default to 100)
      * @return ApiResponse&lt;WorkflowStatusResponse&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
@@ -860,16 +881,19 @@ public class PublicEnrichmentApi {
         <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
-    public ApiResponse<WorkflowStatusResponse> enrichmentStatusWithHttpInfo(@javax.annotation.Nonnull String workflowId) throws ApiException {
-        okhttp3.Call localVarCall = enrichmentStatusValidateBeforeCall(workflowId, null);
+    public ApiResponse<WorkflowStatusResponse> enrichmentStatusWithHttpInfo(@javax.annotation.Nonnull String workflowId, @javax.annotation.Nullable Boolean includeResults, @javax.annotation.Nullable Integer resultsOffset, @javax.annotation.Nullable Integer resultsLimit) throws ApiException {
+        okhttp3.Call localVarCall = enrichmentStatusValidateBeforeCall(workflowId, includeResults, resultsOffset, resultsLimit, null);
         Type localVarReturnType = new TypeToken<WorkflowStatusResponse>(){}.getType();
         return localVarApiClient.execute(localVarCall, localVarReturnType);
     }
 
     /**
      * Poll an enrichment workflow (asynchronously)
-     * Poll the status, progress, and settled billing of an enrichment workflow started by &#x60;enrich_person&#x60;, &#x60;enrich_list&#x60;, or &#x60;enrich_by_task&#x60;.  This read is free and idempotent — call it repeatedly until &#x60;status&#x60; reaches a terminal state (&#x60;completed&#x60; / &#x60;failed&#x60; / &#x60;cancelled&#x60;). It accepts EITHER a &#x60;workflow_id&#x60; (e.g. &#x60;enrich-...&#x60; / &#x60;bulk-enrich-...&#x60;) OR an MCPTask cohort &#x60;task_id&#x60; (&#x60;cl-task_...&#x60;), resolving the latter to the workflow bound at dispatch so the agent can keep using the one handle it already has. Terminal single-lead runs include the inline enriched &#x60;result&#x60;; bulk runs report aggregate counters instead. When a prepaid-via-MCP run ends in failure, &#x60;refund_status&#x60; surfaces &#x60;pending_review&#x60; (credits are not auto-refunded).  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
+     * Poll the status, progress, and settled billing of an enrichment workflow started by &#x60;enrich_person&#x60;, &#x60;enrich_list&#x60;, or &#x60;enrich_by_task&#x60;.  This read is free and idempotent — call it repeatedly until &#x60;status&#x60; reaches a terminal state (&#x60;completed&#x60; / &#x60;failed&#x60; / &#x60;cancelled&#x60;). It accepts EITHER a &#x60;workflow_id&#x60; (e.g. &#x60;enrich-...&#x60; / &#x60;bulk-enrich-...&#x60;) OR an MCPTask cohort &#x60;task_id&#x60; (&#x60;cl-task_...&#x60;), resolving the latter to the workflow bound at dispatch so the agent can keep using the one handle it already has. Terminal single-lead runs include the inline enriched &#x60;result&#x60;; bulk runs report aggregate counters, plus per-contact &#x60;results&#x60; (status, failure reason and the saved lead with email, LinkedIn URL and provider) when polled with &#x60;include_results&#x3D;true&#x60;, paged by &#x60;results_offset&#x60; / &#x60;results_limit&#x60;. Per-contact records are kept for 24 hours; after that read the destination list via &#x60;GET /lead-lists/{id}/leads&#x60;. When a prepaid-via-MCP run ends in failure, &#x60;refund_status&#x60; surfaces &#x60;pending_review&#x60; (credits are not auto-refunded).  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
      * @param workflowId  (required)
+     * @param includeResults Bulk runs: also return per-contact &#x60;results&#x60; (one page). (optional, default to false)
+     * @param resultsOffset First contact index. (optional, default to 0)
+     * @param resultsLimit Page size. (optional, default to 100)
      * @param _callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -889,9 +913,9 @@ public class PublicEnrichmentApi {
         <tr><td> 502 </td><td> Upstream provider error. </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call enrichmentStatusAsync(@javax.annotation.Nonnull String workflowId, final ApiCallback<WorkflowStatusResponse> _callback) throws ApiException {
+    public okhttp3.Call enrichmentStatusAsync(@javax.annotation.Nonnull String workflowId, @javax.annotation.Nullable Boolean includeResults, @javax.annotation.Nullable Integer resultsOffset, @javax.annotation.Nullable Integer resultsLimit, final ApiCallback<WorkflowStatusResponse> _callback) throws ApiException {
 
-        okhttp3.Call localVarCall = enrichmentStatusValidateBeforeCall(workflowId, _callback);
+        okhttp3.Call localVarCall = enrichmentStatusValidateBeforeCall(workflowId, includeResults, resultsOffset, resultsLimit, _callback);
         Type localVarReturnType = new TypeToken<WorkflowStatusResponse>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;

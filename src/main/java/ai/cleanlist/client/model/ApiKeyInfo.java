@@ -90,6 +90,11 @@ public class ApiKeyInfo {
   @javax.annotation.Nullable
   private String lastUsedAt;
 
+  public static final String SERIALIZED_NAME_EXPIRES_AT = "expires_at";
+  @SerializedName(SERIALIZED_NAME_EXPIRES_AT)
+  @javax.annotation.Nullable
+  private String expiresAt;
+
   public static final String SERIALIZED_NAME_IS_ACTIVE = "is_active";
   @SerializedName(SERIALIZED_NAME_IS_ACTIVE)
   @javax.annotation.Nonnull
@@ -239,6 +244,25 @@ public class ApiKeyInfo {
   }
 
 
+  public ApiKeyInfo expiresAt(@javax.annotation.Nullable String expiresAt) {
+    this.expiresAt = expiresAt;
+    return this;
+  }
+
+  /**
+   * Get expiresAt
+   * @return expiresAt
+   */
+  @javax.annotation.Nullable
+  public String getExpiresAt() {
+    return expiresAt;
+  }
+
+  public void setExpiresAt(@javax.annotation.Nullable String expiresAt) {
+    this.expiresAt = expiresAt;
+  }
+
+
   public ApiKeyInfo isActive(@javax.annotation.Nonnull Boolean isActive) {
     this.isActive = isActive;
     return this;
@@ -319,6 +343,7 @@ public class ApiKeyInfo {
         Objects.equals(this.scopes, apiKeyInfo.scopes) &&
         Objects.equals(this.createdAt, apiKeyInfo.createdAt) &&
         Objects.equals(this.lastUsedAt, apiKeyInfo.lastUsedAt) &&
+        Objects.equals(this.expiresAt, apiKeyInfo.expiresAt) &&
         Objects.equals(this.isActive, apiKeyInfo.isActive)&&
         Objects.equals(this.additionalProperties, apiKeyInfo.additionalProperties);
   }
@@ -329,7 +354,7 @@ public class ApiKeyInfo {
 
   @Override
   public int hashCode() {
-    return Objects.hash(keyId, keyPrefix, keyLast4, name, scopes, createdAt, lastUsedAt, isActive, additionalProperties);
+    return Objects.hash(keyId, keyPrefix, keyLast4, name, scopes, createdAt, lastUsedAt, expiresAt, isActive, additionalProperties);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -350,6 +375,7 @@ public class ApiKeyInfo {
     sb.append("    scopes: ").append(toIndentedString(scopes)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    lastUsedAt: ").append(toIndentedString(lastUsedAt)).append("\n");
+    sb.append("    expiresAt: ").append(toIndentedString(expiresAt)).append("\n");
     sb.append("    isActive: ").append(toIndentedString(isActive)).append("\n");
     sb.append("    additionalProperties: ").append(toIndentedString(additionalProperties)).append("\n");
     sb.append("}");
@@ -373,7 +399,7 @@ public class ApiKeyInfo {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("key_id", "key_prefix", "key_last4", "name", "scopes", "created_at", "last_used_at", "is_active"));
+    openapiFields = new HashSet<String>(Arrays.asList("key_id", "key_prefix", "key_last4", "name", "scopes", "created_at", "last_used_at", "expires_at", "is_active"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("key_id", "key_prefix", "key_last4", "scopes", "is_active"));
@@ -422,6 +448,9 @@ public class ApiKeyInfo {
       }
       if ((jsonObj.get("last_used_at") != null && !jsonObj.get("last_used_at").isJsonNull()) && !jsonObj.get("last_used_at").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `last_used_at` to be a primitive type in the JSON string but got `%s`", jsonObj.get("last_used_at").toString()));
+      }
+      if ((jsonObj.get("expires_at") != null && !jsonObj.get("expires_at").isJsonNull()) && !jsonObj.get("expires_at").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `expires_at` to be a primitive type in the JSON string but got `%s`", jsonObj.get("expires_at").toString()));
       }
   }
 

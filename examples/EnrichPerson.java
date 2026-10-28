@@ -35,7 +35,7 @@ public class EnrichPerson {
         WorkflowStatusResponse status;
         do {
             Thread.sleep(3000);
-            status = cl.enrichment.enrichmentStatus(job.getWorkflowId());
+            status = cl.enrichment.enrichmentStatus(job.getWorkflowId(), null, null, null);
             System.out.printf("  status=%s processed=%s/%s%n",
                     status.getStatus(), status.getProcessed(), status.getTotal());
         } while (!TERMINAL.contains(status.getStatus()));

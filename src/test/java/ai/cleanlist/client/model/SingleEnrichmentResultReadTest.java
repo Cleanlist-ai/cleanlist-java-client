@@ -142,4 +142,20 @@ public class SingleEnrichmentResultReadTest {
         // TODO: test provider
     }
 
+    /**
+     * Test the property 'failureKind'
+     */
+    @Test
+    public void failureKindTest() {
+        // TODO: test failureKind
+    }
+
+    /**
+     * Test the property 'error'
+     */
+    @Test
+    public void errorTest() {
+        // TODO: test error
+    }
+
 }

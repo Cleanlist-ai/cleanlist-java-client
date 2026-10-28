@@ -97,6 +97,14 @@ public class ApiKeyInfoTest {
     }
 
     /**
+     * Test the property 'expiresAt'
+     */
+    @Test
+    public void expiresAtTest() {
+        // TODO: test expiresAt
+    }
+
+    /**
      * Test the property 'isActive'
      */
     @Test

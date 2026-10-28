@@ -21,6 +21,8 @@ Inline enriched-lead payload for single-workflow polls.  Populated by `enrich_st
 |**company** | **String** |  |  [optional] |
 |**enrichmentType** | **String** |  |  [optional] |
 |**provider** | **String** |  |  [optional] |
+|**failureKind** | **String** |  |  [optional] |
+|**error** | **String** |  |  [optional] |
 
 
 
