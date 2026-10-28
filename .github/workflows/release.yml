@@ -11,7 +11,8 @@
 # defaults so a regen keeps it), commits `chore(release): vX.Y.Z`, tags it and
 # creates a GitHub Release. The publish job then signs that tag and publishes
 # it. If publishing fails, re-run just the failed job; the tag and release are
-# already in place.
+# already in place. Re-running the whole workflow is also safe: it finds the
+# tag and picks up from there.
 #
 # Required repo secrets (see RELEASING.md):
 #   CENTRAL_TOKEN_USERNAME, CENTRAL_TOKEN_PASSWORD  (Portal -> Account -> user token)
@@ -37,7 +38,7 @@ jobs:
     outputs:
       version: ${{ steps.next.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0
 
@@ -65,9 +66,15 @@ jobs:
           echo "$bump: $old -> $new"
           echo "old=$old" >> "$GITHUB_OUTPUT"
           echo "version=$new" >> "$GITHUB_OUTPUT"
+          # Re-run after the tag was pushed (the push is atomic, so the bump
+          # commit is on main too): skip the bump and finish the release.
+          if git rev-parse -q --verify "refs/tags/v$new" >/dev/null; then
+            echo "v$new is already tagged; resuming."
+            echo "tagged=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Bump version, tag, push
-        if: steps.next.outputs.version
+        if: steps.next.outputs.version && !steps.next.outputs.tagged
         env:
           OLD: ${{ steps.next.outputs.old }}
           NEW: ${{ steps.next.outputs.version }}
@@ -90,14 +97,17 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -am "chore(release): v$NEW"
           git tag -a "v$NEW" -m "v$NEW"
-          git push origin HEAD:main "v$NEW"
+          # Atomic: the commit and the tag land together or not at all.
+          git push --atomic origin HEAD:main "v$NEW"
 
       - name: Create GitHub Release
         if: steps.next.outputs.version
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: v${{ steps.next.outputs.version }}
-        run: gh release create "$TAG" --title "$TAG" --generate-notes
+        run: |
+          gh release view "$TAG" >/dev/null 2>&1 \
+            || gh release create "$TAG" --verify-tag --title "$TAG" --generate-notes
 
   publish:
     needs: release
@@ -106,12 +116,12 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: v${{ needs.release.outputs.version }}
 
       - name: Set up JDK 17 + Maven settings
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.9.1
         with:
           distribution: temurin
           java-version: "17"
