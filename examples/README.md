@@ -22,8 +22,8 @@ Or compile and run them straight from this repo against the built jar:
 
 ```bash
 mvn -q -DskipTests -Dgpg.skip package dependency:build-classpath -Dmdep.outputFile=target/cp.txt
-javac -d target/examples -cp "target/cleanlist-java-4.0.0.jar:$(cat target/cp.txt)" examples/*.java
-java -cp "target/examples:target/cleanlist-java-4.0.0.jar:$(cat target/cp.txt)" examples.Quickstart
+javac -d target/examples -cp "target/cleanlist-java-4.0.1.jar:$(cat target/cp.txt)" examples/*.java
+java -cp "target/examples:target/cleanlist-java-4.0.1.jar:$(cat target/cp.txt)" examples.Quickstart
 ```
 
 ## Examples

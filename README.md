@@ -57,14 +57,14 @@ System.out.println("created list: " + list.getListId());
 <dependency>
   <groupId>ai.cleanlist</groupId>
   <artifactId>cleanlist-java</artifactId>
-  <version>4.0.0</version>
+  <version>4.0.1</version>
 </dependency>
 ```
 
 **Gradle**
 
 ```groovy
-implementation 'ai.cleanlist:cleanlist-java:4.0.0'
+implementation 'ai.cleanlist:cleanlist-java:4.0.1'
 ```
 
 Requires Java 8+.

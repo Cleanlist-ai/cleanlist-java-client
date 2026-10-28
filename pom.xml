@@ -5,7 +5,7 @@
     <artifactId>cleanlist-java</artifactId>
     <packaging>jar</packaging>
     <name>cleanlist-java</name>
-    <version>4.0.0</version>
+    <version>4.0.1</version>
     <url>https://github.com/Cleanlist-ai/cleanlist-java-client</url>
     <description>Official Java SDK for the Cleanlist API (v2) — B2B lead discovery, enrichment, lists, smart agents, and export.</description>
     <scm>
