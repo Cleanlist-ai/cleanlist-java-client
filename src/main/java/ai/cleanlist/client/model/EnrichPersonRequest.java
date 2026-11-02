@@ -22,6 +22,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.UUID;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 import com.google.gson.Gson;
@@ -96,7 +97,7 @@ public class EnrichPersonRequest {
   public static final String SERIALIZED_NAME_PERSON_ID = "person_id";
   @SerializedName(SERIALIZED_NAME_PERSON_ID)
   @javax.annotation.Nullable
-  private String personId;
+  private UUID personId;
 
   /**
    * Gets or Sets enrichmentType
@@ -322,7 +323,7 @@ public class EnrichPersonRequest {
   }
 
 
-  public EnrichPersonRequest personId(@javax.annotation.Nullable String personId) {
+  public EnrichPersonRequest personId(@javax.annotation.Nullable UUID personId) {
     this.personId = personId;
     return this;
   }
@@ -332,11 +333,11 @@ public class EnrichPersonRequest {
    * @return personId
    */
   @javax.annotation.Nullable
-  public String getPersonId() {
+  public UUID getPersonId() {
     return personId;
   }
 
-  public void setPersonId(@javax.annotation.Nullable String personId) {
+  public void setPersonId(@javax.annotation.Nullable UUID personId) {
     this.personId = personId;
   }
 

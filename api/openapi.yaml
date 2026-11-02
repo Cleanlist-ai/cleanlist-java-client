@@ -3576,6 +3576,9 @@ components:
         - investorsInclude
         - investorsInclude
         revenueMin: ""
+        naicsCodes:
+        - naicsCodes
+        - naicsCodes
         updatedAfter: ""
         growthMin: ""
         stockSymbols:
@@ -3662,6 +3665,13 @@ components:
           type: string
         industriesInclude:
           description: LinkedIn industries or industry group names to include.
+          items:
+            type: string
+          type: array
+        naicsCodes:
+          description: "NAICS 2022 codes to include, matched against the company's\
+            \ primary NAICS code. A six-digit code matches exactly; a shorter code\
+            \ (5412, 54) matches every code under it."
           items:
             type: string
           type: array
@@ -4178,6 +4188,9 @@ components:
           - investorsInclude
           - investorsInclude
           revenueMin: ""
+          naicsCodes:
+          - naicsCodes
+          - naicsCodes
           updatedAfter: ""
           growthMin: ""
           stockSymbols:
@@ -5057,6 +5070,7 @@ components:
           nullable: true
           type: string
         person_id:
+          format: uuid
           nullable: true
           type: string
         enrichment_type:
@@ -6969,6 +6983,9 @@ components:
           - investorsInclude
           - investorsInclude
           revenueMin: ""
+          naicsCodes:
+          - naicsCodes
+          - naicsCodes
           updatedAfter: ""
           growthMin: ""
           stockSymbols:
@@ -8477,6 +8494,9 @@ components:
             nullable: true
             type: string
           type: array
+        acting_staff_email:
+          nullable: true
+          type: string
       required:
       - auth_type
       - features

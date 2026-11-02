@@ -160,4 +160,12 @@ public class WhoamiResponseTest {
         // TODO: test features
     }
 
+    /**
+     * Test the property 'actingStaffEmail'
+     */
+    @Test
+    public void actingStaffEmailTest() {
+        // TODO: test actingStaffEmail
+    }
+
 }

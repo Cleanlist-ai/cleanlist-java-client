@@ -130,6 +130,11 @@ public class CompanySearchCriteria {
   @javax.annotation.Nullable
   private List<String> industriesInclude = new ArrayList<>();
 
+  public static final String SERIALIZED_NAME_NAICS_CODES = "naicsCodes";
+  @SerializedName(SERIALIZED_NAME_NAICS_CODES)
+  @javax.annotation.Nullable
+  private List<String> naicsCodes = new ArrayList<>();
+
   public static final String SERIALIZED_NAME_HEADCOUNT_RANGES = "headcountRanges";
   @SerializedName(SERIALIZED_NAME_HEADCOUNT_RANGES)
   @javax.annotation.Nullable
@@ -533,6 +538,33 @@ public class CompanySearchCriteria {
 
   public void setIndustriesInclude(@javax.annotation.Nullable List<String> industriesInclude) {
     this.industriesInclude = industriesInclude;
+  }
+
+
+  public CompanySearchCriteria naicsCodes(@javax.annotation.Nullable List<String> naicsCodes) {
+    this.naicsCodes = naicsCodes;
+    return this;
+  }
+
+  public CompanySearchCriteria addNaicsCodesItem(String naicsCodesItem) {
+    if (this.naicsCodes == null) {
+      this.naicsCodes = new ArrayList<>();
+    }
+    this.naicsCodes.add(naicsCodesItem);
+    return this;
+  }
+
+  /**
+   * NAICS 2022 codes to include, matched against the company&#39;s primary NAICS code. A six-digit code matches exactly; a shorter code (5412, 54) matches every code under it.
+   * @return naicsCodes
+   */
+  @javax.annotation.Nullable
+  public List<String> getNaicsCodes() {
+    return naicsCodes;
+  }
+
+  public void setNaicsCodes(@javax.annotation.Nullable List<String> naicsCodes) {
+    this.naicsCodes = naicsCodes;
   }
 
 
@@ -1765,6 +1797,7 @@ public class CompanySearchCriteria {
         Objects.equals(this.companyNameMatchType, companySearchCriteria.companyNameMatchType) &&
         Objects.equals(this.domain, companySearchCriteria.domain) &&
         Objects.equals(this.industriesInclude, companySearchCriteria.industriesInclude) &&
+        Objects.equals(this.naicsCodes, companySearchCriteria.naicsCodes) &&
         Objects.equals(this.headcountRanges, companySearchCriteria.headcountRanges) &&
         Objects.equals(this.revenueMin, companySearchCriteria.revenueMin) &&
         Objects.equals(this.revenueMax, companySearchCriteria.revenueMax) &&
@@ -1822,7 +1855,7 @@ public class CompanySearchCriteria {
 
   @Override
   public int hashCode() {
-    return Objects.hash(companyName, companyNameMatchType, domain, industriesInclude, headcountRanges, revenueMin, revenueMax, yearFoundedMin, yearFoundedMax, companyType, fundingRoundTypes, fundingAmountMin, growthMin, growthMax, industriesExclude, headcountRangesExclude, companyTypeExclude, hqCountriesIso3, hqCountriesIso3Exclude, largestHeadcountCountriesIso3, hqStates, hqStatesExclude, hqCities, hqCitiesExclude, linkedinCategoriesInclude, crunchbaseCategoriesInclude, crunchbaseCategoriesExclude, stockListings, headcountLatestMin, headcountLatestMax, growth1mMin, growth3mMin, growth12mMin, followersMin, followersGrowth6mMin, followersGrowth12mMin, lastFundingDateAfter, ipoDateAfter, lastFundingRoundAmountMin, lastFundingRoundAmountMax, bootstrappedOnly, acquiredOnly, fundingRoundTypesExclude, investorsInclude, investorsExclude, stockSymbols, domainsList, companyNamesList, twitterHandle, descriptionKeyword, updatedAfter, compositeMode, workforceRules, excludeCompanyDomains, excludeInCleanlist, excludeInCleanlistListIds, crmFilterSections);
+    return Objects.hash(companyName, companyNameMatchType, domain, industriesInclude, naicsCodes, headcountRanges, revenueMin, revenueMax, yearFoundedMin, yearFoundedMax, companyType, fundingRoundTypes, fundingAmountMin, growthMin, growthMax, industriesExclude, headcountRangesExclude, companyTypeExclude, hqCountriesIso3, hqCountriesIso3Exclude, largestHeadcountCountriesIso3, hqStates, hqStatesExclude, hqCities, hqCitiesExclude, linkedinCategoriesInclude, crunchbaseCategoriesInclude, crunchbaseCategoriesExclude, stockListings, headcountLatestMin, headcountLatestMax, growth1mMin, growth3mMin, growth12mMin, followersMin, followersGrowth6mMin, followersGrowth12mMin, lastFundingDateAfter, ipoDateAfter, lastFundingRoundAmountMin, lastFundingRoundAmountMax, bootstrappedOnly, acquiredOnly, fundingRoundTypesExclude, investorsInclude, investorsExclude, stockSymbols, domainsList, companyNamesList, twitterHandle, descriptionKeyword, updatedAfter, compositeMode, workforceRules, excludeCompanyDomains, excludeInCleanlist, excludeInCleanlistListIds, crmFilterSections);
   }
 
   @Override
@@ -1833,6 +1866,7 @@ public class CompanySearchCriteria {
     sb.append("    companyNameMatchType: ").append(toIndentedString(companyNameMatchType)).append("\n");
     sb.append("    domain: ").append(toIndentedString(domain)).append("\n");
     sb.append("    industriesInclude: ").append(toIndentedString(industriesInclude)).append("\n");
+    sb.append("    naicsCodes: ").append(toIndentedString(naicsCodes)).append("\n");
     sb.append("    headcountRanges: ").append(toIndentedString(headcountRanges)).append("\n");
     sb.append("    revenueMin: ").append(toIndentedString(revenueMin)).append("\n");
     sb.append("    revenueMax: ").append(toIndentedString(revenueMax)).append("\n");
@@ -1907,7 +1941,7 @@ public class CompanySearchCriteria {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("companyName", "companyNameMatchType", "domain", "industriesInclude", "headcountRanges", "revenueMin", "revenueMax", "yearFoundedMin", "yearFoundedMax", "companyType", "fundingRoundTypes", "fundingAmountMin", "growthMin", "growthMax", "industriesExclude", "headcountRangesExclude", "companyTypeExclude", "hqCountriesIso3", "hqCountriesIso3Exclude", "largestHeadcountCountriesIso3", "hqStates", "hqStatesExclude", "hqCities", "hqCitiesExclude", "linkedinCategoriesInclude", "crunchbaseCategoriesInclude", "crunchbaseCategoriesExclude", "stockListings", "headcountLatestMin", "headcountLatestMax", "growth1mMin", "growth3mMin", "growth12mMin", "followersMin", "followersGrowth6mMin", "followersGrowth12mMin", "lastFundingDateAfter", "ipoDateAfter", "lastFundingRoundAmountMin", "lastFundingRoundAmountMax", "bootstrappedOnly", "acquiredOnly", "fundingRoundTypesExclude", "investorsInclude", "investorsExclude", "stockSymbols", "domainsList", "companyNamesList", "twitterHandle", "descriptionKeyword", "updatedAfter", "compositeMode", "workforceRules", "excludeCompanyDomains", "excludeInCleanlist", "excludeInCleanlistListIds", "crmFilterSections"));
+    openapiFields = new HashSet<String>(Arrays.asList("companyName", "companyNameMatchType", "domain", "industriesInclude", "naicsCodes", "headcountRanges", "revenueMin", "revenueMax", "yearFoundedMin", "yearFoundedMax", "companyType", "fundingRoundTypes", "fundingAmountMin", "growthMin", "growthMax", "industriesExclude", "headcountRangesExclude", "companyTypeExclude", "hqCountriesIso3", "hqCountriesIso3Exclude", "largestHeadcountCountriesIso3", "hqStates", "hqStatesExclude", "hqCities", "hqCitiesExclude", "linkedinCategoriesInclude", "crunchbaseCategoriesInclude", "crunchbaseCategoriesExclude", "stockListings", "headcountLatestMin", "headcountLatestMax", "growth1mMin", "growth3mMin", "growth12mMin", "followersMin", "followersGrowth6mMin", "followersGrowth12mMin", "lastFundingDateAfter", "ipoDateAfter", "lastFundingRoundAmountMin", "lastFundingRoundAmountMax", "bootstrappedOnly", "acquiredOnly", "fundingRoundTypesExclude", "investorsInclude", "investorsExclude", "stockSymbols", "domainsList", "companyNamesList", "twitterHandle", "descriptionKeyword", "updatedAfter", "compositeMode", "workforceRules", "excludeCompanyDomains", "excludeInCleanlist", "excludeInCleanlistListIds", "crmFilterSections"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(0);
@@ -1950,6 +1984,10 @@ public class CompanySearchCriteria {
       // ensure the optional json data is an array if present
       if (jsonObj.get("industriesInclude") != null && !jsonObj.get("industriesInclude").isJsonNull() && !jsonObj.get("industriesInclude").isJsonArray()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `industriesInclude` to be an array in the JSON string but got `%s`", jsonObj.get("industriesInclude").toString()));
+      }
+      // ensure the optional json data is an array if present
+      if (jsonObj.get("naicsCodes") != null && !jsonObj.get("naicsCodes").isJsonNull() && !jsonObj.get("naicsCodes").isJsonArray()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `naicsCodes` to be an array in the JSON string but got `%s`", jsonObj.get("naicsCodes").toString()));
       }
       // ensure the optional json data is an array if present
       if (jsonObj.get("headcountRanges") != null && !jsonObj.get("headcountRanges").isJsonNull() && !jsonObj.get("headcountRanges").isJsonArray()) {

@@ -240,6 +240,11 @@ public class WhoamiResponse {
   @javax.annotation.Nonnull
   private List<String> features = new ArrayList<>();
 
+  public static final String SERIALIZED_NAME_ACTING_STAFF_EMAIL = "acting_staff_email";
+  @SerializedName(SERIALIZED_NAME_ACTING_STAFF_EMAIL)
+  @javax.annotation.Nullable
+  private String actingStaffEmail;
+
   public WhoamiResponse() {
   }
 
@@ -543,6 +548,25 @@ public class WhoamiResponse {
     this.features = features;
   }
 
+
+  public WhoamiResponse actingStaffEmail(@javax.annotation.Nullable String actingStaffEmail) {
+    this.actingStaffEmail = actingStaffEmail;
+    return this;
+  }
+
+  /**
+   * Get actingStaffEmail
+   * @return actingStaffEmail
+   */
+  @javax.annotation.Nullable
+  public String getActingStaffEmail() {
+    return actingStaffEmail;
+  }
+
+  public void setActingStaffEmail(@javax.annotation.Nullable String actingStaffEmail) {
+    this.actingStaffEmail = actingStaffEmail;
+  }
+
   /**
    * A container for additional, undeclared properties.
    * This is a holder for any undeclared properties as specified with
@@ -612,7 +636,8 @@ public class WhoamiResponse {
         Objects.equals(this.scopes, whoamiResponse.scopes) &&
         Objects.equals(this.tier, whoamiResponse.tier) &&
         Objects.equals(this.appsumoTier, whoamiResponse.appsumoTier) &&
-        Objects.equals(this.features, whoamiResponse.features)&&
+        Objects.equals(this.features, whoamiResponse.features) &&
+        Objects.equals(this.actingStaffEmail, whoamiResponse.actingStaffEmail)&&
         Objects.equals(this.additionalProperties, whoamiResponse.additionalProperties);
   }
 
@@ -622,7 +647,7 @@ public class WhoamiResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(taskId, timestampMs, agentInstructions, usage, message, userEmail, userId, userName, organizationId, organizationName, authType, scopes, tier, appsumoTier, features, additionalProperties);
+    return Objects.hash(taskId, timestampMs, agentInstructions, usage, message, userEmail, userId, userName, organizationId, organizationName, authType, scopes, tier, appsumoTier, features, actingStaffEmail, additionalProperties);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -651,6 +676,7 @@ public class WhoamiResponse {
     sb.append("    tier: ").append(toIndentedString(tier)).append("\n");
     sb.append("    appsumoTier: ").append(toIndentedString(appsumoTier)).append("\n");
     sb.append("    features: ").append(toIndentedString(features)).append("\n");
+    sb.append("    actingStaffEmail: ").append(toIndentedString(actingStaffEmail)).append("\n");
     sb.append("    additionalProperties: ").append(toIndentedString(additionalProperties)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -673,7 +699,7 @@ public class WhoamiResponse {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("task_id", "timestamp_ms", "agent_instructions", "usage", "message", "user_email", "user_id", "user_name", "organization_id", "organization_name", "auth_type", "scopes", "tier", "appsumo_tier", "features"));
+    openapiFields = new HashSet<String>(Arrays.asList("task_id", "timestamp_ms", "agent_instructions", "usage", "message", "user_email", "user_id", "user_name", "organization_id", "organization_name", "auth_type", "scopes", "tier", "appsumo_tier", "features", "acting_staff_email"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("user_email", "organization_id", "auth_type", "scopes", "tier", "features"));
@@ -747,6 +773,9 @@ public class WhoamiResponse {
         throw new IllegalArgumentException("Expected the field `linkedContent` to be an array in the JSON string but got `null`");
       } else if (!jsonObj.get("features").isJsonArray()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `features` to be an array in the JSON string but got `%s`", jsonObj.get("features").toString()));
+      }
+      if ((jsonObj.get("acting_staff_email") != null && !jsonObj.get("acting_staff_email").isJsonNull()) && !jsonObj.get("acting_staff_email").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `acting_staff_email` to be a primitive type in the JSON string but got `%s`", jsonObj.get("acting_staff_email").toString()));
       }
   }
 
