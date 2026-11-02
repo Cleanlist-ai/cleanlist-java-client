@@ -23,6 +23,8 @@ echo "==> Preparing spec (clean operationIds -> readable method names)"
 
 echo "==> Generating java (okhttp-gson) client"
 rm -rf "$BUILD"
+# The generator reads .openapi-generator-ignore from its output dir, so seed it.
+mkdir -p "$BUILD" && cp "$ROOT/.openapi-generator-ignore" "$BUILD/"
 # Metadata is passed via a JSON config file (values contain spaces/parens that the
 # npx wrapper cannot safely forward through --additional-properties on the CLI).
 npx --yes @openapitools/openapi-generator-cli generate \
