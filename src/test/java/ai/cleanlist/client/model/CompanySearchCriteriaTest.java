@@ -74,6 +74,14 @@ public class CompanySearchCriteriaTest {
     }
 
     /**
+     * Test the property 'naicsCodes'
+     */
+    @Test
+    public void naicsCodesTest() {
+        // TODO: test naicsCodes
+    }
+
+    /**
      * Test the property 'headcountRanges'
      */
     @Test

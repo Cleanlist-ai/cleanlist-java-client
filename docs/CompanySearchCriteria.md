@@ -12,6 +12,7 @@ The company-side filter blob, one field per ``CompanySearchFilters`` key.
 |**companyNameMatchType** | [**CompanyNameMatchTypeEnum**](#CompanyNameMatchTypeEnum) | How company_name matches: contains (substring), exact, or similar (word-order-free fuzzy). |  [optional] |
 |**domain** | **String** | Company website domain; a pasted URL is reduced to its host. |  [optional] |
 |**industriesInclude** | **List&lt;String&gt;** | LinkedIn industries or industry group names to include. |  [optional] |
+|**naicsCodes** | **List&lt;String&gt;** | NAICS 2022 codes to include, matched against the company&#39;s primary NAICS code. A six-digit code matches exactly; a shorter code (5412, 54) matches every code under it. |  [optional] |
 |**headcountRanges** | **List&lt;String&gt;** | Headcount buckets to include (1-10 through 10001+), OR-ed. |  [optional] |
 |**revenueMin** | **String** | Minimum estimated annual revenue in USD. |  [optional] |
 |**revenueMax** | **String** | Maximum estimated annual revenue in USD. |  [optional] |

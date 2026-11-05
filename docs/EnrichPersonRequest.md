@@ -15,7 +15,7 @@
 |**lastName** | **String** |  |  [optional] |
 |**companyName** | **String** |  |  [optional] |
 |**domain** | **String** |  |  [optional] |
-|**personId** | **String** |  |  [optional] |
+|**personId** | **UUID** |  |  [optional] |
 |**enrichmentType** | [**EnrichmentTypeEnum**](#EnrichmentTypeEnum) |  |  [optional] |
 |**includePhone** | **Boolean** | Legacy scope toggle, kept for back-compat. false → &#39;partial&#39;, true → &#39;phone_only&#39;. Ignored when enrichment_type is set. |  [optional] |
 |**quoteId** | **String** |  |  [optional] |
