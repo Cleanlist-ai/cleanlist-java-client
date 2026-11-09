@@ -355,6 +355,11 @@ public class CompanySearchCriteria {
   @javax.annotation.Nullable
   private List<String> companyNamesList = new ArrayList<>();
 
+  public static final String SERIALIZED_NAME_LINKEDIN_URLS = "linkedinUrls";
+  @SerializedName(SERIALIZED_NAME_LINKEDIN_URLS)
+  @javax.annotation.Nullable
+  private List<String> linkedinUrls = new ArrayList<>();
+
   public static final String SERIALIZED_NAME_TWITTER_HANDLE = "twitterHandle";
   @SerializedName(SERIALIZED_NAME_TWITTER_HANDLE)
   @javax.annotation.Nullable
@@ -1588,6 +1593,33 @@ public class CompanySearchCriteria {
   }
 
 
+  public CompanySearchCriteria linkedinUrls(@javax.annotation.Nullable List<String> linkedinUrls) {
+    this.linkedinUrls = linkedinUrls;
+    return this;
+  }
+
+  public CompanySearchCriteria addLinkedinUrlsItem(String linkedinUrlsItem) {
+    if (this.linkedinUrls == null) {
+      this.linkedinUrls = new ArrayList<>();
+    }
+    this.linkedinUrls.add(linkedinUrlsItem);
+    return this;
+  }
+
+  /**
+   * Company LinkedIn page URLs to match exactly; normalized to https://www.linkedin.com/company/&lt;slug&gt;. Values that are not a company page are dropped.
+   * @return linkedinUrls
+   */
+  @javax.annotation.Nullable
+  public List<String> getLinkedinUrls() {
+    return linkedinUrls;
+  }
+
+  public void setLinkedinUrls(@javax.annotation.Nullable List<String> linkedinUrls) {
+    this.linkedinUrls = linkedinUrls;
+  }
+
+
   public CompanySearchCriteria twitterHandle(@javax.annotation.Nullable String twitterHandle) {
     this.twitterHandle = twitterHandle;
     return this;
@@ -1842,6 +1874,7 @@ public class CompanySearchCriteria {
         Objects.equals(this.stockSymbols, companySearchCriteria.stockSymbols) &&
         Objects.equals(this.domainsList, companySearchCriteria.domainsList) &&
         Objects.equals(this.companyNamesList, companySearchCriteria.companyNamesList) &&
+        Objects.equals(this.linkedinUrls, companySearchCriteria.linkedinUrls) &&
         Objects.equals(this.twitterHandle, companySearchCriteria.twitterHandle) &&
         Objects.equals(this.descriptionKeyword, companySearchCriteria.descriptionKeyword) &&
         Objects.equals(this.updatedAfter, companySearchCriteria.updatedAfter) &&
@@ -1855,7 +1888,7 @@ public class CompanySearchCriteria {
 
   @Override
   public int hashCode() {
-    return Objects.hash(companyName, companyNameMatchType, domain, industriesInclude, naicsCodes, headcountRanges, revenueMin, revenueMax, yearFoundedMin, yearFoundedMax, companyType, fundingRoundTypes, fundingAmountMin, growthMin, growthMax, industriesExclude, headcountRangesExclude, companyTypeExclude, hqCountriesIso3, hqCountriesIso3Exclude, largestHeadcountCountriesIso3, hqStates, hqStatesExclude, hqCities, hqCitiesExclude, linkedinCategoriesInclude, crunchbaseCategoriesInclude, crunchbaseCategoriesExclude, stockListings, headcountLatestMin, headcountLatestMax, growth1mMin, growth3mMin, growth12mMin, followersMin, followersGrowth6mMin, followersGrowth12mMin, lastFundingDateAfter, ipoDateAfter, lastFundingRoundAmountMin, lastFundingRoundAmountMax, bootstrappedOnly, acquiredOnly, fundingRoundTypesExclude, investorsInclude, investorsExclude, stockSymbols, domainsList, companyNamesList, twitterHandle, descriptionKeyword, updatedAfter, compositeMode, workforceRules, excludeCompanyDomains, excludeInCleanlist, excludeInCleanlistListIds, crmFilterSections);
+    return Objects.hash(companyName, companyNameMatchType, domain, industriesInclude, naicsCodes, headcountRanges, revenueMin, revenueMax, yearFoundedMin, yearFoundedMax, companyType, fundingRoundTypes, fundingAmountMin, growthMin, growthMax, industriesExclude, headcountRangesExclude, companyTypeExclude, hqCountriesIso3, hqCountriesIso3Exclude, largestHeadcountCountriesIso3, hqStates, hqStatesExclude, hqCities, hqCitiesExclude, linkedinCategoriesInclude, crunchbaseCategoriesInclude, crunchbaseCategoriesExclude, stockListings, headcountLatestMin, headcountLatestMax, growth1mMin, growth3mMin, growth12mMin, followersMin, followersGrowth6mMin, followersGrowth12mMin, lastFundingDateAfter, ipoDateAfter, lastFundingRoundAmountMin, lastFundingRoundAmountMax, bootstrappedOnly, acquiredOnly, fundingRoundTypesExclude, investorsInclude, investorsExclude, stockSymbols, domainsList, companyNamesList, linkedinUrls, twitterHandle, descriptionKeyword, updatedAfter, compositeMode, workforceRules, excludeCompanyDomains, excludeInCleanlist, excludeInCleanlistListIds, crmFilterSections);
   }
 
   @Override
@@ -1911,6 +1944,7 @@ public class CompanySearchCriteria {
     sb.append("    stockSymbols: ").append(toIndentedString(stockSymbols)).append("\n");
     sb.append("    domainsList: ").append(toIndentedString(domainsList)).append("\n");
     sb.append("    companyNamesList: ").append(toIndentedString(companyNamesList)).append("\n");
+    sb.append("    linkedinUrls: ").append(toIndentedString(linkedinUrls)).append("\n");
     sb.append("    twitterHandle: ").append(toIndentedString(twitterHandle)).append("\n");
     sb.append("    descriptionKeyword: ").append(toIndentedString(descriptionKeyword)).append("\n");
     sb.append("    updatedAfter: ").append(toIndentedString(updatedAfter)).append("\n");
@@ -1941,7 +1975,7 @@ public class CompanySearchCriteria {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("companyName", "companyNameMatchType", "domain", "industriesInclude", "naicsCodes", "headcountRanges", "revenueMin", "revenueMax", "yearFoundedMin", "yearFoundedMax", "companyType", "fundingRoundTypes", "fundingAmountMin", "growthMin", "growthMax", "industriesExclude", "headcountRangesExclude", "companyTypeExclude", "hqCountriesIso3", "hqCountriesIso3Exclude", "largestHeadcountCountriesIso3", "hqStates", "hqStatesExclude", "hqCities", "hqCitiesExclude", "linkedinCategoriesInclude", "crunchbaseCategoriesInclude", "crunchbaseCategoriesExclude", "stockListings", "headcountLatestMin", "headcountLatestMax", "growth1mMin", "growth3mMin", "growth12mMin", "followersMin", "followersGrowth6mMin", "followersGrowth12mMin", "lastFundingDateAfter", "ipoDateAfter", "lastFundingRoundAmountMin", "lastFundingRoundAmountMax", "bootstrappedOnly", "acquiredOnly", "fundingRoundTypesExclude", "investorsInclude", "investorsExclude", "stockSymbols", "domainsList", "companyNamesList", "twitterHandle", "descriptionKeyword", "updatedAfter", "compositeMode", "workforceRules", "excludeCompanyDomains", "excludeInCleanlist", "excludeInCleanlistListIds", "crmFilterSections"));
+    openapiFields = new HashSet<String>(Arrays.asList("companyName", "companyNameMatchType", "domain", "industriesInclude", "naicsCodes", "headcountRanges", "revenueMin", "revenueMax", "yearFoundedMin", "yearFoundedMax", "companyType", "fundingRoundTypes", "fundingAmountMin", "growthMin", "growthMax", "industriesExclude", "headcountRangesExclude", "companyTypeExclude", "hqCountriesIso3", "hqCountriesIso3Exclude", "largestHeadcountCountriesIso3", "hqStates", "hqStatesExclude", "hqCities", "hqCitiesExclude", "linkedinCategoriesInclude", "crunchbaseCategoriesInclude", "crunchbaseCategoriesExclude", "stockListings", "headcountLatestMin", "headcountLatestMax", "growth1mMin", "growth3mMin", "growth12mMin", "followersMin", "followersGrowth6mMin", "followersGrowth12mMin", "lastFundingDateAfter", "ipoDateAfter", "lastFundingRoundAmountMin", "lastFundingRoundAmountMax", "bootstrappedOnly", "acquiredOnly", "fundingRoundTypesExclude", "investorsInclude", "investorsExclude", "stockSymbols", "domainsList", "companyNamesList", "linkedinUrls", "twitterHandle", "descriptionKeyword", "updatedAfter", "compositeMode", "workforceRules", "excludeCompanyDomains", "excludeInCleanlist", "excludeInCleanlistListIds", "crmFilterSections"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(0);
@@ -2137,6 +2171,10 @@ public class CompanySearchCriteria {
       // ensure the optional json data is an array if present
       if (jsonObj.get("companyNamesList") != null && !jsonObj.get("companyNamesList").isJsonNull() && !jsonObj.get("companyNamesList").isJsonArray()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `companyNamesList` to be an array in the JSON string but got `%s`", jsonObj.get("companyNamesList").toString()));
+      }
+      // ensure the optional json data is an array if present
+      if (jsonObj.get("linkedinUrls") != null && !jsonObj.get("linkedinUrls").isJsonNull() && !jsonObj.get("linkedinUrls").isJsonArray()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `linkedinUrls` to be an array in the JSON string but got `%s`", jsonObj.get("linkedinUrls").toString()));
       }
       if ((jsonObj.get("twitterHandle") != null && !jsonObj.get("twitterHandle").isJsonNull()) && !jsonObj.get("twitterHandle").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `twitterHandle` to be a primitive type in the JSON string but got `%s`", jsonObj.get("twitterHandle").toString()));

@@ -100,6 +100,11 @@ public class ExportJsonResponse {
   @javax.annotation.Nullable
   private String cursor;
 
+  public static final String SERIALIZED_NAME_SKIPPED = "skipped";
+  @SerializedName(SERIALIZED_NAME_SKIPPED)
+  @javax.annotation.Nullable
+  private Integer skipped = 0;
+
   public ExportJsonResponse() {
   }
 
@@ -250,7 +255,7 @@ public class ExportJsonResponse {
   }
 
   /**
-   * Total number of leads in the list (across all pages).
+   * Total number of rows in the list (across all pages), import rows not yet enriched included.
    * @return total
    */
   @javax.annotation.Nonnull
@@ -279,6 +284,25 @@ public class ExportJsonResponse {
 
   public void setCursor(@javax.annotation.Nullable String cursor) {
     this.cursor = cursor;
+  }
+
+
+  public ExportJsonResponse skipped(@javax.annotation.Nullable Integer skipped) {
+    this.skipped = skipped;
+    return this;
+  }
+
+  /**
+   * Rows of this page&#39;s place in the ordering that left the list (deleted or moved) after the cursor&#39;s ordering was taken, so the page holds fewer rows than it covers. &#x60;total&#x60; minus the sum of &#x60;skipped&#x60; over every page is the number of rows returned.
+   * @return skipped
+   */
+  @javax.annotation.Nullable
+  public Integer getSkipped() {
+    return skipped;
+  }
+
+  public void setSkipped(@javax.annotation.Nullable Integer skipped) {
+    this.skipped = skipped;
   }
 
   /**
@@ -344,7 +368,8 @@ public class ExportJsonResponse {
         Objects.equals(this.listId, exportJsonResponse.listId) &&
         Objects.equals(this.leads, exportJsonResponse.leads) &&
         Objects.equals(this.total, exportJsonResponse.total) &&
-        Objects.equals(this.cursor, exportJsonResponse.cursor)&&
+        Objects.equals(this.cursor, exportJsonResponse.cursor) &&
+        Objects.equals(this.skipped, exportJsonResponse.skipped)&&
         Objects.equals(this.additionalProperties, exportJsonResponse.additionalProperties);
   }
 
@@ -354,7 +379,7 @@ public class ExportJsonResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(taskId, timestampMs, agentInstructions, usage, message, listId, leads, total, cursor, additionalProperties);
+    return Objects.hash(taskId, timestampMs, agentInstructions, usage, message, listId, leads, total, cursor, skipped, additionalProperties);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -377,6 +402,7 @@ public class ExportJsonResponse {
     sb.append("    leads: ").append(toIndentedString(leads)).append("\n");
     sb.append("    total: ").append(toIndentedString(total)).append("\n");
     sb.append("    cursor: ").append(toIndentedString(cursor)).append("\n");
+    sb.append("    skipped: ").append(toIndentedString(skipped)).append("\n");
     sb.append("    additionalProperties: ").append(toIndentedString(additionalProperties)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -399,7 +425,7 @@ public class ExportJsonResponse {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("task_id", "timestamp_ms", "agent_instructions", "usage", "message", "list_id", "leads", "total", "cursor"));
+    openapiFields = new HashSet<String>(Arrays.asList("task_id", "timestamp_ms", "agent_instructions", "usage", "message", "list_id", "leads", "total", "cursor", "skipped"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("list_id", "leads", "total"));

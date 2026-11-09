@@ -12,6 +12,7 @@
 |**agentInstructions** | **String** |  |  [optional] |
 |**usage** | **String** |  |  [optional] |
 |**message** | **String** |  |  [optional] |
+|**snapshotId** | **String** |  |  [optional] |
 |**presentation** | [**SearchPresentation**](SearchPresentation.md) |  |  [optional] |
 |**pendingImports** | [**List&lt;PendingImportRow&gt;**](PendingImportRow.md) |  |  [optional] |
 |**pendingImportTotal** | **Integer** |  |  [optional] |

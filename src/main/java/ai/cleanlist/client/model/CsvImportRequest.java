@@ -129,6 +129,63 @@ public class CsvImportRequest {
   @javax.annotation.Nullable
   private EnrichmentTypeEnum enrichmentType;
 
+  /**
+   * Gets or Sets phoneWaterfall
+   */
+  @JsonAdapter(PhoneWaterfallEnum.Adapter.class)
+  public enum PhoneWaterfallEnum {
+    STANDARD("standard"),
+    
+    GB("gb");
+
+    private String value;
+
+    PhoneWaterfallEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static PhoneWaterfallEnum fromValue(String value) {
+      for (PhoneWaterfallEnum b : PhoneWaterfallEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<PhoneWaterfallEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final PhoneWaterfallEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public PhoneWaterfallEnum read(final JsonReader jsonReader) throws IOException {
+        String value =  jsonReader.nextString();
+        return PhoneWaterfallEnum.fromValue(value);
+      }
+    }
+
+    public static void validateJsonElement(JsonElement jsonElement) throws IOException {
+      String value = jsonElement.getAsString();
+      PhoneWaterfallEnum.fromValue(value);
+    }
+  }
+
+  public static final String SERIALIZED_NAME_PHONE_WATERFALL = "phone_waterfall";
+  @SerializedName(SERIALIZED_NAME_PHONE_WATERFALL)
+  @javax.annotation.Nullable
+  private PhoneWaterfallEnum phoneWaterfall;
+
   public static final String SERIALIZED_NAME_QUOTE_ID = "quote_id";
   @SerializedName(SERIALIZED_NAME_QUOTE_ID)
   @javax.annotation.Nullable
@@ -223,6 +280,25 @@ public class CsvImportRequest {
 
   public void setEnrichmentType(@javax.annotation.Nullable EnrichmentTypeEnum enrichmentType) {
     this.enrichmentType = enrichmentType;
+  }
+
+
+  public CsvImportRequest phoneWaterfall(@javax.annotation.Nullable PhoneWaterfallEnum phoneWaterfall) {
+    this.phoneWaterfall = phoneWaterfall;
+    return this;
+  }
+
+  /**
+   * Get phoneWaterfall
+   * @return phoneWaterfall
+   */
+  @javax.annotation.Nullable
+  public PhoneWaterfallEnum getPhoneWaterfall() {
+    return phoneWaterfall;
+  }
+
+  public void setPhoneWaterfall(@javax.annotation.Nullable PhoneWaterfallEnum phoneWaterfall) {
+    this.phoneWaterfall = phoneWaterfall;
   }
 
 
@@ -322,6 +398,7 @@ public class CsvImportRequest {
         Objects.equals(this.columnMapping, csvImportRequest.columnMapping) &&
         Objects.equals(this.dispatchEnrichment, csvImportRequest.dispatchEnrichment) &&
         Objects.equals(this.enrichmentType, csvImportRequest.enrichmentType) &&
+        Objects.equals(this.phoneWaterfall, csvImportRequest.phoneWaterfall) &&
         Objects.equals(this.quoteId, csvImportRequest.quoteId) &&
         Objects.equals(this.idempotencyKey, csvImportRequest.idempotencyKey)&&
         Objects.equals(this.additionalProperties, csvImportRequest.additionalProperties);
@@ -333,7 +410,7 @@ public class CsvImportRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(csvContentBase64, columnMapping, dispatchEnrichment, enrichmentType, quoteId, idempotencyKey, additionalProperties);
+    return Objects.hash(csvContentBase64, columnMapping, dispatchEnrichment, enrichmentType, phoneWaterfall, quoteId, idempotencyKey, additionalProperties);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -351,6 +428,7 @@ public class CsvImportRequest {
     sb.append("    columnMapping: ").append(toIndentedString(columnMapping)).append("\n");
     sb.append("    dispatchEnrichment: ").append(toIndentedString(dispatchEnrichment)).append("\n");
     sb.append("    enrichmentType: ").append(toIndentedString(enrichmentType)).append("\n");
+    sb.append("    phoneWaterfall: ").append(toIndentedString(phoneWaterfall)).append("\n");
     sb.append("    quoteId: ").append(toIndentedString(quoteId)).append("\n");
     sb.append("    idempotencyKey: ").append(toIndentedString(idempotencyKey)).append("\n");
     sb.append("    additionalProperties: ").append(toIndentedString(additionalProperties)).append("\n");
@@ -375,7 +453,7 @@ public class CsvImportRequest {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("csv_content_base64", "column_mapping", "dispatch_enrichment", "enrichment_type", "quote_id", "idempotency_key"));
+    openapiFields = new HashSet<String>(Arrays.asList("csv_content_base64", "column_mapping", "dispatch_enrichment", "enrichment_type", "phone_waterfall", "quote_id", "idempotency_key"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("csv_content_base64", "column_mapping"));
@@ -410,6 +488,13 @@ public class CsvImportRequest {
       // validate the optional field `enrichment_type`
       if (jsonObj.get("enrichment_type") != null && !jsonObj.get("enrichment_type").isJsonNull()) {
         EnrichmentTypeEnum.validateJsonElement(jsonObj.get("enrichment_type"));
+      }
+      if ((jsonObj.get("phone_waterfall") != null && !jsonObj.get("phone_waterfall").isJsonNull()) && !jsonObj.get("phone_waterfall").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `phone_waterfall` to be a primitive type in the JSON string but got `%s`", jsonObj.get("phone_waterfall").toString()));
+      }
+      // validate the optional field `phone_waterfall`
+      if (jsonObj.get("phone_waterfall") != null && !jsonObj.get("phone_waterfall").isJsonNull()) {
+        PhoneWaterfallEnum.validateJsonElement(jsonObj.get("phone_waterfall"));
       }
       if ((jsonObj.get("quote_id") != null && !jsonObj.get("quote_id").isJsonNull()) && !jsonObj.get("quote_id").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `quote_id` to be a primitive type in the JSON string but got `%s`", jsonObj.get("quote_id").toString()));

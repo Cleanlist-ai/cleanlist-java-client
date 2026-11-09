@@ -25,6 +25,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -199,7 +200,7 @@ public class PeopleSearchResponse {
   public static final String SERIALIZED_NAME_CREDITS_CHARGED = "credits_charged";
   @SerializedName(SERIALIZED_NAME_CREDITS_CHARGED)
   @javax.annotation.Nonnull
-  private Integer creditsCharged;
+  private BigDecimal creditsCharged;
 
   public static final String SERIALIZED_NAME_TRUNCATION_WARNING = "truncation_warning";
   @SerializedName(SERIALIZED_NAME_TRUNCATION_WARNING)
@@ -556,21 +557,21 @@ public class PeopleSearchResponse {
   }
 
 
-  public PeopleSearchResponse creditsCharged(@javax.annotation.Nonnull Integer creditsCharged) {
+  public PeopleSearchResponse creditsCharged(@javax.annotation.Nonnull BigDecimal creditsCharged) {
     this.creditsCharged = creditsCharged;
     return this;
   }
 
   /**
-   * Get creditsCharged
+   * Credits this page cost: 0 unless the org has a per-row search price.
    * @return creditsCharged
    */
   @javax.annotation.Nonnull
-  public Integer getCreditsCharged() {
+  public BigDecimal getCreditsCharged() {
     return creditsCharged;
   }
 
-  public void setCreditsCharged(@javax.annotation.Nonnull Integer creditsCharged) {
+  public void setCreditsCharged(@javax.annotation.Nonnull BigDecimal creditsCharged) {
     this.creditsCharged = creditsCharged;
   }
 

@@ -22,6 +22,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -57,14 +58,76 @@ public class ExportCsvResponse {
   @javax.annotation.Nonnull
   private String listId;
 
+  public static final String SERIALIZED_NAME_JOB_ID = "job_id";
+  @SerializedName(SERIALIZED_NAME_JOB_ID)
+  @javax.annotation.Nullable
+  private String jobId;
+
+  /**
+   * &#x60;completed&#x60; with a &#x60;download_url&#x60;, or &#x60;running&#x60; (HTTP 202): call again with &#x60;job_id&#x60;.
+   */
+  @JsonAdapter(StatusEnum.Adapter.class)
+  public enum StatusEnum {
+    RUNNING("running"),
+    
+    COMPLETED("completed");
+
+    private String value;
+
+    StatusEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static StatusEnum fromValue(String value) {
+      for (StatusEnum b : StatusEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+
+    public static class Adapter extends TypeAdapter<StatusEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final StatusEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public StatusEnum read(final JsonReader jsonReader) throws IOException {
+        String value =  jsonReader.nextString();
+        return StatusEnum.fromValue(value);
+      }
+    }
+
+    public static void validateJsonElement(JsonElement jsonElement) throws IOException {
+      String value = jsonElement.getAsString();
+      StatusEnum.fromValue(value);
+    }
+  }
+
+  public static final String SERIALIZED_NAME_STATUS = "status";
+  @SerializedName(SERIALIZED_NAME_STATUS)
+  @javax.annotation.Nullable
+  private StatusEnum status = StatusEnum.COMPLETED;
+
   public static final String SERIALIZED_NAME_DOWNLOAD_URL = "download_url";
   @SerializedName(SERIALIZED_NAME_DOWNLOAD_URL)
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private String downloadUrl;
 
   public static final String SERIALIZED_NAME_EXPIRES_AT = "expires_at";
   @SerializedName(SERIALIZED_NAME_EXPIRES_AT)
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private String expiresAt;
 
   public static final String SERIALIZED_NAME_ROW_COUNT = "row_count";
@@ -74,8 +137,13 @@ public class ExportCsvResponse {
 
   public static final String SERIALIZED_NAME_FILE_SIZE_BYTES = "file_size_bytes";
   @SerializedName(SERIALIZED_NAME_FILE_SIZE_BYTES)
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private Integer fileSizeBytes;
+
+  public static final String SERIALIZED_NAME_SKIPPED_COUNT = "skipped_count";
+  @SerializedName(SERIALIZED_NAME_SKIPPED_COUNT)
+  @javax.annotation.Nullable
+  private Integer skippedCount = 0;
 
   public ExportCsvResponse() {
   }
@@ -99,40 +167,78 @@ public class ExportCsvResponse {
   }
 
 
-  public ExportCsvResponse downloadUrl(@javax.annotation.Nonnull String downloadUrl) {
+  public ExportCsvResponse jobId(@javax.annotation.Nullable String jobId) {
+    this.jobId = jobId;
+    return this;
+  }
+
+  /**
+   * Get jobId
+   * @return jobId
+   */
+  @javax.annotation.Nullable
+  public String getJobId() {
+    return jobId;
+  }
+
+  public void setJobId(@javax.annotation.Nullable String jobId) {
+    this.jobId = jobId;
+  }
+
+
+  public ExportCsvResponse status(@javax.annotation.Nullable StatusEnum status) {
+    this.status = status;
+    return this;
+  }
+
+  /**
+   * &#x60;completed&#x60; with a &#x60;download_url&#x60;, or &#x60;running&#x60; (HTTP 202): call again with &#x60;job_id&#x60;.
+   * @return status
+   */
+  @javax.annotation.Nullable
+  public StatusEnum getStatus() {
+    return status;
+  }
+
+  public void setStatus(@javax.annotation.Nullable StatusEnum status) {
+    this.status = status;
+  }
+
+
+  public ExportCsvResponse downloadUrl(@javax.annotation.Nullable String downloadUrl) {
     this.downloadUrl = downloadUrl;
     return this;
   }
 
   /**
-   * Time-limited, SAS-signed URL to download the generated CSV file. The signature (&#x60;sig&#x60;) and expiry (&#x60;exp&#x60;) query params gate access; the link stops working after &#x60;expires_at&#x60;.
+   * Get downloadUrl
    * @return downloadUrl
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   public String getDownloadUrl() {
     return downloadUrl;
   }
 
-  public void setDownloadUrl(@javax.annotation.Nonnull String downloadUrl) {
+  public void setDownloadUrl(@javax.annotation.Nullable String downloadUrl) {
     this.downloadUrl = downloadUrl;
   }
 
 
-  public ExportCsvResponse expiresAt(@javax.annotation.Nonnull String expiresAt) {
+  public ExportCsvResponse expiresAt(@javax.annotation.Nullable String expiresAt) {
     this.expiresAt = expiresAt;
     return this;
   }
 
   /**
-   * ISO-8601 UTC timestamp at which &#x60;download_url&#x60; expires. Generated URLs are valid for 24 hours.
+   * Get expiresAt
    * @return expiresAt
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   public String getExpiresAt() {
     return expiresAt;
   }
 
-  public void setExpiresAt(@javax.annotation.Nonnull String expiresAt) {
+  public void setExpiresAt(@javax.annotation.Nullable String expiresAt) {
     this.expiresAt = expiresAt;
   }
 
@@ -143,7 +249,7 @@ public class ExportCsvResponse {
   }
 
   /**
-   * Number of data rows written to the CSV (excludes the header row).
+   * Number of data rows written to the CSV (excludes the header row); while running, the rows being exported.
    * @return rowCount
    */
   @javax.annotation.Nonnull
@@ -156,22 +262,41 @@ public class ExportCsvResponse {
   }
 
 
-  public ExportCsvResponse fileSizeBytes(@javax.annotation.Nonnull Integer fileSizeBytes) {
+  public ExportCsvResponse fileSizeBytes(@javax.annotation.Nullable Integer fileSizeBytes) {
     this.fileSizeBytes = fileSizeBytes;
     return this;
   }
 
   /**
-   * Size of the generated CSV file in bytes.
+   * Get fileSizeBytes
    * @return fileSizeBytes
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   public Integer getFileSizeBytes() {
     return fileSizeBytes;
   }
 
-  public void setFileSizeBytes(@javax.annotation.Nonnull Integer fileSizeBytes) {
+  public void setFileSizeBytes(@javax.annotation.Nullable Integer fileSizeBytes) {
     this.fileSizeBytes = fileSizeBytes;
+  }
+
+
+  public ExportCsvResponse skippedCount(@javax.annotation.Nullable Integer skippedCount) {
+    this.skippedCount = skippedCount;
+    return this;
+  }
+
+  /**
+   * Rows of the list that changed while it was exporting (deleted, or merged into another row) and are not in the file. &#x60;row_count&#x60; + &#x60;skipped_count&#x60; is the list&#39;s row count when the export started.
+   * @return skippedCount
+   */
+  @javax.annotation.Nullable
+  public Integer getSkippedCount() {
+    return skippedCount;
+  }
+
+  public void setSkippedCount(@javax.annotation.Nullable Integer skippedCount) {
+    this.skippedCount = skippedCount;
   }
 
 
@@ -186,15 +311,29 @@ public class ExportCsvResponse {
     }
     ExportCsvResponse exportCsvResponse = (ExportCsvResponse) o;
     return Objects.equals(this.listId, exportCsvResponse.listId) &&
+        Objects.equals(this.jobId, exportCsvResponse.jobId) &&
+        Objects.equals(this.status, exportCsvResponse.status) &&
         Objects.equals(this.downloadUrl, exportCsvResponse.downloadUrl) &&
         Objects.equals(this.expiresAt, exportCsvResponse.expiresAt) &&
         Objects.equals(this.rowCount, exportCsvResponse.rowCount) &&
-        Objects.equals(this.fileSizeBytes, exportCsvResponse.fileSizeBytes);
+        Objects.equals(this.fileSizeBytes, exportCsvResponse.fileSizeBytes) &&
+        Objects.equals(this.skippedCount, exportCsvResponse.skippedCount);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(listId, downloadUrl, expiresAt, rowCount, fileSizeBytes);
+    return Objects.hash(listId, jobId, status, downloadUrl, expiresAt, rowCount, fileSizeBytes, skippedCount);
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override
@@ -202,10 +341,13 @@ public class ExportCsvResponse {
     StringBuilder sb = new StringBuilder();
     sb.append("class ExportCsvResponse {\n");
     sb.append("    listId: ").append(toIndentedString(listId)).append("\n");
+    sb.append("    jobId: ").append(toIndentedString(jobId)).append("\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    downloadUrl: ").append(toIndentedString(downloadUrl)).append("\n");
     sb.append("    expiresAt: ").append(toIndentedString(expiresAt)).append("\n");
     sb.append("    rowCount: ").append(toIndentedString(rowCount)).append("\n");
     sb.append("    fileSizeBytes: ").append(toIndentedString(fileSizeBytes)).append("\n");
+    sb.append("    skippedCount: ").append(toIndentedString(skippedCount)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -227,10 +369,10 @@ public class ExportCsvResponse {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("list_id", "download_url", "expires_at", "row_count", "file_size_bytes"));
+    openapiFields = new HashSet<String>(Arrays.asList("list_id", "job_id", "status", "download_url", "expires_at", "row_count", "file_size_bytes", "skipped_count"));
 
     // a set of required properties/fields (JSON key names)
-    openapiRequiredFields = new HashSet<String>(Arrays.asList("list_id", "download_url", "expires_at", "row_count", "file_size_bytes"));
+    openapiRequiredFields = new HashSet<String>(Arrays.asList("list_id", "row_count"));
   }
 
   /**
@@ -264,10 +406,20 @@ public class ExportCsvResponse {
       if (!jsonObj.get("list_id").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `list_id` to be a primitive type in the JSON string but got `%s`", jsonObj.get("list_id").toString()));
       }
-      if (!jsonObj.get("download_url").isJsonPrimitive()) {
+      if ((jsonObj.get("job_id") != null && !jsonObj.get("job_id").isJsonNull()) && !jsonObj.get("job_id").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `job_id` to be a primitive type in the JSON string but got `%s`", jsonObj.get("job_id").toString()));
+      }
+      if ((jsonObj.get("status") != null && !jsonObj.get("status").isJsonNull()) && !jsonObj.get("status").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `status` to be a primitive type in the JSON string but got `%s`", jsonObj.get("status").toString()));
+      }
+      // validate the optional field `status`
+      if (jsonObj.get("status") != null && !jsonObj.get("status").isJsonNull()) {
+        StatusEnum.validateJsonElement(jsonObj.get("status"));
+      }
+      if ((jsonObj.get("download_url") != null && !jsonObj.get("download_url").isJsonNull()) && !jsonObj.get("download_url").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `download_url` to be a primitive type in the JSON string but got `%s`", jsonObj.get("download_url").toString()));
       }
-      if (!jsonObj.get("expires_at").isJsonPrimitive()) {
+      if ((jsonObj.get("expires_at") != null && !jsonObj.get("expires_at").isJsonNull()) && !jsonObj.get("expires_at").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `expires_at` to be a primitive type in the JSON string but got `%s`", jsonObj.get("expires_at").toString()));
       }
   }

@@ -675,9 +675,9 @@ paths:
       description: |-
         Delete a list and its lead memberships. Leads survive.
 
-        Hard delete via `delete_with_dependencies` (mirrors the portal):
-        smart/action columns, CRM-contact links, per-user state, shares,
-        raw-person stubs, and junction rows are removed; the Lead rows
+        The list is gone at once and a background job deletes its rows (mirrors
+        the portal): smart/action columns, CRM-contact links, per-user state,
+        shares, raw-person stubs, and junction rows are removed; the Lead rows
         themselves are global entities and are NOT deleted — they stay
         findable via search_people and in any other list they belong to.
 
@@ -1067,7 +1067,10 @@ paths:
         the joined Prospect + Company relations — the Lead row itself only
         carries enrichment results (email, phone, linkedin URL).
 
-        Page forward with `limit` (1–500, default 100) and the opaque `cursor`.
+        Page forward with `limit` (1–500, default 100) and the opaque `cursor`,
+        or with the response's `snapshot_id` plus an `offset`. Either way the walk
+        reads one frozen order, so rows added meanwhile cause no duplicates or
+        skips; a snapshot that has expired answers 409 `snapshot_expired`.
         The response also carries a `task_id` cohort handle for the page so a
         follow-up `add_person_enrichments` can operate on these leads without
         re-passing lead_ids. Requires the `lists:read` scope.
@@ -1101,6 +1104,24 @@ paths:
         schema:
           nullable: true
           type: string
+        style: form
+      - explode: true
+        in: query
+        name: snapshot_id
+        required: false
+        schema:
+          maxLength: 512
+          nullable: true
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          minimum: 0
+          nullable: true
+          type: integer
         style: form
       responses:
         "200":
@@ -1289,8 +1310,8 @@ paths:
                redeem quote.
             5. Bulk-insert RawPeople into the list. UUIDs are stamped
                Python-side so we can hand them to the workflow.
-            6. If dispatching: kick off `start_bulk_enrichment` with the
-               parsed prospects + raw_person_ids. The workflow's per-Lead
+            6. If dispatching: write the imported rows as a list selection and
+               kick off `start_selection_enrichment` on it. The workflow's per-Lead
                `insert_lead_to_list` activity handles prospect_count
                updates per the existing pattern; import-only path bumps
                prospect_count here directly.
@@ -1507,7 +1528,7 @@ paths:
   /api/v2/people/find:
     post:
       description: |-
-        Search people. FREE — credits are spent at enrichment / save time.
+        Search people. Free unless the org has a per-row search price.
 
         Delegates to the internal staging handler so the 5-step filter
         pipeline (location component expansion → region contains expansion
@@ -2858,13 +2879,15 @@ paths:
       description: |-
         Export a Lead List to CSV and return a time-limited signed download URL.
 
-        Streams the list's leads through a temporary spooled file, uploads the
-        result to blob storage, and responds with a SAS-signed `download_url`
-        that expires 24 hours after generation (see `expires_at`). Pass `columns`
-        to control which fields — and their order — are written, or omit it to use
-        the default column set; set `include_smart_agents=false` to skip any
-        configured smart-agent result columns. This export is free and does not
-        consume credits.
+        Starts an export job over every row of the list (import rows not yet
+        enriched come first) and waits up to 20 seconds for it. When the file is
+        ready the response carries a SAS-signed `download_url` that expires 24
+        hours after generation (see `expires_at`). A bigger list answers HTTP 202
+        with `status: running` and a `job_id`: call again with that `job_id` to
+        get the link. Pass `columns` to control which fields, and their order,
+        are written, or omit it to use the default column set; set
+        `include_smart_agents=false` to skip any configured smart-agent result
+        columns. This export is free and does not consume credits.
 
         **📖 Docs:** https://docs.cleanlist.ai/guides/exporting-data
       operationId: export_csv
@@ -2948,11 +2971,13 @@ paths:
       description: |-
         Export a Lead List as JSON rows returned inline in the response.
 
-        Returns a page of leads (default 100, max 500 per call) projected to the
-        same columns as the CSV export and wrapped in the standard response
-        envelope. Use the opaque `cursor` from each response to fetch the next
-        page; a malformed cursor returns 400 rather than silently rewinding to
-        page 0. This export is free and does not consume credits.
+        Returns a page of rows (default 100, max 500 per call) projected to the
+        same columns as the CSV export, in the same order (import rows not yet
+        enriched first, then leads), wrapped in the standard response envelope.
+        Use the opaque `cursor` from each response to fetch the next page; a
+        malformed cursor returns 400 rather than silently rewinding to page 0,
+        and a cursor whose ordering expired (15 minutes unused) returns 409.
+        This export is free and does not consume credits.
 
         **📖 Docs:** https://docs.cleanlist.ai/guides/exporting-data
       operationId: export_json
@@ -2981,6 +3006,7 @@ paths:
         name: cursor
         required: false
         schema:
+          maxLength: 1024
           nullable: true
           type: string
         style: form
@@ -3534,6 +3560,9 @@ components:
           - condition: condition
             id: id
             polarity: exclude
+        linkedinUrls:
+        - linkedinUrls
+        - linkedinUrls
         companyNamesList:
         - companyNamesList
         - companyNamesList
@@ -3896,6 +3925,13 @@ components:
           items:
             type: string
           type: array
+        linkedinUrls:
+          description: Company LinkedIn page URLs to match exactly; normalized to
+            https://www.linkedin.com/company/<slug>. Values that are not a company
+            page are dropped.
+          items:
+            type: string
+          type: array
         twitterHandle:
           default: ""
           description: Exact Twitter handle; a leading @ is kept.
@@ -4146,6 +4182,9 @@ components:
             - condition: condition
               id: id
               polarity: exclude
+          linkedinUrls:
+          - linkedinUrls
+          - linkedinUrls
           companyNamesList:
           - companyNamesList
           - companyNamesList
@@ -4503,6 +4542,12 @@ components:
           - full
           nullable: true
           type: string
+        phone_waterfall:
+          enum:
+          - standard
+          - gb
+          nullable: true
+          type: string
         quote_id:
           nullable: true
           type: string
@@ -4764,6 +4809,12 @@ components:
         quote_id:
           nullable: true
           type: string
+        phone_waterfall:
+          enum:
+          - standard
+          - gb
+          nullable: true
+          type: string
       required:
       - data_points
       - task_id
@@ -4957,6 +5008,12 @@ components:
           minItems: 1
           nullable: true
           type: array
+        phone_waterfall:
+          enum:
+          - standard
+          - gb
+          nullable: true
+          type: string
       required:
       - list_id
       - quote_id
@@ -5087,6 +5144,12 @@ components:
           title: Include Phone
           type: boolean
         quote_id:
+          nullable: true
+          type: string
+        phone_waterfall:
+          enum:
+          - standard
+          - gb
           nullable: true
           type: string
       required:
@@ -5346,6 +5409,10 @@ components:
             the selected columns. Set false to export only the base columns.
           title: Include Smart Agents
           type: boolean
+        job_id:
+          maxLength: 64
+          nullable: true
+          type: string
       required:
       - list_id
       title: ExportCsvRequest
@@ -5362,30 +5429,40 @@ components:
           description: ID of the Lead List that was exported.
           title: List Id
           type: string
+        job_id:
+          nullable: true
+          type: string
+        status:
+          default: completed
+          description: "`completed` with a `download_url`, or `running` (HTTP 202):\
+            \ call again with `job_id`."
+          enum:
+          - running
+          - completed
+          title: Status
+          type: string
         download_url:
-          description: "Time-limited, SAS-signed URL to download the generated CSV\
-            \ file. The signature (`sig`) and expiry (`exp`) query params gate access;\
-            \ the link stops working after `expires_at`."
-          title: Download Url
+          nullable: true
           type: string
         expires_at:
-          description: ISO-8601 UTC timestamp at which `download_url` expires. Generated
-            URLs are valid for 24 hours.
-          title: Expires At
+          nullable: true
           type: string
         row_count:
-          description: Number of data rows written to the CSV (excludes the header
-            row).
+          description: "Number of data rows written to the CSV (excludes the header\
+            \ row); while running, the rows being exported."
           title: Row Count
           type: integer
         file_size_bytes:
-          description: Size of the generated CSV file in bytes.
-          title: File Size Bytes
+          nullable: true
+          type: integer
+        skipped_count:
+          default: 0
+          description: "Rows of the list that changed while it was exporting (deleted,\
+            \ or merged into another row) and are not in the file. `row_count` + `skipped_count`\
+            \ is the list's row count when the export started."
+          title: Skipped Count
           type: integer
       required:
-      - download_url
-      - expires_at
-      - file_size_bytes
       - list_id
       - row_count
       title: ExportCsvResponse
@@ -5437,12 +5514,21 @@ components:
             type: object
           type: array
         total:
-          description: Total number of leads in the list (across all pages).
+          description: "Total number of rows in the list (across all pages), import\
+            \ rows not yet enriched included."
           title: Total
           type: integer
         cursor:
           nullable: true
           type: string
+        skipped:
+          default: 0
+          description: "Rows of this page's place in the ordering that left the list\
+            \ (deleted or moved) after the cursor's ordering was taken, so the page\
+            \ holds fewer rows than it covers. `total` minus the sum of `skipped`\
+            \ over every page is the number of rows returned."
+          title: Skipped
+          type: integer
       required:
       - leads
       - list_id
@@ -5761,6 +5847,9 @@ components:
           nullable: true
           type: string
         message:
+          nullable: true
+          type: string
+        snapshot_id:
           nullable: true
           type: string
         presentation:
@@ -6493,7 +6582,10 @@ components:
           type: array
         companyNameFilter:
           default: ""
-          description: "One current employer name, ANDed."
+          description: "One current employer name, or a website domain, as typed.\
+            \ With current_company_names, domains or LinkedIn URLs it is one more\
+            \ alternative (ORed); alone, a domain matches the employer's website exactly\
+            \ and a name matches by company_name_match_type."
           title: Companynamefilter
           type: string
         companyNameMatchType:
@@ -6941,6 +7033,9 @@ components:
             - condition: condition
               id: id
               polarity: exclude
+          linkedinUrls:
+          - linkedinUrls
+          - linkedinUrls
           companyNamesList:
           - companyNamesList
           - companyNamesList
@@ -7092,7 +7187,7 @@ components:
         warnings:
         - warnings
         - warnings
-        credits_charged: 5
+        credits_charged: 5.025004791520295
         agent_instructions: agent_instructions
         cohort:
           returned_count: 0
@@ -7398,8 +7493,10 @@ components:
           nullable: true
           type: string
         credits_charged:
+          description: "Credits this page cost: 0 unless the org has a per-row search\
+            \ price."
           title: Credits Charged
-          type: integer
+          type: number
         truncation_warning:
           nullable: true
           type: string

@@ -12,6 +12,16 @@
 |**entityIds** | **List&lt;String&gt;** |  |  [optional] |
 |**leadListId** | **String** |  |  [optional] |
 |**quoteId** | **String** |  |  [optional] |
+|**phoneWaterfall** | [**PhoneWaterfallEnum**](#PhoneWaterfallEnum) |  |  [optional] |
+
+
+
+## Enum: PhoneWaterfallEnum
+
+| Name | Value |
+|---- | -----|
+| STANDARD | &quot;standard&quot; |
+| GB | &quot;gb&quot; |
 
 
 
