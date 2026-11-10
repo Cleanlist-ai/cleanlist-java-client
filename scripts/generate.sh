@@ -44,6 +44,7 @@ cp "$BUILD/.openapi-generator-ignore" "$ROOT/.openapi-generator-ignore" 2>/dev/n
 chmod +x "$ROOT/gradlew"
 
 echo "==> Applying hand-authored overlay (Cleanlist convenience facade)"
-cp "$ROOT/overlay/Cleanlist.java" "$ROOT/src/main/java/ai/cleanlist/client/Cleanlist.java"
+cp "$ROOT/overlay/"*.java "$ROOT/src/main/java/ai/cleanlist/client/"
+cp "$ROOT/overlay/test/"*.java "$ROOT/src/test/java/ai/cleanlist/client/"
 
 echo "==> Done. Build with: mvn -q -DskipTests package   (or ./gradlew build)"

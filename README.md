@@ -41,6 +41,8 @@ System.out.println("created list: " + list.getListId());
   - [Smart Agents](#smart-agents-clsmartagents)
   - [Export](#export-clexport)
 - [Examples](#examples)
+- [Retries, idempotency and rate limits](#retries-idempotency-and-rate-limits)
+- [Verifying webhooks](#verifying-webhooks)
 - [Error handling](#error-handling)
 - [Pagination](#pagination)
 - [Using the generated API classes directly](#using-the-generated-api-classes-directly)
@@ -326,6 +328,43 @@ Runnable programs live in [`examples/`](examples/) (setup notes in
 | [`SmartAgent.java`](examples/SmartAgent.java) | Run a custom AI smart-agent column and read the results. | Spends |
 | [`Export.java`](examples/Export.java) | CSV (signed URL) + JSON export. | Free |
 | [`ErrorHandling.java`](examples/ErrorHandling.java) | Catching `ApiException`. | Free |
+
+## Retries, idempotency and rate limits
+
+A 429 or 5xx is retried with backoff, honoring `Retry-After` (a wait over a minute is
+returned to you instead). Three tries by default; `new Cleanlist(key, basePath, maxAttempts)`
+changes that, and `1` turns retries off. Every POST, PUT, PATCH and DELETE carries an
+`Idempotency-Key` that stays the same across its retries, so a retried write runs once.
+To set your own on a synchronous call:
+
+```java
+cl.withIdempotencyKey("order-1234", () -> cl.leadLists.createList(new CreateListRequest().name("Q3")));
+```
+
+After any call, `cl.getLastResponse()` has the rate-limit headers and the mode:
+
+```java
+ResponseMeta meta = cl.getLastResponse();
+meta.getRateLimit();          // getLimit(), getRemaining(), getReset() (unix seconds); null if absent
+meta.isIdempotentReplayed();  // true when the server replayed a stored response
+cl.getMode();                 // "test" for a clapi_test_ key's sandbox workspace, else "live"
+```
+
+`ResponseMeta.from(e.getCode(), e.getResponseHeaders())` reads the same values off an `ApiException`.
+
+## Verifying webhooks
+
+```java
+import ai.cleanlist.client.Webhooks;
+
+// rawBody: the request body bytes exactly as received, not re-serialized JSON.
+if (!Webhooks.verifySignature(rawBody, request.getHeader("Cleanlist-Signature"), secret)) {
+    response.setStatus(400);
+    return;
+}
+```
+
+Signatures older than 5 minutes are refused (the five-argument overload takes a tolerance).
 
 ## Error handling
 

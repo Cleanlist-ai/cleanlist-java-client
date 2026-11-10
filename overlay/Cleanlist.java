@@ -37,6 +37,8 @@ public class Cleanlist {
     public static final String API_KEY_ENV_VAR = "CLEANLIST_API_KEY";
 
     private final ApiClient apiClient;
+    private final RetryInterceptor retries;
+    private final String keyMode;
 
     /** Identity, credits, API keys, usage. */
     public final PublicWorkspaceApi workspace;
@@ -64,6 +66,17 @@ public class Cleanlist {
      * @param basePath API base URL (e.g. {@code http://localhost:8000} for local dev).
      */
     public Cleanlist(String accessToken, String basePath) {
+        this(accessToken, basePath, RetryInterceptor.DEFAULT_MAX_ATTEMPTS);
+    }
+
+    /**
+     * @param accessToken your Cleanlist API key. Falls back to {@code CLEANLIST_API_KEY}.
+     * @param basePath API base URL (e.g. {@code http://localhost:8000} for local dev).
+     * @param maxAttempts tries per request, the first included (default 3). 429s and 5xx are
+     *     retried with backoff, honoring {@code Retry-After}; writes carry an {@code Idempotency-Key}
+     *     that stays the same across retries. {@code 1} turns retries off.
+     */
+    public Cleanlist(String accessToken, String basePath, int maxAttempts) {
         if (accessToken == null || accessToken.isEmpty()) {
             accessToken = System.getenv(API_KEY_ENV_VAR);
         }
@@ -77,6 +90,10 @@ public class Cleanlist {
         this.apiClient.setBasePath(
                 (basePath == null || basePath.isEmpty()) ? DEFAULT_BASE_PATH : basePath);
         this.apiClient.setBearerToken(accessToken);
+        this.retries = new RetryInterceptor(maxAttempts);
+        this.apiClient.setHttpClient(
+                this.apiClient.getHttpClient().newBuilder().addInterceptor(retries).build());
+        this.keyMode = accessToken.startsWith("clapi_test_") ? "test" : "live";
 
         this.workspace = new PublicWorkspaceApi(apiClient);
         this.leadLists = new PublicLeadListsApi(apiClient);
@@ -97,5 +114,47 @@ public class Cleanlist {
     /** The underlying generated client (timeouts, interceptors, custom base path, …). */
     public ApiClient getApiClient() {
         return apiClient;
+    }
+
+    /** Rate-limit, mode and replay headers of the most recent response, or {@code null} before the first. */
+    public ResponseMeta getLastResponse() {
+        return retries.getLastResponse();
+    }
+
+    /** {@code "test"} when the server says so ({@code Cleanlist-Mode: test}), else what the key prefix implies. */
+    public String getMode() {
+        ResponseMeta last = retries.getLastResponse();
+        return last != null && last.getMode() != null ? last.getMode() : keyMode;
+    }
+
+    /** One API call, run on the calling thread. */
+    @FunctionalInterface
+    public interface ApiCall<T> {
+        T call() throws ApiException;
+    }
+
+    /**
+     * Runs one synchronous call with your own {@code Idempotency-Key} instead of a generated one:
+     * <pre>{@code
+     * cl.withIdempotencyKey("order-1234", () -> cl.leadLists.createList(request));
+     * }</pre>
+     *
+     * @param key 1 to 255 characters
+     */
+    public <T> T withIdempotencyKey(String key, ApiCall<T> call) throws ApiException {
+        if (key == null || key.isEmpty() || key.length() > 255) {
+            throw new IllegalArgumentException("An Idempotency-Key must be 1 to 255 characters.");
+        }
+        String previous = RetryInterceptor.NEXT_KEY.get();
+        RetryInterceptor.NEXT_KEY.set(key);
+        try {
+            return call.call();
+        } finally {
+            if (previous == null) {
+                RetryInterceptor.NEXT_KEY.remove();
+            } else {
+                RetryInterceptor.NEXT_KEY.set(previous);
+            }
+        }
     }
 }
