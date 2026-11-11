@@ -13,7 +13,7 @@ cd "$ROOT"
 RAW_SPEC="openapi/cleanse-api-v2.oas.json"
 GEN_SPEC="openapi/cleanse-api-v2.clean.json"
 BUILD="$ROOT/.build/java"
-PKG_VERSION="${PKG_VERSION:-4.0.2}"
+PKG_VERSION="${PKG_VERSION:-4.0.3}"
 PYTHON="${PYTHON:-python3}"
 
 REPO_URL="https://github.com/Cleanlist-ai/cleanlist-java-client"
