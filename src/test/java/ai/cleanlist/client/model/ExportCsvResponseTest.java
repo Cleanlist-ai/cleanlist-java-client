@@ -20,6 +20,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -43,6 +44,22 @@ public class ExportCsvResponseTest {
     @Test
     public void listIdTest() {
         // TODO: test listId
+    }
+
+    /**
+     * Test the property 'jobId'
+     */
+    @Test
+    public void jobIdTest() {
+        // TODO: test jobId
+    }
+
+    /**
+     * Test the property 'status'
+     */
+    @Test
+    public void statusTest() {
+        // TODO: test status
     }
 
     /**
@@ -75,6 +92,14 @@ public class ExportCsvResponseTest {
     @Test
     public void fileSizeBytesTest() {
         // TODO: test fileSizeBytes
+    }
+
+    /**
+     * Test the property 'skippedCount'
+     */
+    @Test
+    public void skippedCountTest() {
+        // TODO: test skippedCount
     }
 
 }

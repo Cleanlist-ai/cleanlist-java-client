@@ -19,6 +19,7 @@
 |**enrichmentType** | [**EnrichmentTypeEnum**](#EnrichmentTypeEnum) |  |  [optional] |
 |**includePhone** | **Boolean** | Legacy scope toggle, kept for back-compat. false → &#39;partial&#39;, true → &#39;phone_only&#39;. Ignored when enrichment_type is set. |  [optional] |
 |**quoteId** | **String** |  |  [optional] |
+|**phoneWaterfall** | [**PhoneWaterfallEnum**](#PhoneWaterfallEnum) |  |  [optional] |
 
 
 
@@ -29,6 +30,15 @@
 | PARTIAL | &quot;partial&quot; |
 | PHONE_ONLY | &quot;phone_only&quot; |
 | FULL | &quot;full&quot; |
+
+
+
+## Enum: PhoneWaterfallEnum
+
+| Name | Value |
+|---- | -----|
+| STANDARD | &quot;standard&quot; |
+| GB | &quot;gb&quot; |
 
 
 

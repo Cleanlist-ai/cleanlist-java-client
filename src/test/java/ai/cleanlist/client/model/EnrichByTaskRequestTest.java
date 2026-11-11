@@ -80,4 +80,12 @@ public class EnrichByTaskRequestTest {
         // TODO: test quoteId
     }
 
+    /**
+     * Test the property 'phoneWaterfall'
+     */
+    @Test
+    public void phoneWaterfallTest() {
+        // TODO: test phoneWaterfall
+    }
+
 }

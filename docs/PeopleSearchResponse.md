@@ -24,7 +24,7 @@
 |**results** | [**List&lt;PeopleSearchResultRow&gt;**](PeopleSearchResultRow.md) |  |  |
 |**total** | **Integer** |  |  |
 |**cursor** | **String** |  |  [optional] |
-|**creditsCharged** | **Integer** |  |  |
+|**creditsCharged** | **BigDecimal** | Credits this page cost: 0 unless the org has a per-row search price. |  |
 |**truncationWarning** | **String** |  |  [optional] |
 
 

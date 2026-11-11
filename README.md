@@ -207,7 +207,7 @@ facade as `cl.workspace`, `cl.leadLists`, `cl.peopleFinder`, `cl.enrichment`,
 | `getList(String listId)` | `GET /api/v2/lead-lists/{list_id}` | Fetch one list. |
 | `updateList(String listId, PublicLeadListUpdate)` | `PATCH …/{list_id}` | Rename / move / edit. |
 | `deleteList(String listId)` | `DELETE …/{list_id}` | Delete a list. |
-| `listLeadsInList(String listId, Integer limit, String cursor)` | `GET …/{list_id}/leads` | Page through leads. |
+| `listLeadsInList(String listId, Integer limit, String cursor, String snapshotId, Integer offset)` | `GET …/{list_id}/leads` | Page through leads. |
 | `addLeadsToList(String listId, Body)` | `POST …/{list_id}/leads` | Add leads by id or cohort. |
 | `removeLeadsFromList(String listId, RemoveLeadsRequest)` | `DELETE …/{list_id}/leads` | Remove up to 100. |
 | `csvImport(String listId, CsvImportRequest)` | `POST …/{list_id}/csv-import` | Import from base64 CSV. |
@@ -219,7 +219,7 @@ import java.util.Arrays;
 
 ListDetailResponse list = cl.leadLists.createList(new CreateListRequest().name("Prospects — West"));
 
-LeadsPageResponse page = cl.leadLists.listLeadsInList(list.getListId(), 100, null);
+LeadsPageResponse page = cl.leadLists.listLeadsInList(list.getListId(), 100, null, null, null);
 
 // `Body` is a one-of: wrap AddByLeadIds OR AddByCohort (a search task_id)
 cl.leadLists.addLeadsToList(list.getListId(),
@@ -353,7 +353,7 @@ List endpoints return a page plus an opaque `cursor`. Pass it back for the next 
 ```java
 String cursor = null;
 do {
-    LeadsPageResponse page = cl.leadLists.listLeadsInList(list.getListId(), 500, cursor);
+    LeadsPageResponse page = cl.leadLists.listLeadsInList(list.getListId(), 500, cursor, null, null);
     page.getLeads().forEach(lead -> { /* ... */ });
     cursor = page.getCursor();
 } while (cursor != null && !cursor.isEmpty());

@@ -84,6 +84,14 @@ public class LeadsPageResponseTest {
     }
 
     /**
+     * Test the property 'snapshotId'
+     */
+    @Test
+    public void snapshotIdTest() {
+        // TODO: test snapshotId
+    }
+
+    /**
      * Test the property 'presentation'
      */
     @Test

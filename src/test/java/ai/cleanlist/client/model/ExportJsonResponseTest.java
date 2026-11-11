@@ -112,4 +112,12 @@ public class ExportJsonResponseTest {
         // TODO: test cursor
     }
 
+    /**
+     * Test the property 'skipped'
+     */
+    @Test
+    public void skippedTest() {
+        // TODO: test skipped
+    }
+
 }

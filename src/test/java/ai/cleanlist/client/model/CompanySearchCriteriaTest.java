@@ -434,6 +434,14 @@ public class CompanySearchCriteriaTest {
     }
 
     /**
+     * Test the property 'linkedinUrls'
+     */
+    @Test
+    public void linkedinUrlsTest() {
+        // TODO: test linkedinUrls
+    }
+
+    /**
      * Test the property 'twitterHandle'
      */
     @Test

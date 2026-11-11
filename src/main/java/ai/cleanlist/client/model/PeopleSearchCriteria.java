@@ -1290,7 +1290,7 @@ public class PeopleSearchCriteria {
   }
 
   /**
-   * One current employer name, ANDed.
+   * One current employer name, or a website domain, as typed. With current_company_names, domains or LinkedIn URLs it is one more alternative (ORed); alone, a domain matches the employer&#39;s website exactly and a name matches by company_name_match_type.
    * @return companyNameFilter
    */
   @javax.annotation.Nullable

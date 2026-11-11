@@ -83,6 +83,11 @@ public class LeadsPageResponse {
   @javax.annotation.Nullable
   private String message;
 
+  public static final String SERIALIZED_NAME_SNAPSHOT_ID = "snapshot_id";
+  @SerializedName(SERIALIZED_NAME_SNAPSHOT_ID)
+  @javax.annotation.Nullable
+  private String snapshotId;
+
   public static final String SERIALIZED_NAME_PRESENTATION = "presentation";
   @SerializedName(SERIALIZED_NAME_PRESENTATION)
   @javax.annotation.Nullable
@@ -218,6 +223,25 @@ public class LeadsPageResponse {
 
   public void setMessage(@javax.annotation.Nullable String message) {
     this.message = message;
+  }
+
+
+  public LeadsPageResponse snapshotId(@javax.annotation.Nullable String snapshotId) {
+    this.snapshotId = snapshotId;
+    return this;
+  }
+
+  /**
+   * Get snapshotId
+   * @return snapshotId
+   */
+  @javax.annotation.Nullable
+  public String getSnapshotId() {
+    return snapshotId;
+  }
+
+  public void setSnapshotId(@javax.annotation.Nullable String snapshotId) {
+    this.snapshotId = snapshotId;
   }
 
 
@@ -404,6 +428,7 @@ public class LeadsPageResponse {
         Objects.equals(this.agentInstructions, leadsPageResponse.agentInstructions) &&
         Objects.equals(this.usage, leadsPageResponse.usage) &&
         Objects.equals(this.message, leadsPageResponse.message) &&
+        Objects.equals(this.snapshotId, leadsPageResponse.snapshotId) &&
         Objects.equals(this.presentation, leadsPageResponse.presentation) &&
         Objects.equals(this.pendingImports, leadsPageResponse.pendingImports) &&
         Objects.equals(this.pendingImportTotal, leadsPageResponse.pendingImportTotal) &&
@@ -420,7 +445,7 @@ public class LeadsPageResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(taskId, timestampMs, agentInstructions, usage, message, presentation, pendingImports, pendingImportTotal, pendingImportCursor, listId, leads, total, cursor);
+    return Objects.hash(taskId, timestampMs, agentInstructions, usage, message, snapshotId, presentation, pendingImports, pendingImportTotal, pendingImportCursor, listId, leads, total, cursor);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -439,6 +464,7 @@ public class LeadsPageResponse {
     sb.append("    agentInstructions: ").append(toIndentedString(agentInstructions)).append("\n");
     sb.append("    usage: ").append(toIndentedString(usage)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("    snapshotId: ").append(toIndentedString(snapshotId)).append("\n");
     sb.append("    presentation: ").append(toIndentedString(presentation)).append("\n");
     sb.append("    pendingImports: ").append(toIndentedString(pendingImports)).append("\n");
     sb.append("    pendingImportTotal: ").append(toIndentedString(pendingImportTotal)).append("\n");
@@ -468,7 +494,7 @@ public class LeadsPageResponse {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("task_id", "timestamp_ms", "agent_instructions", "usage", "message", "presentation", "pending_imports", "pending_import_total", "pending_import_cursor", "list_id", "leads", "total", "cursor"));
+    openapiFields = new HashSet<String>(Arrays.asList("task_id", "timestamp_ms", "agent_instructions", "usage", "message", "snapshot_id", "presentation", "pending_imports", "pending_import_total", "pending_import_cursor", "list_id", "leads", "total", "cursor"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("list_id", "leads", "total"));
@@ -513,6 +539,9 @@ public class LeadsPageResponse {
       }
       if ((jsonObj.get("message") != null && !jsonObj.get("message").isJsonNull()) && !jsonObj.get("message").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `message` to be a primitive type in the JSON string but got `%s`", jsonObj.get("message").toString()));
+      }
+      if ((jsonObj.get("snapshot_id") != null && !jsonObj.get("snapshot_id").isJsonNull()) && !jsonObj.get("snapshot_id").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `snapshot_id` to be a primitive type in the JSON string but got `%s`", jsonObj.get("snapshot_id").toString()));
       }
       // validate the optional field `presentation`
       if (jsonObj.get("presentation") != null && !jsonObj.get("presentation").isJsonNull()) {
