@@ -57,6 +57,7 @@ The company-side filter blob, one field per ``CompanySearchFilters`` key.
 |**stockSymbols** | **List&lt;String&gt;** | Stock ticker symbols to include. |  [optional] |
 |**domainsList** | **List&lt;String&gt;** | Exact company domains to match; URLs are reduced to hosts. |  [optional] |
 |**companyNamesList** | **List&lt;String&gt;** | Exact, case-sensitive company names to match. |  [optional] |
+|**linkedinUrls** | **List&lt;String&gt;** | Company LinkedIn page URLs to match exactly; normalized to https://www.linkedin.com/company/&lt;slug&gt;. Values that are not a company page are dropped. |  [optional] |
 |**twitterHandle** | **String** | Exact Twitter handle; a leading @ is kept. |  [optional] |
 |**descriptionKeyword** | **String** | Keyword matched against the LinkedIn company description. |  [optional] |
 |**updatedAfter** | **String** | Crustdata updated_at floor, sent verbatim. |  [optional] |

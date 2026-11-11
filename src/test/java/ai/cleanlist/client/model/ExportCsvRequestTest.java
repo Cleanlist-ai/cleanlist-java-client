@@ -64,4 +64,12 @@ public class ExportCsvRequestTest {
         // TODO: test includeSmartAgents
     }
 
+    /**
+     * Test the property 'jobId'
+     */
+    @Test
+    public void jobIdTest() {
+        // TODO: test jobId
+    }
+
 }

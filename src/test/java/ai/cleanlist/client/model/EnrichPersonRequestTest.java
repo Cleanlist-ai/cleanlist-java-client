@@ -135,4 +135,12 @@ public class EnrichPersonRequestTest {
         // TODO: test quoteId
     }
 
+    /**
+     * Test the property 'phoneWaterfall'
+     */
+    @Test
+    public void phoneWaterfallTest() {
+        // TODO: test phoneWaterfall
+    }
+
 }

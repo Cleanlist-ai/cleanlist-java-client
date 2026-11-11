@@ -72,4 +72,12 @@ public class EnrichListRequestTest {
         // TODO: test leadIds
     }
 
+    /**
+     * Test the property 'phoneWaterfall'
+     */
+    @Test
+    public void phoneWaterfallTest() {
+        // TODO: test phoneWaterfall
+    }
+
 }

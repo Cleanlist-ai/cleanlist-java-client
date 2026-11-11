@@ -129,6 +129,63 @@ public class EnrichListRequest {
   @javax.annotation.Nullable
   private List<String> leadIds;
 
+  /**
+   * Gets or Sets phoneWaterfall
+   */
+  @JsonAdapter(PhoneWaterfallEnum.Adapter.class)
+  public enum PhoneWaterfallEnum {
+    STANDARD("standard"),
+    
+    GB("gb");
+
+    private String value;
+
+    PhoneWaterfallEnum(String value) {
+      this.value = value;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    public static PhoneWaterfallEnum fromValue(String value) {
+      for (PhoneWaterfallEnum b : PhoneWaterfallEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    public static class Adapter extends TypeAdapter<PhoneWaterfallEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final PhoneWaterfallEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public PhoneWaterfallEnum read(final JsonReader jsonReader) throws IOException {
+        String value =  jsonReader.nextString();
+        return PhoneWaterfallEnum.fromValue(value);
+      }
+    }
+
+    public static void validateJsonElement(JsonElement jsonElement) throws IOException {
+      String value = jsonElement.getAsString();
+      PhoneWaterfallEnum.fromValue(value);
+    }
+  }
+
+  public static final String SERIALIZED_NAME_PHONE_WATERFALL = "phone_waterfall";
+  @SerializedName(SERIALIZED_NAME_PHONE_WATERFALL)
+  @javax.annotation.Nullable
+  private PhoneWaterfallEnum phoneWaterfall;
+
   public EnrichListRequest() {
   }
 
@@ -216,6 +273,25 @@ public class EnrichListRequest {
   }
 
 
+  public EnrichListRequest phoneWaterfall(@javax.annotation.Nullable PhoneWaterfallEnum phoneWaterfall) {
+    this.phoneWaterfall = phoneWaterfall;
+    return this;
+  }
+
+  /**
+   * Get phoneWaterfall
+   * @return phoneWaterfall
+   */
+  @javax.annotation.Nullable
+  public PhoneWaterfallEnum getPhoneWaterfall() {
+    return phoneWaterfall;
+  }
+
+  public void setPhoneWaterfall(@javax.annotation.Nullable PhoneWaterfallEnum phoneWaterfall) {
+    this.phoneWaterfall = phoneWaterfall;
+  }
+
+
 
   @Override
   public boolean equals(Object o) {
@@ -229,7 +305,8 @@ public class EnrichListRequest {
     return Objects.equals(this.listId, enrichListRequest.listId) &&
         Objects.equals(this.scope, enrichListRequest.scope) &&
         Objects.equals(this.quoteId, enrichListRequest.quoteId) &&
-        Objects.equals(this.leadIds, enrichListRequest.leadIds);
+        Objects.equals(this.leadIds, enrichListRequest.leadIds) &&
+        Objects.equals(this.phoneWaterfall, enrichListRequest.phoneWaterfall);
   }
 
   private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
@@ -238,7 +315,7 @@ public class EnrichListRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(listId, scope, quoteId, leadIds);
+    return Objects.hash(listId, scope, quoteId, leadIds, phoneWaterfall);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -256,6 +333,7 @@ public class EnrichListRequest {
     sb.append("    scope: ").append(toIndentedString(scope)).append("\n");
     sb.append("    quoteId: ").append(toIndentedString(quoteId)).append("\n");
     sb.append("    leadIds: ").append(toIndentedString(leadIds)).append("\n");
+    sb.append("    phoneWaterfall: ").append(toIndentedString(phoneWaterfall)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -277,7 +355,7 @@ public class EnrichListRequest {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("list_id", "scope", "quote_id", "lead_ids"));
+    openapiFields = new HashSet<String>(Arrays.asList("list_id", "scope", "quote_id", "lead_ids", "phone_waterfall"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("list_id", "quote_id"));
@@ -327,6 +405,13 @@ public class EnrichListRequest {
       // ensure the optional json data is an array if present
       if (jsonObj.get("lead_ids") != null && !jsonObj.get("lead_ids").isJsonNull() && !jsonObj.get("lead_ids").isJsonArray()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `lead_ids` to be an array in the JSON string but got `%s`", jsonObj.get("lead_ids").toString()));
+      }
+      if ((jsonObj.get("phone_waterfall") != null && !jsonObj.get("phone_waterfall").isJsonNull()) && !jsonObj.get("phone_waterfall").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `phone_waterfall` to be a primitive type in the JSON string but got `%s`", jsonObj.get("phone_waterfall").toString()));
+      }
+      // validate the optional field `phone_waterfall`
+      if (jsonObj.get("phone_waterfall") != null && !jsonObj.get("phone_waterfall").isJsonNull()) {
+        PhoneWaterfallEnum.validateJsonElement(jsonObj.get("phone_waterfall"));
       }
   }
 

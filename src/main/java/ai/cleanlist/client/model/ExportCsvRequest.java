@@ -70,6 +70,11 @@ public class ExportCsvRequest {
   @javax.annotation.Nullable
   private Boolean includeSmartAgents = true;
 
+  public static final String SERIALIZED_NAME_JOB_ID = "job_id";
+  @SerializedName(SERIALIZED_NAME_JOB_ID)
+  @javax.annotation.Nullable
+  private String jobId;
+
   public ExportCsvRequest() {
   }
 
@@ -137,6 +142,25 @@ public class ExportCsvRequest {
     this.includeSmartAgents = includeSmartAgents;
   }
 
+
+  public ExportCsvRequest jobId(@javax.annotation.Nullable String jobId) {
+    this.jobId = jobId;
+    return this;
+  }
+
+  /**
+   * Get jobId
+   * @return jobId
+   */
+  @javax.annotation.Nullable
+  public String getJobId() {
+    return jobId;
+  }
+
+  public void setJobId(@javax.annotation.Nullable String jobId) {
+    this.jobId = jobId;
+  }
+
   /**
    * A container for additional, undeclared properties.
    * This is a holder for any undeclared properties as specified with
@@ -194,7 +218,8 @@ public class ExportCsvRequest {
     ExportCsvRequest exportCsvRequest = (ExportCsvRequest) o;
     return Objects.equals(this.listId, exportCsvRequest.listId) &&
         Objects.equals(this.columns, exportCsvRequest.columns) &&
-        Objects.equals(this.includeSmartAgents, exportCsvRequest.includeSmartAgents)&&
+        Objects.equals(this.includeSmartAgents, exportCsvRequest.includeSmartAgents) &&
+        Objects.equals(this.jobId, exportCsvRequest.jobId)&&
         Objects.equals(this.additionalProperties, exportCsvRequest.additionalProperties);
   }
 
@@ -204,7 +229,7 @@ public class ExportCsvRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(listId, columns, includeSmartAgents, additionalProperties);
+    return Objects.hash(listId, columns, includeSmartAgents, jobId, additionalProperties);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -221,6 +246,7 @@ public class ExportCsvRequest {
     sb.append("    listId: ").append(toIndentedString(listId)).append("\n");
     sb.append("    columns: ").append(toIndentedString(columns)).append("\n");
     sb.append("    includeSmartAgents: ").append(toIndentedString(includeSmartAgents)).append("\n");
+    sb.append("    jobId: ").append(toIndentedString(jobId)).append("\n");
     sb.append("    additionalProperties: ").append(toIndentedString(additionalProperties)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -243,7 +269,7 @@ public class ExportCsvRequest {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("list_id", "columns", "include_smart_agents"));
+    openapiFields = new HashSet<String>(Arrays.asList("list_id", "columns", "include_smart_agents", "job_id"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("list_id"));
@@ -275,6 +301,9 @@ public class ExportCsvRequest {
       // ensure the optional json data is an array if present
       if (jsonObj.get("columns") != null && !jsonObj.get("columns").isJsonNull() && !jsonObj.get("columns").isJsonArray()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `columns` to be an array in the JSON string but got `%s`", jsonObj.get("columns").toString()));
+      }
+      if ((jsonObj.get("job_id") != null && !jsonObj.get("job_id").isJsonNull()) && !jsonObj.get("job_id").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `job_id` to be a primitive type in the JSON string but got `%s`", jsonObj.get("job_id").toString()));
       }
   }
 

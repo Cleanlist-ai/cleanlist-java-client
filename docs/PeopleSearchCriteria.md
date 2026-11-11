@@ -35,7 +35,7 @@
 |**schoolNames** | **List&lt;String&gt;** | Institution names, matched exactly. |  [optional] |
 |**fieldsOfStudy** | **List&lt;String&gt;** | Fields of study, matched exactly. |  [optional] |
 |**certificationKeywords** | **List&lt;String&gt;** | Certification names, matched exactly. |  [optional] |
-|**companyNameFilter** | **String** | One current employer name, ANDed. |  [optional] |
+|**companyNameFilter** | **String** | One current employer name, or a website domain, as typed. With current_company_names, domains or LinkedIn URLs it is one more alternative (ORed); alone, a domain matches the employer&#39;s website exactly and a name matches by company_name_match_type. |  [optional] |
 |**companyNameMatchType** | [**CompanyNameMatchTypeEnum**](#CompanyNameMatchTypeEnum) | How employer NAMES match — governs both company_name_filter and current_company_names: contains (substring), exact, or similar. Domains and LinkedIn URLs are always exact. |  [optional] |
 |**firstName** | **String** | First name, exact. |  [optional] |
 |**lastName** | **String** | Last name, exact. |  [optional] |

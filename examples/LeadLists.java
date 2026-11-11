@@ -35,7 +35,7 @@ public class LeadLists {
         int total = 0;
         String cursor = null;
         do {
-            LeadsPageResponse page = cl.leadLists.listLeadsInList(list.getListId(), 500, cursor);
+            LeadsPageResponse page = cl.leadLists.listLeadsInList(list.getListId(), 500, cursor, null, null);
             total += page.getLeads().size();
             cursor = page.getCursor();
         } while (cursor != null && !cursor.isEmpty());

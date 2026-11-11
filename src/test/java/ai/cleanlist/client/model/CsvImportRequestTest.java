@@ -73,6 +73,14 @@ public class CsvImportRequestTest {
     }
 
     /**
+     * Test the property 'phoneWaterfall'
+     */
+    @Test
+    public void phoneWaterfallTest() {
+        // TODO: test phoneWaterfall
+    }
+
+    /**
      * Test the property 'quoteId'
      */
     @Test
