@@ -27,7 +27,10 @@
 |**enrichmentType** | **String** |  |  [optional] |
 |**taskId** | **String** |  |  [optional] |
 |**dataPoints** | **List&lt;String&gt;** |  |  [optional] |
+|**fields** | **List&lt;String&gt;** |  |  [optional] |
 |**entityIds** | **List&lt;String&gt;** |  |  [optional] |
+|**agentId** | **String** |  |  [optional] |
+|**playbookId** | **String** |  |  [optional] |
 |**extra** | **Object** |  |  [optional] |
 
 

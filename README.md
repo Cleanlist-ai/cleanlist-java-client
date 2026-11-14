@@ -41,6 +41,8 @@ System.out.println("created list: " + list.getListId());
   - [Smart Agents](#smart-agents-clsmartagents)
   - [Export](#export-clexport)
 - [Examples](#examples)
+- [Retries, idempotency and rate limits](#retries-idempotency-and-rate-limits)
+- [Verifying webhooks](#verifying-webhooks)
 - [Error handling](#error-handling)
 - [Pagination](#pagination)
 - [Using the generated API classes directly](#using-the-generated-api-classes-directly)
@@ -184,9 +186,11 @@ System.out.printf("charged=%d refunded=%d%n", status.getCreditsCharged(), status
 
 ## Endpoint reference
 
-The v2 surface is 26 operations across six resource groups, exposed on the `Cleanlist`
+The v2 surface is 73 operations across 14 resource groups, exposed on the `Cleanlist`
 facade as `cl.workspace`, `cl.leadLists`, `cl.peopleFinder`, `cl.enrichment`,
-`cl.smartAgents`, and `cl.export`. Field-by-field model docs live in [`docs/`](docs/).
+`cl.smartAgents`, `cl.export`, and the groups under
+[More resource groups](#more-resource-groups). Field-by-field model docs live in
+[`docs/`](docs/).
 
 ### Workspace (`cl.workspace`)
 
@@ -310,6 +314,24 @@ ExportJsonResponse data = cl.export.exportJson(list.getListId(), 500, null, null
 data.getLeads().forEach(System.out::println);
 ```
 
+### More resource groups
+
+Each has a page in [`docs/`](docs/) with every method and model.
+
+| Facade field | Covers | Docs |
+| ------------ | ------ | ---- |
+| `cl.actions` | Every action this key may use, run by name (`commit: true` to go live) and card confirms. | [`PublicActionsApi.md`](docs/PublicActionsApi.md) |
+| `cl.gtmAgents` | GTM agents: create, read, turn on or off, start live runs, read runs and records. | [`PublicGtmAgentsApi.md`](docs/PublicGtmAgentsApi.md) |
+| `cl.plays` | Plays: list, run, read run events. | [`PublicPlaysApi.md`](docs/PublicPlaysApi.md) |
+| `cl.gtmTasks` | Agent tasks and the updates feed. | [`PublicGtmTasksApi.md`](docs/PublicGtmTasksApi.md) |
+| `cl.inbox` | Inbox threads: list, read, update, reply. | [`PublicInboxApi.md`](docs/PublicInboxApi.md) |
+| `cl.signals` | Job postings, job changes, LinkedIn posts and engagers, tech adoption, company signals. | [`PublicSignalsApi.md`](docs/PublicSignalsApi.md) |
+| `cl.accountsData` | Buying committee, org structure, meetings. | [`PublicAccountsDataApi.md`](docs/PublicAccountsDataApi.md) |
+| `cl.webhooks` | Webhook subscriptions and their deliveries. | [`PublicWebhooksApi.md`](docs/PublicWebhooksApi.md) |
+
+Batch lookups (`batchPeopleLookup`, `batchCompaniesLookup`) are on `cl.enrichment`, and the
+request log (`listRequestLogs`) is on `cl.workspace`.
+
 ## Examples
 
 Runnable programs live in [`examples/`](examples/) (setup notes in
@@ -326,6 +348,47 @@ Runnable programs live in [`examples/`](examples/) (setup notes in
 | [`SmartAgent.java`](examples/SmartAgent.java) | Run a custom AI smart-agent column and read the results. | Spends |
 | [`Export.java`](examples/Export.java) | CSV (signed URL) + JSON export. | Free |
 | [`ErrorHandling.java`](examples/ErrorHandling.java) | Catching `ApiException`. | Free |
+
+## Retries, idempotency and rate limits
+
+GET, HEAD and OPTIONS are retried on network errors, 429 and 5xx, with backoff that honors
+`Retry-After` (a wait over a minute is returned to you instead). POST, PUT, PATCH and DELETE
+are retried only on a 429, a 503 `idempotency_unavailable`, or a network error with no
+response when the request carries an `Idempotency-Key`, because any other 5xx may mean the
+write already ran. `POST /api/v2/actions/confirm` and inbox replies are never retried.
+
+Three tries by default; `new Cleanlist(key, basePath, maxAttempts)` changes that, and `1` turns
+retries off. Every POST, PUT, PATCH and DELETE carries an `Idempotency-Key` that stays the same
+across its retries. To set your own on a synchronous call:
+
+```java
+cl.withIdempotencyKey("order-1234", () -> cl.leadLists.createList(new CreateListRequest().name("Q3")));
+```
+
+After any call, `cl.getLastResponse()` has the rate-limit headers and the mode:
+
+```java
+ResponseMeta meta = cl.getLastResponse();
+meta.getRateLimit();          // getLimit(), getRemaining(), getReset() (unix seconds); null if absent
+meta.isIdempotentReplayed();  // true when the server replayed a stored response
+cl.getMode();                 // "test" for a clapi_test_ key's sandbox workspace, else "live"
+```
+
+`ResponseMeta.from(e.getCode(), e.getResponseHeaders())` reads the same values off an `ApiException`.
+
+## Verifying webhooks
+
+```java
+import ai.cleanlist.client.Webhooks;
+
+// rawBody: the request body bytes exactly as received, not re-serialized JSON.
+if (!Webhooks.verifySignature(rawBody, request.getHeader("Cleanlist-Signature"), secret)) {
+    response.setStatus(400);
+    return;
+}
+```
+
+Signatures older than 5 minutes are refused (the five-argument overload takes a tolerance).
 
 ## Error handling
 
