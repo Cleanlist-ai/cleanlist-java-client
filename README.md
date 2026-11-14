@@ -351,13 +351,15 @@ Runnable programs live in [`examples/`](examples/) (setup notes in
 
 ## Retries, idempotency and rate limits
 
-A 429, a 5xx or a dropped connection is retried with backoff, honoring `Retry-After` (a wait
-over a minute is returned to you instead). Three tries by default;
-`new Cleanlist(key, basePath, maxAttempts)` changes that, and `1` turns retries off. Every POST,
-PUT, PATCH and DELETE carries an `Idempotency-Key` that stays the same across its retries, so a
-retried write runs once. A 409 `idempotency_in_progress` is retried with the same key, which
-returns the first request's stored result.
-To set your own on a synchronous call:
+GET, HEAD and OPTIONS are retried on network errors, 429 and 5xx, with backoff that honors
+`Retry-After` (a wait over a minute is returned to you instead). POST, PUT, PATCH and DELETE
+are retried only on a 429, a 503 `idempotency_unavailable`, or a network error with no
+response when the request carries an `Idempotency-Key`, because any other 5xx may mean the
+write already ran. `POST /api/v2/actions/confirm` and inbox replies are never retried.
+
+Three tries by default; `new Cleanlist(key, basePath, maxAttempts)` changes that, and `1` turns
+retries off. Every POST, PUT, PATCH and DELETE carries an `Idempotency-Key` that stays the same
+across its retries. To set your own on a synchronous call:
 
 ```java
 cl.withIdempotencyKey("order-1234", () -> cl.leadLists.createList(new CreateListRequest().name("Q3")));

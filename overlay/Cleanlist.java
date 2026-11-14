@@ -116,8 +116,11 @@ public class Cleanlist {
                 (basePath == null || basePath.isEmpty()) ? DEFAULT_BASE_PATH : basePath);
         this.apiClient.setBearerToken(accessToken);
         this.retries = new RetryInterceptor(maxAttempts);
-        this.apiClient.setHttpClient(
-                this.apiClient.getHttpClient().newBuilder().addInterceptor(retries).build());
+        // OkHttp's own reconnect can resend a write after a dropped connection; RetryInterceptor decides that instead.
+        this.apiClient.setHttpClient(this.apiClient.getHttpClient().newBuilder()
+                .retryOnConnectionFailure(false)
+                .addInterceptor(retries)
+                .build());
         this.keyMode = accessToken.startsWith("clapi_test_") ? "test" : "live";
 
         this.workspace = new PublicWorkspaceApi(apiClient);

@@ -1,6 +1,7 @@
 package ai.cleanlist.client;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -8,12 +9,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import ai.cleanlist.client.model.ActionCall;
+import ai.cleanlist.client.model.ConfirmCall;
 import ai.cleanlist.client.model.CreateListRequest;
 import ai.cleanlist.client.model.ListDetailResponse;
+import ai.cleanlist.client.model.ReplyBody;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
@@ -26,8 +30,7 @@ class CleanlistRetryTest {
 
     private static final String LIST =
             "{\"list_id\":\"l1\",\"name\":\"Q3\",\"lead_count\":0,\"enriched_count\":0}";
-    private static final String ACTION_RESULT =
-            "{\"action\":\"lists.get\",\"session_id\":\"00000000-0000-0000-0000-000000000001\",\"kind\":\"result\"}";
+    private static final String UNAVAILABLE = "{\"error\":{\"code\":\"idempotency_unavailable\"}}";
 
     /** Answers from a script instead of the network and records every request. */
     static final class Fake implements Interceptor {
@@ -70,7 +73,7 @@ class CleanlistRetryTest {
         Cleanlist cl = new Cleanlist("clapi_live_abc", "https://x");
         Fake fake = install(cl,
                 new String[] {"429", "{}", "Retry-After", "0"},
-                new String[] {"503", "{}", "Retry-After", "0"},
+                new String[] {"503", UNAVAILABLE, "Retry-After", "0"},
                 new String[] {"200", LIST, "X-RateLimit-Limit", "600", "X-RateLimit-Remaining", "599",
                     "X-RateLimit-Reset", "1762790400"});
         ListDetailResponse list = cl.leadLists.createList(new CreateListRequest().name("Q3"));
@@ -165,22 +168,85 @@ class CleanlistRetryTest {
     }
 
     @Test
-    void inProgressConflictRetriesWithTheSameKey() throws Exception {
+    void a500Or502OnAPostIsNotRetried() {
+        for (String status : new String[] {"500", "502"}) {
+            Cleanlist cl = new Cleanlist("clapi_live_abc", "https://x");
+            Fake fake = install(cl, new String[] {status, "{}"}, new String[] {"200", LIST});
+            ApiException err = assertThrows(ApiException.class,
+                    () -> cl.leadLists.createList(new CreateListRequest().name("Q3")));
+            assertEquals(Integer.parseInt(status), err.getCode());
+            assertEquals(1, fake.requests.size());
+        }
+    }
+
+    @Test
+    void a503IdempotencyUnavailableOnAPostIsRetriedWithTheSameKey() throws Exception {
         Cleanlist cl = new Cleanlist("clapi_live_abc", "https://x");
-        Fake fake = install(cl,
-                new String[] {"409", "{\"error\":{\"code\":\"idempotency_in_progress\"}}", "Retry-After", "0"},
-                new String[] {"200", ACTION_RESULT, "Idempotent-Replayed", "true"});
-        assertEquals("lists.get",
-                cl.withIdempotencyKey("run-7", () -> cl.actions.callAction("lists.get", new ActionCall()))
-                        .getAction());
+        Fake fake = install(cl, new String[] {"503", UNAVAILABLE}, new String[] {"200", LIST});
+        cl.withIdempotencyKey("run-7", () -> cl.leadLists.createList(new CreateListRequest().name("Q3")));
         assertEquals(2, fake.requests.size());
         assertEquals("run-7", fake.requests.get(0).header("Idempotency-Key"));
         assertEquals("run-7", fake.requests.get(1).header("Idempotency-Key"));
-        assertTrue(cl.getLastResponse().isIdempotentReplayed());
 
-        Cleanlist plain = new Cleanlist("clapi_live_abc", "https://x");
-        Fake conflict = install(plain, new String[] {"409", "{}"});
-        assertThrows(ApiException.class, () -> plain.actions.callAction("lists.get", new ActionCall()));
+        Cleanlist bare = new Cleanlist("clapi_live_abc", "https://x");
+        Fake other = install(bare, new String[] {"503", "{\"error\":{\"code\":\"service_unavailable\"}}"});
+        assertThrows(ApiException.class, () -> bare.leadLists.createList(new CreateListRequest().name("Q3")));
+        assertEquals(1, other.requests.size());
+    }
+
+    @Test
+    void a429OnAPostIsRetried() throws Exception {
+        Cleanlist cl = new Cleanlist("clapi_live_abc", "https://x");
+        Fake fake = install(cl, new String[] {"429", "{}"}, new String[] {"200", LIST});
+        assertEquals("l1", cl.leadLists.createList(new CreateListRequest().name("Q3")).getListId());
+        assertEquals(2, fake.requests.size());
+    }
+
+    @Test
+    void aGet500IsStillRetried() throws Exception {
+        Cleanlist cl = new Cleanlist("clapi_live_abc", "https://x");
+        Fake fake = install(cl, new String[] {"500", "{}"}, new String[] {"200", "[]"});
+        assertEquals(0, cl.gtmAgents.listGtmAgents().size());
+        assertEquals(2, fake.requests.size());
+    }
+
+    @Test
+    void inboxReplyIsNeverRetried() {
+        for (String[] first : new String[][] {
+            {"502", "{\"error\":{\"code\":\"send_unconfirmed\"}}"}, {"429", "{}"}, {"503", UNAVAILABLE}, {"IO", ""}}) {
+            Cleanlist cl = new Cleanlist("clapi_live_abc", "https://x");
+            Fake fake = install(cl, first, new String[] {"200", "{}"});
+            assertThrows(ApiException.class,
+                    () -> cl.inbox.replyInInboxThread(UUID.randomUUID(), new ReplyBody().body("hi")));
+            assertEquals(1, fake.requests.size(), first[0]);
+            assertTrue(fake.requests.get(0).url().encodedPath().endsWith("/reply"));
+        }
+    }
+
+    @Test
+    void confirmIsNeverRetried() {
+        for (String[] first : new String[][] {{"500", "{}"}, {"429", "{}"}, {"503", UNAVAILABLE}, {"IO", ""}}) {
+            Cleanlist cl = new Cleanlist("clapi_live_abc", "https://x");
+            Fake fake = install(cl, first, new String[] {"200", "{}"});
+            assertThrows(ApiException.class, () -> cl.actions.confirmCard(
+                    new ConfirmCall().cardId("c1").sessionId(UUID.randomUUID())));
+            assertEquals(1, fake.requests.size(), first[0]);
+            assertEquals("/api/v2/actions/confirm", fake.requests.get(0).url().encodedPath());
+        }
+    }
+
+    @Test
+    void aConflictOnAWriteIsNotRetried() {
+        Cleanlist cl = new Cleanlist("clapi_live_abc", "https://x");
+        Fake conflict = install(cl,
+                new String[] {"409", "{\"error\":{\"code\":\"idempotency_in_progress\"}}", "Retry-After", "0"});
+        assertThrows(ApiException.class, () -> cl.actions.callAction("lists.get", new ActionCall()));
         assertEquals(1, conflict.requests.size());
+    }
+
+    @Test
+    void retryInterceptorTurnsOffOkHttpReconnects() {
+        Cleanlist cl = new Cleanlist("clapi_live_abc", "https://x");
+        assertFalse(cl.getApiClient().getHttpClient().retryOnConnectionFailure());
     }
 }

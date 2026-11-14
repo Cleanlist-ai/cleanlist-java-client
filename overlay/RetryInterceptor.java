@@ -6,6 +6,9 @@
  */
 package ai.cleanlist.client;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.time.ZonedDateTime;
@@ -16,16 +19,19 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Pattern;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Retries 429s, 5xx and network failures with backoff, honoring {@code Retry-After}, and gives
- * each write one {@code Idempotency-Key} that stays the same across its retries. A key already on
- * the request wins, so a retried write runs once. A 409 {@code idempotency_in_progress} (sent with {@code Retry-After}) is retried with
- * the same key to collect the first request's result. A {@code Retry-After} over a minute returns
- * the response instead of waiting.
+ * Gives each write one {@code Idempotency-Key} that stays the same across its retries (a key
+ * already on the request wins) and retries what the server can't have run, with backoff that
+ * honors {@code Retry-After}. Reads retry on network failures, 429s and 5xx. Writes retry on
+ * 429s, a 503 {@code idempotency_unavailable}, and a network failure with no response when they
+ * carry a key; never on any other 5xx, which may have run the route. {@code POST
+ * /api/v2/actions/confirm} and inbox replies are never retried. A {@code Retry-After} over a
+ * minute returns the response instead of waiting.
  */
 public class RetryInterceptor implements Interceptor {
 
@@ -40,6 +46,10 @@ public class RetryInterceptor implements Interceptor {
 
     /** Key for the next write on this thread; set by {@link Cleanlist#withIdempotencyKey}. */
     static final ThreadLocal<String> NEXT_KEY = new ThreadLocal<>();
+
+    /** Single-use writes: a second try after a lost response can't be told apart from a repeat. */
+    private static final Pattern NEVER_RETRY_PATH =
+            Pattern.compile("/api/v2/(actions/confirm|inbox/threads/[^/]+/reply)/?$");
 
     /** Sleeps between tries; replaceable in tests. */
     interface Sleeper {
@@ -73,19 +83,23 @@ public class RetryInterceptor implements Interceptor {
                     .header(IDEMPOTENCY_HEADER, key != null ? key : UUID.randomUUID().toString())
                     .build();
         }
-        // Every write now carries a key, so every request is safe to retry.
+        boolean write = WRITE_METHODS.contains(request.method());
+        int tries = write && NEVER_RETRY_PATH.matcher(request.url().encodedPath()).find() ? 1 : maxAttempts;
+        boolean retryNetworkFailure = !write || request.header(IDEMPOTENCY_HEADER) != null;
         for (int attempt = 1; ; attempt++) {
             Response response;
             try {
                 response = chain.proceed(request);
             } catch (IOException e) {
-                if (attempt >= maxAttempts || chain.call().isCanceled()) {
+                if (!retryNetworkFailure || attempt >= tries || chain.call().isCanceled()) {
                     throw e;
                 }
-                pause(retryDelayMs(503, null, attempt, maxAttempts));
+                pause(retryDelayMs(503, null, attempt, tries));
                 continue;
             }
-            long delay = retryDelayMs(response.code(), response.header("Retry-After"), attempt, maxAttempts);
+            long delay = canRetryStatus(write, response)
+                    ? retryDelayMs(response.code(), response.header("Retry-After"), attempt, tries)
+                    : -1;
             if (delay < 0) {
                 lastResponse = ResponseMeta.from(response.code(), response.headers().toMultimap());
                 return response;
@@ -104,10 +118,44 @@ public class RetryInterceptor implements Interceptor {
         }
     }
 
+    /**
+     * Reads retry on 429 and 5xx. Writes retry on 429 and a 503 {@code idempotency_unavailable}
+     * (refused before the route ran); the server doesn't store a 5xx under the key, so retrying
+     * any other 5xx would run the route again.
+     */
+    static boolean canRetryStatus(boolean write, Response response) {
+        int status = response.code();
+        if (status == 429) {
+            return true;
+        }
+        if (!write) {
+            return status >= 500;
+        }
+        return status == 503 && "idempotency_unavailable".equals(errorCode(response));
+    }
+
+    /** The error envelope's {@code code}, read without consuming the body. */
+    private static String errorCode(Response response) {
+        try {
+            JsonElement root = JsonParser.parseString(response.peekBody(65_536).string());
+            if (!root.isJsonObject()) {
+                return null;
+            }
+            JsonObject holder = root.getAsJsonObject();
+            JsonElement error = holder.get("error");
+            if (error != null && error.isJsonObject()) {
+                holder = error.getAsJsonObject();
+            }
+            JsonElement code = holder.get("code");
+            return code != null && code.isJsonPrimitive() ? code.getAsString() : null;
+        } catch (IOException | RuntimeException e) {
+            return null;
+        }
+    }
+
     /** Milliseconds to wait before try {@code attempt + 1}, or -1 to stop and return the response. */
     static long retryDelayMs(int status, String retryAfter, int attempt, int maxAttempts) {
-        boolean inProgress = status == 409 && retryAfter != null;
-        if (attempt >= maxAttempts || !(status == 429 || status >= 500 || inProgress)) {
+        if (attempt >= maxAttempts || !(status == 429 || status >= 500)) {
             return -1;
         }
         long delay = parseRetryAfterMs(retryAfter);
