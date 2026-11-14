@@ -7,6 +7,7 @@ All URIs are relative to *https://api.cleanlist.ai*
 | [**creditsBalance**](PublicWorkspaceApi.md#creditsBalance) | **GET** /api/v2/credits/balance | Get credit balance |
 | [**creditsEstimate**](PublicWorkspaceApi.md#creditsEstimate) | **POST** /api/v2/credits/estimate | Estimate cost &amp; get a signed quote |
 | [**listApiKeys**](PublicWorkspaceApi.md#listApiKeys) | **GET** /api/v2/api-keys | List API keys |
+| [**listRequestLogs**](PublicWorkspaceApi.md#listRequestLogs) | **GET** /api/v2/logs | List API requests |
 | [**usageReport**](PublicWorkspaceApi.md#usageReport) | **GET** /api/v2/usage | Get usage report |
 | [**whoami**](PublicWorkspaceApi.md#whoami) | **GET** /api/v2/whoami | Get current identity &amp; entitlements |
 
@@ -230,6 +231,90 @@ This endpoint does not need any parameter.
 | **500** | Internal error. |  -  |
 | **502** | Upstream provider error. |  -  |
 | **422** | Request failed validation. |  -  |
+
+<a id="listRequestLogs"></a>
+# **listRequestLogs**
+> RequestLogsResponse listRequestLogs(since, status, path, limit, cursor)
+
+List API requests
+
+This workspace&#39;s API key and CLI requests, newest first: time, method, path, status, duration, route template, credits, key prefix and OAuth client. Page with &#x60;next_cursor&#x60;. Requires &#x60;admin:api_keys&#x60; and deducts no credits.
+
+### Example
+```java
+// Import classes:
+import ai.cleanlist.client.ApiClient;
+import ai.cleanlist.client.ApiException;
+import ai.cleanlist.client.Configuration;
+import ai.cleanlist.client.auth.*;
+import ai.cleanlist.client.models.*;
+import ai.cleanlist.client.api.PublicWorkspaceApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.cleanlist.ai");
+    
+    // Configure HTTP bearer authorization: HTTPBearer
+    HttpBearerAuth HTTPBearer = (HttpBearerAuth) defaultClient.getAuthentication("HTTPBearer");
+    HTTPBearer.setBearerToken("BEARER TOKEN");
+
+    PublicWorkspaceApi apiInstance = new PublicWorkspaceApi(defaultClient);
+    OffsetDateTime since = OffsetDateTime.now(); // OffsetDateTime | Only requests at or after this ISO 8601 time.
+    String status = "status_example"; // String | An exact status code (429) or a class (4xx).
+    String path = "path_example"; // String | Path prefix, matched against the raw path (/api/v2/lead-lists) or the route template (/lead-lists/{list_id}).
+    Integer limit = 50; // Integer | 
+    String cursor = "cursor_example"; // String | next_cursor from the previous page.
+    try {
+      RequestLogsResponse result = apiInstance.listRequestLogs(since, status, path, limit, cursor);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling PublicWorkspaceApi#listRequestLogs");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **since** | **OffsetDateTime**| Only requests at or after this ISO 8601 time. | [optional] |
+| **status** | **String**| An exact status code (429) or a class (4xx). | [optional] |
+| **path** | **String**| Path prefix, matched against the raw path (/api/v2/lead-lists) or the route template (/lead-lists/{list_id}). | [optional] |
+| **limit** | **Integer**|  | [optional] [default to 50] |
+| **cursor** | **String**| next_cursor from the previous page. | [optional] |
+
+### Return type
+
+[**RequestLogsResponse**](RequestLogsResponse.md)
+
+### Authorization
+
+[HTTPBearer](../README.md#HTTPBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Successful Response |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 
 <a id="usageReport"></a>
 # **usageReport**
