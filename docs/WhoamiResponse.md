@@ -23,6 +23,7 @@
 |**appsumoTier** | **Integer** |  |  [optional] |
 |**features** | **List&lt;String&gt;** | EFFECTIVE feature grants the gates actually enforce: base Stripe tier ∪ AppSumo carve-outs − AppSumo blocks (via &#x60;has_feature_effective&#x60;). Sourced from the same function the server-side gate uses so the advertised list and the gate can&#39;t drift. Sorted alphabetically for stable diffs. |  |
 |**actingStaffEmail** | **String** |  |  [optional] |
+|**mode** | [**ModeEnum**](#ModeEnum) | &#x60;test&#x60; for a &#x60;clapi_test_&#x60; key, which runs in the workspace&#39;s sandbox: search answers from fixtures, and calls that would spend real money, send, or write to a CRM are refused with &#x60;test_mode_unsupported&#x60;. Every test response also carries &#x60;Cleanlist-Mode: test&#x60;. |  [optional] |
 
 
 
@@ -44,6 +45,15 @@
 | STARTER | &quot;starter&quot; |
 | PRO | &quot;pro&quot; |
 | ENTERPRISE | &quot;enterprise&quot; |
+
+
+
+## Enum: ModeEnum
+
+| Name | Value |
+|---- | -----|
+| LIVE | &quot;live&quot; |
+| TEST | &quot;test&quot; |
 
 
 

@@ -16,6 +16,8 @@
 |**filterHash** | **String** | Stable digest of the canonical filter/list/cohort shape bound into the quote signature; &#x60;none&#x60; when there is no filter object. |  |
 |**availableCredits** | **Integer** | The organization&#39;s current credit balance at estimate time. |  |
 |**sufficient** | **Boolean** | True when &#x60;available_credits &gt;&#x3D; estimated_cost&#x60;. False signals the org must top up at billing before the operation can run. |  |
+|**effects** | **List&lt;String&gt;** |  |  [optional] |
+|**requiredScopes** | **List&lt;String&gt;** |  |  [optional] |
 
 
 

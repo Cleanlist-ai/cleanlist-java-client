@@ -89,6 +89,29 @@ def collapse_numeric_anyof(node) -> int:
     return count
 
 
+def drop_boolean_const(node) -> int:
+    """Drop ``const`` from boolean schemas.
+
+    Pydantic emits ``Literal[False]`` as ``{"type": "boolean", "const": false}``.
+    java okhttp-gson turns that into a one-value enum backed by the string
+    ``"false"``, which doesn't compile. A plain boolean (the ``default`` stays)
+    reads and writes the same JSON.
+
+    Recurses through the whole document; returns the number of drops.
+    """
+    count = 0
+    if isinstance(node, dict):
+        if node.get("type") == "boolean" and isinstance(node.get("const"), bool):
+            node.pop("const")
+            count += 1
+        for value in node.values():
+            count += drop_boolean_const(value)
+    elif isinstance(node, list):
+        for value in node:
+            count += drop_boolean_const(value)
+    return count
+
+
 def main() -> int:
     if len(sys.argv) != 3:
         print(__doc__)
@@ -116,12 +139,14 @@ def main() -> int:
 
     collapsed = collapse_freeform_anyof(spec)
     collapsed += collapse_numeric_anyof(spec)
+    consts = drop_boolean_const(spec)
 
     dst.parent.mkdir(parents=True, exist_ok=True)
     dst.write_text(json.dumps(spec, indent=2))
     print(
         f"Prepared spec: {len(seen)} cleaned operationIds, "
-        f"{collapsed} free-form/numeric anyOf collapsed -> {dst}"
+        f"{collapsed} free-form/numeric anyOf collapsed, "
+        f"{consts} boolean const dropped -> {dst}"
     )
     return 0
 

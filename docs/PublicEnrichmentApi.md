@@ -4,12 +4,166 @@ All URIs are relative to *https://api.cleanlist.ai*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
+| [**batchCompaniesLookup**](PublicEnrichmentApi.md#batchCompaniesLookup) | **POST** /api/v2/batch/companies/lookup | Look up a batch of companies |
+| [**batchPeopleLookup**](PublicEnrichmentApi.md#batchPeopleLookup) | **POST** /api/v2/batch/people/lookup | Look up a batch of people |
 | [**enrichByTask**](PublicEnrichmentApi.md#enrichByTask) | **POST** /api/v2/enrichment/by-task | Enrich entities from a prior task |
 | [**enrichCompany**](PublicEnrichmentApi.md#enrichCompany) | **POST** /api/v2/enrichment/company | Enrich a company |
 | [**enrichList**](PublicEnrichmentApi.md#enrichList) | **POST** /api/v2/enrichment/bulk | Enrich a whole lead list |
 | [**enrichPerson**](PublicEnrichmentApi.md#enrichPerson) | **POST** /api/v2/enrichment/person | Enrich a single person |
 | [**enrichmentStatus**](PublicEnrichmentApi.md#enrichmentStatus) | **GET** /api/v2/enrichment/status/{workflow_id} | Poll an enrichment workflow |
 
+
+<a id="batchCompaniesLookup"></a>
+# **batchCompaniesLookup**
+> BatchLookupResponse batchCompaniesLookup(batchCompaniesLookupRequest)
+
+Look up a batch of companies
+
+Firmographics for up to 1,000 companies in one call.  Each row is looked up like POST /enrichment/company and returned in &#x60;rows&#x60;; the companies found also form the &#x60;task_id&#x60; cohort, read back with GET /tasks/{task_id} (scope &#x60;companies:read&#x60;) and usable with /enrichment/by-task. Priced like a company cohort, about 1 credit per 10 companies found; rows not found are not charged.  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
+
+### Example
+```java
+// Import classes:
+import ai.cleanlist.client.ApiClient;
+import ai.cleanlist.client.ApiException;
+import ai.cleanlist.client.Configuration;
+import ai.cleanlist.client.auth.*;
+import ai.cleanlist.client.models.*;
+import ai.cleanlist.client.api.PublicEnrichmentApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.cleanlist.ai");
+    
+    // Configure HTTP bearer authorization: HTTPBearer
+    HttpBearerAuth HTTPBearer = (HttpBearerAuth) defaultClient.getAuthentication("HTTPBearer");
+    HTTPBearer.setBearerToken("BEARER TOKEN");
+
+    PublicEnrichmentApi apiInstance = new PublicEnrichmentApi(defaultClient);
+    BatchCompaniesLookupRequest batchCompaniesLookupRequest = new BatchCompaniesLookupRequest(); // BatchCompaniesLookupRequest | 
+    try {
+      BatchLookupResponse result = apiInstance.batchCompaniesLookup(batchCompaniesLookupRequest);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling PublicEnrichmentApi#batchCompaniesLookup");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **batchCompaniesLookupRequest** | [**BatchCompaniesLookupRequest**](BatchCompaniesLookupRequest.md)|  | |
+
+### Return type
+
+[**BatchLookupResponse**](BatchLookupResponse.md)
+
+### Authorization
+
+[HTTPBearer](../README.md#HTTPBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Successful Response |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
+
+<a id="batchPeopleLookup"></a>
+# **batchPeopleLookup**
+> BatchLookupResponse batchPeopleLookup(batchPeopleLookupRequest)
+
+Look up a batch of people
+
+Find email, phone and/or profile for up to 1,000 people in one call.  Asynchronous: the usable rows start one bulk enrichment and the response returns its &#x60;task_id&#x60; at once. Read the rows back with GET /tasks/{task_id} (scope &#x60;people:read&#x60;): each row shows &#x60;enrichment_status&#x60; and, once done, the saved lead&#39;s values. Poll &#x60;poll_url&#x60; for progress; &#x60;enrichment.completed&#x60; fires when it ends. Bad rows come back in &#x60;rows&#x60; with a reason and are not charged.  **📖 Docs:** https://docs.cleanlist.ai/api-reference/enrichment
+
+### Example
+```java
+// Import classes:
+import ai.cleanlist.client.ApiClient;
+import ai.cleanlist.client.ApiException;
+import ai.cleanlist.client.Configuration;
+import ai.cleanlist.client.auth.*;
+import ai.cleanlist.client.models.*;
+import ai.cleanlist.client.api.PublicEnrichmentApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.cleanlist.ai");
+    
+    // Configure HTTP bearer authorization: HTTPBearer
+    HttpBearerAuth HTTPBearer = (HttpBearerAuth) defaultClient.getAuthentication("HTTPBearer");
+    HTTPBearer.setBearerToken("BEARER TOKEN");
+
+    PublicEnrichmentApi apiInstance = new PublicEnrichmentApi(defaultClient);
+    BatchPeopleLookupRequest batchPeopleLookupRequest = new BatchPeopleLookupRequest(); // BatchPeopleLookupRequest | 
+    try {
+      BatchLookupResponse result = apiInstance.batchPeopleLookup(batchPeopleLookupRequest);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling PublicEnrichmentApi#batchPeopleLookup");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **batchPeopleLookupRequest** | [**BatchPeopleLookupRequest**](BatchPeopleLookupRequest.md)|  | |
+
+### Return type
+
+[**BatchLookupResponse**](BatchLookupResponse.md)
+
+### Authorization
+
+[HTTPBearer](../README.md#HTTPBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Successful Response |  -  |
+| **422** | Request failed validation. |  -  |
+| **400** | Bad request. |  -  |
+| **401** | Authentication required or invalid. |  -  |
+| **403** | Permission denied or feature not enabled. |  -  |
+| **404** | Resource not found. |  -  |
+| **409** | Resource conflict. |  -  |
+| **429** | Rate limited. |  -  |
+| **500** | Internal error. |  -  |
+| **502** | Upstream provider error. |  -  |
 
 <a id="enrichByTask"></a>
 # **enrichByTask**
