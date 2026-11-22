@@ -43,6 +43,7 @@ The company-side filter blob, one field per ``CompanySearchFilters`` key.
 |**growth3mMin** | **String** | Minimum three-month employee growth percent. |  [optional] |
 |**growth12mMin** | **String** | Minimum twelve-month employee growth percent. |  [optional] |
 |**followersMin** | **String** | Minimum LinkedIn follower count. |  [optional] |
+|**followersMax** | **String** | Maximum LinkedIn follower count. |  [optional] |
 |**followersGrowth6mMin** | **String** | Minimum six-month follower growth percent. |  [optional] |
 |**followersGrowth12mMin** | **String** | Minimum twelve-month follower growth percent. |  [optional] |
 |**lastFundingDateAfter** | **String** | Last funding date floor as YYYY-MM-DD. |  [optional] |

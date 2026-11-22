@@ -20,6 +20,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -51,6 +52,14 @@ public class DailySummaryDtoTest {
     @Test
     public void timezoneTest() {
         // TODO: test timezone
+    }
+
+    /**
+     * Test the property 'report'
+     */
+    @Test
+    public void reportTest() {
+        // TODO: test report
     }
 
 }

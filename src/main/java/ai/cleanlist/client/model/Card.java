@@ -22,7 +22,9 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 import com.google.gson.Gson;
@@ -78,6 +80,11 @@ public class Card {
   @SerializedName(SERIALIZED_NAME_EXPIRES_AT)
   @javax.annotation.Nonnull
   private String expiresAt;
+
+  public static final String SERIALIZED_NAME_EFFECTS = "effects";
+  @SerializedName(SERIALIZED_NAME_EFFECTS)
+  @javax.annotation.Nullable
+  private List<String> effects;
 
   public Card() {
   }
@@ -177,6 +184,33 @@ public class Card {
   }
 
 
+  public Card effects(@javax.annotation.Nullable List<String> effects) {
+    this.effects = effects;
+    return this;
+  }
+
+  public Card addEffectsItem(String effectsItem) {
+    if (this.effects == null) {
+      this.effects = new ArrayList<>();
+    }
+    this.effects.add(effectsItem);
+    return this;
+  }
+
+  /**
+   * Get effects
+   * @return effects
+   */
+  @javax.annotation.Nullable
+  public List<String> getEffects() {
+    return effects;
+  }
+
+  public void setEffects(@javax.annotation.Nullable List<String> effects) {
+    this.effects = effects;
+  }
+
+
 
   @Override
   public boolean equals(Object o) {
@@ -191,7 +225,8 @@ public class Card {
         Objects.equals(this.title, card.title) &&
         Objects.equals(this.summary, card.summary) &&
         Objects.equals(this.creditsRequired, card.creditsRequired) &&
-        Objects.equals(this.expiresAt, card.expiresAt);
+        Objects.equals(this.expiresAt, card.expiresAt) &&
+        Objects.equals(this.effects, card.effects);
   }
 
   private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
@@ -200,7 +235,7 @@ public class Card {
 
   @Override
   public int hashCode() {
-    return Objects.hash(cardId, title, summary, creditsRequired, expiresAt);
+    return Objects.hash(cardId, title, summary, creditsRequired, expiresAt, effects);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -219,6 +254,7 @@ public class Card {
     sb.append("    summary: ").append(toIndentedString(summary)).append("\n");
     sb.append("    creditsRequired: ").append(toIndentedString(creditsRequired)).append("\n");
     sb.append("    expiresAt: ").append(toIndentedString(expiresAt)).append("\n");
+    sb.append("    effects: ").append(toIndentedString(effects)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -240,7 +276,7 @@ public class Card {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("card_id", "title", "summary", "credits_required", "expires_at"));
+    openapiFields = new HashSet<String>(Arrays.asList("card_id", "title", "summary", "credits_required", "expires_at", "effects"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("card_id", "title", "summary", "expires_at"));
@@ -285,6 +321,10 @@ public class Card {
       }
       if (!jsonObj.get("expires_at").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `expires_at` to be a primitive type in the JSON string but got `%s`", jsonObj.get("expires_at").toString()));
+      }
+      // ensure the optional json data is an array if present
+      if (jsonObj.get("effects") != null && !jsonObj.get("effects").isJsonNull() && !jsonObj.get("effects").isJsonArray()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `effects` to be an array in the JSON string but got `%s`", jsonObj.get("effects").toString()));
       }
   }
 
