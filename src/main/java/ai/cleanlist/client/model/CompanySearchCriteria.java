@@ -285,6 +285,11 @@ public class CompanySearchCriteria {
   @javax.annotation.Nullable
   private String followersMin = "";
 
+  public static final String SERIALIZED_NAME_FOLLOWERS_MAX = "followersMax";
+  @SerializedName(SERIALIZED_NAME_FOLLOWERS_MAX)
+  @javax.annotation.Nullable
+  private String followersMax = "";
+
   public static final String SERIALIZED_NAME_FOLLOWERS_GROWTH6M_MIN = "followersGrowth6mMin";
   @SerializedName(SERIALIZED_NAME_FOLLOWERS_GROWTH6M_MIN)
   @javax.annotation.Nullable
@@ -1279,6 +1284,25 @@ public class CompanySearchCriteria {
   }
 
 
+  public CompanySearchCriteria followersMax(@javax.annotation.Nullable String followersMax) {
+    this.followersMax = followersMax;
+    return this;
+  }
+
+  /**
+   * Maximum LinkedIn follower count.
+   * @return followersMax
+   */
+  @javax.annotation.Nullable
+  public String getFollowersMax() {
+    return followersMax;
+  }
+
+  public void setFollowersMax(@javax.annotation.Nullable String followersMax) {
+    this.followersMax = followersMax;
+  }
+
+
   public CompanySearchCriteria followersGrowth6mMin(@javax.annotation.Nullable String followersGrowth6mMin) {
     this.followersGrowth6mMin = followersGrowth6mMin;
     return this;
@@ -1860,6 +1884,7 @@ public class CompanySearchCriteria {
         Objects.equals(this.growth3mMin, companySearchCriteria.growth3mMin) &&
         Objects.equals(this.growth12mMin, companySearchCriteria.growth12mMin) &&
         Objects.equals(this.followersMin, companySearchCriteria.followersMin) &&
+        Objects.equals(this.followersMax, companySearchCriteria.followersMax) &&
         Objects.equals(this.followersGrowth6mMin, companySearchCriteria.followersGrowth6mMin) &&
         Objects.equals(this.followersGrowth12mMin, companySearchCriteria.followersGrowth12mMin) &&
         Objects.equals(this.lastFundingDateAfter, companySearchCriteria.lastFundingDateAfter) &&
@@ -1888,7 +1913,7 @@ public class CompanySearchCriteria {
 
   @Override
   public int hashCode() {
-    return Objects.hash(companyName, companyNameMatchType, domain, industriesInclude, naicsCodes, headcountRanges, revenueMin, revenueMax, yearFoundedMin, yearFoundedMax, companyType, fundingRoundTypes, fundingAmountMin, growthMin, growthMax, industriesExclude, headcountRangesExclude, companyTypeExclude, hqCountriesIso3, hqCountriesIso3Exclude, largestHeadcountCountriesIso3, hqStates, hqStatesExclude, hqCities, hqCitiesExclude, linkedinCategoriesInclude, crunchbaseCategoriesInclude, crunchbaseCategoriesExclude, stockListings, headcountLatestMin, headcountLatestMax, growth1mMin, growth3mMin, growth12mMin, followersMin, followersGrowth6mMin, followersGrowth12mMin, lastFundingDateAfter, ipoDateAfter, lastFundingRoundAmountMin, lastFundingRoundAmountMax, bootstrappedOnly, acquiredOnly, fundingRoundTypesExclude, investorsInclude, investorsExclude, stockSymbols, domainsList, companyNamesList, linkedinUrls, twitterHandle, descriptionKeyword, updatedAfter, compositeMode, workforceRules, excludeCompanyDomains, excludeInCleanlist, excludeInCleanlistListIds, crmFilterSections);
+    return Objects.hash(companyName, companyNameMatchType, domain, industriesInclude, naicsCodes, headcountRanges, revenueMin, revenueMax, yearFoundedMin, yearFoundedMax, companyType, fundingRoundTypes, fundingAmountMin, growthMin, growthMax, industriesExclude, headcountRangesExclude, companyTypeExclude, hqCountriesIso3, hqCountriesIso3Exclude, largestHeadcountCountriesIso3, hqStates, hqStatesExclude, hqCities, hqCitiesExclude, linkedinCategoriesInclude, crunchbaseCategoriesInclude, crunchbaseCategoriesExclude, stockListings, headcountLatestMin, headcountLatestMax, growth1mMin, growth3mMin, growth12mMin, followersMin, followersMax, followersGrowth6mMin, followersGrowth12mMin, lastFundingDateAfter, ipoDateAfter, lastFundingRoundAmountMin, lastFundingRoundAmountMax, bootstrappedOnly, acquiredOnly, fundingRoundTypesExclude, investorsInclude, investorsExclude, stockSymbols, domainsList, companyNamesList, linkedinUrls, twitterHandle, descriptionKeyword, updatedAfter, compositeMode, workforceRules, excludeCompanyDomains, excludeInCleanlist, excludeInCleanlistListIds, crmFilterSections);
   }
 
   @Override
@@ -1930,6 +1955,7 @@ public class CompanySearchCriteria {
     sb.append("    growth3mMin: ").append(toIndentedString(growth3mMin)).append("\n");
     sb.append("    growth12mMin: ").append(toIndentedString(growth12mMin)).append("\n");
     sb.append("    followersMin: ").append(toIndentedString(followersMin)).append("\n");
+    sb.append("    followersMax: ").append(toIndentedString(followersMax)).append("\n");
     sb.append("    followersGrowth6mMin: ").append(toIndentedString(followersGrowth6mMin)).append("\n");
     sb.append("    followersGrowth12mMin: ").append(toIndentedString(followersGrowth12mMin)).append("\n");
     sb.append("    lastFundingDateAfter: ").append(toIndentedString(lastFundingDateAfter)).append("\n");
@@ -1975,7 +2001,7 @@ public class CompanySearchCriteria {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("companyName", "companyNameMatchType", "domain", "industriesInclude", "naicsCodes", "headcountRanges", "revenueMin", "revenueMax", "yearFoundedMin", "yearFoundedMax", "companyType", "fundingRoundTypes", "fundingAmountMin", "growthMin", "growthMax", "industriesExclude", "headcountRangesExclude", "companyTypeExclude", "hqCountriesIso3", "hqCountriesIso3Exclude", "largestHeadcountCountriesIso3", "hqStates", "hqStatesExclude", "hqCities", "hqCitiesExclude", "linkedinCategoriesInclude", "crunchbaseCategoriesInclude", "crunchbaseCategoriesExclude", "stockListings", "headcountLatestMin", "headcountLatestMax", "growth1mMin", "growth3mMin", "growth12mMin", "followersMin", "followersGrowth6mMin", "followersGrowth12mMin", "lastFundingDateAfter", "ipoDateAfter", "lastFundingRoundAmountMin", "lastFundingRoundAmountMax", "bootstrappedOnly", "acquiredOnly", "fundingRoundTypesExclude", "investorsInclude", "investorsExclude", "stockSymbols", "domainsList", "companyNamesList", "linkedinUrls", "twitterHandle", "descriptionKeyword", "updatedAfter", "compositeMode", "workforceRules", "excludeCompanyDomains", "excludeInCleanlist", "excludeInCleanlistListIds", "crmFilterSections"));
+    openapiFields = new HashSet<String>(Arrays.asList("companyName", "companyNameMatchType", "domain", "industriesInclude", "naicsCodes", "headcountRanges", "revenueMin", "revenueMax", "yearFoundedMin", "yearFoundedMax", "companyType", "fundingRoundTypes", "fundingAmountMin", "growthMin", "growthMax", "industriesExclude", "headcountRangesExclude", "companyTypeExclude", "hqCountriesIso3", "hqCountriesIso3Exclude", "largestHeadcountCountriesIso3", "hqStates", "hqStatesExclude", "hqCities", "hqCitiesExclude", "linkedinCategoriesInclude", "crunchbaseCategoriesInclude", "crunchbaseCategoriesExclude", "stockListings", "headcountLatestMin", "headcountLatestMax", "growth1mMin", "growth3mMin", "growth12mMin", "followersMin", "followersMax", "followersGrowth6mMin", "followersGrowth12mMin", "lastFundingDateAfter", "ipoDateAfter", "lastFundingRoundAmountMin", "lastFundingRoundAmountMax", "bootstrappedOnly", "acquiredOnly", "fundingRoundTypesExclude", "investorsInclude", "investorsExclude", "stockSymbols", "domainsList", "companyNamesList", "linkedinUrls", "twitterHandle", "descriptionKeyword", "updatedAfter", "compositeMode", "workforceRules", "excludeCompanyDomains", "excludeInCleanlist", "excludeInCleanlistListIds", "crmFilterSections"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(0);
@@ -2129,6 +2155,9 @@ public class CompanySearchCriteria {
       }
       if ((jsonObj.get("followersMin") != null && !jsonObj.get("followersMin").isJsonNull()) && !jsonObj.get("followersMin").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `followersMin` to be a primitive type in the JSON string but got `%s`", jsonObj.get("followersMin").toString()));
+      }
+      if ((jsonObj.get("followersMax") != null && !jsonObj.get("followersMax").isJsonNull()) && !jsonObj.get("followersMax").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `followersMax` to be a primitive type in the JSON string but got `%s`", jsonObj.get("followersMax").toString()));
       }
       if ((jsonObj.get("followersGrowth6mMin") != null && !jsonObj.get("followersGrowth6mMin").isJsonNull()) && !jsonObj.get("followersGrowth6mMin").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(Locale.ROOT, "Expected the field `followersGrowth6mMin` to be a primitive type in the JSON string but got `%s`", jsonObj.get("followersGrowth6mMin").toString()));

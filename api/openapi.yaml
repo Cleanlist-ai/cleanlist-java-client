@@ -697,14 +697,14 @@ paths:
         themselves are global entities and are NOT deleted — they stay
         findable via search_people and in any other list they belong to.
 
-        Owner-only + is_protected guards mirror the portal. There is no
+        Edit-access + is_protected guards mirror the portal. There is no
         in-flight-workflow guard (the portal has none either; the MCP
         confirm-gate already prevents accidental deletes off a fuzzy name
         match). Re-deleting an unknown/already-deleted list returns 404.
 
-        Owner-only: a non-owner gets 404 (indistinguishable from missing) and a
-        protected list gets 403 `list_protected`. Requires the `lists:write`
-        scope.
+        Needs edit access, as the portal's delete does: a caller who can only
+        view the list gets 403 `list_not_editable`, and a protected list 403
+        `list_protected`. Requires the `lists:write` scope.
 
         **📖 Docs:** https://docs.cleanlist.ai/api-reference/lead-lists · https://docs.cleanlist.ai/guides/managing-lists
       operationId: delete_list
@@ -884,7 +884,7 @@ paths:
         PATCH semantics: only the fields present in the body change. A `null`
         `description` clears it; a `null` `folder_id` unfiles the list; an
         omitted field is left untouched. Renaming to the current name is an
-        idempotent 200 no-op. Owner-only + is_protected guards mirror the
+        idempotent 200 no-op. Edit-access + is_protected guards mirror the
         portal's edit path.
 
         At least one of `name`, `description`, or `folder_id` must be present;
@@ -1341,7 +1341,7 @@ paths:
         Net effect: no duplicate Lead, but the RawPerson stub persists
         until the workflow processes it.
 
-        Send the file as base64 in `csv_content_base64` (≤150 KB / ~600 rows)
+        Send the file as base64 in `csv_content_base64` (≤10 MB / 20,000 rows)
         with a `column_mapping` from canonical field to CSV header. Requires the
         `lists:write` scope, plus `enrich:write` when `dispatch_enrichment=true`
         (the enrichment spend). Importing rows is free; when dispatching,
@@ -5610,7 +5610,7 @@ paths:
     post:
       description: |-
         Recent job postings, newest first: the read the "Companies start
-        hiring" trigger makes. 0.03 credits a posting returned; quote first.
+        hiring" trigger makes. 0.1 credits a posting returned; quote first.
       operationId: search_job_postings
       requestBody:
         content:
@@ -5794,6 +5794,8 @@ paths:
       description: |-
         Where these people work now, from their LinkedIn profiles: the read
         the Job history step makes. Every person named, up to 500; quote first.
+        A retry with the same quote_id within an hour returns the first result
+        (``replayed: true``) and charges nothing more.
       operationId: check_job_changes
       requestBody:
         content:
@@ -6955,6 +6957,9 @@ components:
           status: done
         card:
           summary: summary
+          effects:
+          - effects
+          - effects
           expires_at: expires_at
           credits_required: 0.8008281904610115
           title: title
@@ -7176,6 +7181,7 @@ components:
             dailySummary:
               hour: 5
               timezone: timezone
+              report: "{}"
             email:
             - email
             - email
@@ -7827,6 +7833,9 @@ components:
     Card:
       example:
         summary: summary
+        effects:
+        - effects
+        - effects
         expires_at: expires_at
         credits_required: 0.8008281904610115
         title: title
@@ -7847,6 +7856,11 @@ components:
         expires_at:
           title: Expires At
           type: string
+        effects:
+          items:
+            type: string
+          nullable: true
+          type: array
       required:
       - card_id
       - expires_at
@@ -8164,6 +8178,7 @@ components:
         - naicsCodes
         - naicsCodes
         updatedAfter: ""
+        followersMax: ""
         growthMin: ""
         stockSymbols:
         - stockSymbols
@@ -8409,6 +8424,11 @@ components:
           default: ""
           description: Minimum LinkedIn follower count.
           title: Followersmin
+          type: string
+        followersMax:
+          default: ""
+          description: Maximum LinkedIn follower count.
+          title: Followersmax
           type: string
         followersGrowth6mMin:
           default: ""
@@ -8818,6 +8838,7 @@ components:
           - naicsCodes
           - naicsCodes
           updatedAfter: ""
+          followersMax: ""
           growthMin: ""
           stockSymbols:
           - stockSymbols
@@ -9323,10 +9344,10 @@ components:
       properties:
         csv_content_base64:
           description: "Full CSV file body, base64-encoded. UTF-8 (with or without\
-            \ BOM). v1 hard-caps the raw body at 150 KB / ~600 rows — past that the\
-            \ base64 payload starts hitting tool-call output limits in the agent before\
-            \ any server cap fires. Above the cap the endpoint returns 413; chunk\
-            \ the file upstream."
+            \ BOM). Up to 10 MB of raw CSV and 20,000 rows per call. Above 10 MB the\
+            \ endpoint returns 413; rows past 20,000 are skipped with reason `row_cap_exceeded`.\
+            \ An agent sending the file in a tool call may need smaller chunks to\
+            \ stay within its own output limit."
           title: Csv Content Base64
           type: string
         column_mapping:
@@ -9512,6 +9533,7 @@ components:
       example:
         hour: 5
         timezone: timezone
+        report: "{}"
       properties:
         hour:
           title: Hour
@@ -9519,6 +9541,10 @@ components:
         timezone:
           title: Timezone
           type: string
+        report:
+          additionalProperties: false
+          nullable: true
+          type: object
       required:
       - hour
       - timezone
@@ -9604,6 +9630,7 @@ components:
           dailySummary:
             hour: 5
             timezone: timezone
+            report: "{}"
           email:
           - email
           - email
@@ -9621,6 +9648,7 @@ components:
         dailySummary:
           hour: 5
           timezone: timezone
+          report: "{}"
         email:
         - email
         - email
@@ -12386,6 +12414,7 @@ components:
           - naicsCodes
           - naicsCodes
           updatedAfter: ""
+          followersMax: ""
           growthMin: ""
           stockSymbols:
           - stockSymbols
@@ -14857,8 +14886,9 @@ components:
           type: string
         commit:
           default: false
-          description: Needed when the change writes to the CRM; without it that call
-            answers with a preview.
+          description: "Needed when the change writes to the CRM, or completes a sequence\
+            \ step's task (its sequence moves on); without it that call answers with\
+            \ a preview."
           title: Commit
           type: boolean
       required:

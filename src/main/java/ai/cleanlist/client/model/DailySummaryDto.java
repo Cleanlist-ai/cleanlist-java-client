@@ -22,6 +22,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -61,6 +62,11 @@ public class DailySummaryDto {
   @SerializedName(SERIALIZED_NAME_TIMEZONE)
   @javax.annotation.Nonnull
   private String timezone;
+
+  public static final String SERIALIZED_NAME_REPORT = "report";
+  @SerializedName(SERIALIZED_NAME_REPORT)
+  @javax.annotation.Nullable
+  private Object report;
 
   public DailySummaryDto() {
   }
@@ -103,6 +109,25 @@ public class DailySummaryDto {
   }
 
 
+  public DailySummaryDto report(@javax.annotation.Nullable Object report) {
+    this.report = report;
+    return this;
+  }
+
+  /**
+   * Get report
+   * @return report
+   */
+  @javax.annotation.Nullable
+  public Object getReport() {
+    return report;
+  }
+
+  public void setReport(@javax.annotation.Nullable Object report) {
+    this.report = report;
+  }
+
+
 
   @Override
   public boolean equals(Object o) {
@@ -114,12 +139,24 @@ public class DailySummaryDto {
     }
     DailySummaryDto dailySummaryDto = (DailySummaryDto) o;
     return Objects.equals(this.hour, dailySummaryDto.hour) &&
-        Objects.equals(this.timezone, dailySummaryDto.timezone);
+        Objects.equals(this.timezone, dailySummaryDto.timezone) &&
+        Objects.equals(this.report, dailySummaryDto.report);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(hour, timezone);
+    return Objects.hash(hour, timezone, report);
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override
@@ -128,6 +165,7 @@ public class DailySummaryDto {
     sb.append("class DailySummaryDto {\n");
     sb.append("    hour: ").append(toIndentedString(hour)).append("\n");
     sb.append("    timezone: ").append(toIndentedString(timezone)).append("\n");
+    sb.append("    report: ").append(toIndentedString(report)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -149,7 +187,7 @@ public class DailySummaryDto {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("hour", "timezone"));
+    openapiFields = new HashSet<String>(Arrays.asList("hour", "timezone", "report"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("hour", "timezone"));

@@ -322,6 +322,14 @@ public class CompanySearchCriteriaTest {
     }
 
     /**
+     * Test the property 'followersMax'
+     */
+    @Test
+    public void followersMaxTest() {
+        // TODO: test followersMax
+    }
+
+    /**
      * Test the property 'followersGrowth6mMin'
      */
     @Test

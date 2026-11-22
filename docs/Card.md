@@ -12,6 +12,7 @@
 |**summary** | **String** |  |  |
 |**creditsRequired** | **BigDecimal** |  |  [optional] |
 |**expiresAt** | **String** |  |  |
+|**effects** | **List&lt;String&gt;** |  |  [optional] |
 
 
 

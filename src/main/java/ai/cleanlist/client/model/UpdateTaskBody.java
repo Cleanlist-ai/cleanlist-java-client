@@ -190,7 +190,7 @@ public class UpdateTaskBody {
   }
 
   /**
-   * Needed when the change writes to the CRM; without it that call answers with a preview.
+   * Needed when the change writes to the CRM, or completes a sequence step&#39;s task (its sequence moves on); without it that call answers with a preview.
    * @return commit
    */
   @javax.annotation.Nullable
